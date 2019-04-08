@@ -28,7 +28,7 @@
     #### authToken
       - Open the dev tools (F12), open the Network tab. (You should clear all requests for better readability if you see some.)
       - Delete one message manually. In the request log, you will see a request with a DELETE method.
-      - Click on the request to open the details, and on the Headers tab, copy the 'authorization' thoken. It's a long text with dots like `MTX5MzQ1MjAyMjU0NjA2MzM2.ROFLMAO.UvqZqBMXLpDuOY3Z456J3JRIfbk`.
+      - Click on the request to open the details, and on the Headers tab, copy the 'authorization' token. It's a long text with dots like `MTX5MzQ1MjAyMjU0NjA2MzM2.ROFLMAO.UvqZqBMXLpDuOY3Z456J3JRIfbk`.
 
     #### authorId
       - Right click your avatar in any chat, Copy ID
