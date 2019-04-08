@@ -1,12 +1,12 @@
 # Delete all messages in a Discord channel or DM
 
-1. Open discord in a browser
+1. Open Discord in a browser like Chrome or Firefox;
 
-2. Open DevTools pressing F12 or CMD-OPTION-J  
+2. Open DevTools pressing <kbd>F12</kbd> or <kbd>CMD</kbd>+<kbd>OPTION</kbd>+<kbd>J</kbd>;
 
-3. Paste the **deleteMessages.js** script in the Console and press ENTER
+3. Copy the [deleteMessages.js](https://gist.github.com/victornpb/135f5b346dea4decfc8f63ad7d9cc182#file-deletemessages-js) script and paste it in the Console and press ENTER;
    
-4. Edit and paste the following variables:
+4. Edit the following variables, then paste it in the console:
 
     ```js
     // Your token, you can find it in other requests headers
@@ -39,12 +39,18 @@
     #### firstMessageId
       - Right click a message, Copy ID (Leave this variable empty for deleting all your messages in a channel)
       
-.
-
+<br>
 
 > **NOTE:** if the `Copy ID` menu doens't show up when right clicking  
 > Enable developer mode in discord
 >   Go to user **Settings** > **Appearance** in discord and enable **Developer mode**.
+
+
+5. The script will start to run, a popup will be opened showing the progress and the messages being deleted, as well as a remaining time. Do not close it.
+
+----
+
+You can stop the process by typing `STOP=1` in the console (UPPERCASE) and pressing ENTER.
 
 ----
 DO NOT SHARE YOUR `authToken` !
