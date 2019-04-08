@@ -48,6 +48,8 @@
 
 5. The script will start to run, a popup will be opened showing the progress and the messages being deleted, as well as a remaining time. Do not close it.
 
+![Screen Shot 2019-04-08](https://user-images.githubusercontent.com/3372598/55703780-ec97d380-59b0-11e9-93e6-73983cb32de5.png)
+
 ----
 
 You can stop the process by typing `STOP=1` in the console (UPPERCASE) and pressing ENTER.
