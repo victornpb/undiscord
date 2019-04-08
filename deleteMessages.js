@@ -90,3 +90,5 @@ function deleteMessages(authToken, authorId, channelId, firstMessageId) {
     }
   }
 }
+
+//END
