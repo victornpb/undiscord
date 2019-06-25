@@ -37,9 +37,11 @@ function deleteMessages(authToken, authorId, channelId, afterMessageId) {
     function log_success() { logger('log', arguments, 'color:green;'); }
 
     var popup = window.open('', '', 'width=800,height=1000,top=0,left=0');
+    if (!popup) return console.error('Popup blocked! Please allow popups and try again.');
+    popup.document.write('<span>...</span>');
     popup.document.body.innerHTML = '<pre></pre>';
     const pp = popup.document.getElementsByTagName('pre')[0];
-    if (!popup) console.error('Popup blocked!');
+    
 
     log_info(`Started at ${start.toLocaleString()}`);
     log(`channelId=${channelId} authorId=${authorId} firstMessageId=${afterMessageId}`);
