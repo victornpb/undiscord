@@ -67,9 +67,18 @@ If the `Copy ID` menu doens't show up when right clicking:
    <img src="https://user-images.githubusercontent.com/3372598/58374693-fa3df400-7f31-11e9-9abd-ba17b9440326.png" height="50">  
 
 ----
-DO NOT SHARE YOUR `authToken` !
-----
+# DO NOT SHARE YOUR `authToken`!
 
-**DISCLAIMER:** *USE AT YOUR OWN RISK! I TAKE NO RESPONSABILITY FOR ANYTHING POSTED HERE!*
+Sharing your authToken on the internet will give full access to your account! [There are bots gathering credentials all over the internet](https://github.com/rndinfosecguy/Scavenger).
+If you post your token by accident, LOGOUT from discord on that **same browser** you got that token imediately.
+Changing your password will make sure that you get logged out of every device. I advice that you turn on [2FA](https://support.discordapp.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
+
+If you are unsure do not share screenshots, or copy paste logs on the internet.
+
+----
+> **DISCLAIMER:**
+> THE SOFTWARE AND ALL INFORMATION HERE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+>
+> By using any code or information provided here you are agreeing to all parts of the above Disclaimer.
 
 Last tested: 2019-MAY-25
