@@ -4,29 +4,7 @@
 
 2. Open DevTools pressing <kbd>F12</kbd> or <kbd>⌘ command</kbd>+<kbd>option</kbd>+<kbd>J</kbd>;
 
-3. Copy the [deleteDiscordMessages.js](#file-deletediscordmessages-js) script and paste it in the Console, then press <kbd>ENTER</kbd>;  
-   
-4. Edit the following text, then paste it in the console:
-
-    **Continue reading for [instructions](#Variables) on how edit each variable**
-    
-    ```js
-    // fill with your info
-    var authToken = "MTX5MzQ1MjAyMjU0NjA2MzM2.ROFLMAO.UvqZqBMXLpDuOY3Z456J3JRIfbk";
-    var authorId = "112233445566778899";
-    var channelId = "112233445566778899";
-    var firstMessageId = "";
-
-    deleteMessages(authToken, authorId, channelId, firstMessageId); //start
-    ```
-    *I recommend that you paste it inside a text editor, change it and then paste it in the console.*
-5. It will start to delete messages. You will be able to follow the progress and the remaining time in a popup window.  
-**Do not close this window while it is running!**
-  <img src="https://user-images.githubusercontent.com/3372598/55703780-ec97d380-59b0-11e9-93e6-73983cb32de5.png" height="300">
-
-#### Abort / Stop
-Inside the **console**, type (uppercase) `STOP=1` and press <kbd>ENTER</kbd>.  
-
+3. Copy the [deleteDiscordMessages.js](#file-deletediscordmessages-js) script and paste it in the Console, then press <kbd>ENTER</kbd>;
 
 ## Variables
 > 
