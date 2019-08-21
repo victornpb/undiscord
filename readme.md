@@ -10,6 +10,13 @@
    
   <img src="https://user-images.githubusercontent.com/3372598/63403726-f0f8e200-c3cf-11e9-97ef-d1e73a225027.png" height="300">
 
+------------
+
+Read this entire document first!
+
+After that if you need help post comments, questions or issues: [here](https://github.com/victornpb/deleteDiscordMessages/issues/new)
+
+------------
 
 ## Variables
 > 
@@ -37,7 +44,7 @@
 >   Right click a message, [Copy ID](#DeveloperMode)  
 >   <img src="https://user-images.githubusercontent.com/3372598/58374442-daa4cc80-7f2d-11e9-843b-10aec30fe349.png" height="250">  
 > - Delete since the begining of a channel:  
->   Leave this variable empty `""`.  
+>   Leave this variable empty.  
 
 
 <br>
@@ -57,6 +64,13 @@ If you post your token by accident, LOGOUT from discord on that **same browser**
 Changing your password will make sure that you get logged out of every device. I advice that you turn on [2FA](https://support.discordapp.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
 
 If you are unsure do not share screenshots, or copy paste logs on the internet.
+
+----
+
+#### Script size:
+
+The script started small and it grew with time, as I made it more reliable and user friendly.
+I did not attempt to make this script short, I deliberately choose to make it readable, so people can analyze it before running.
 
 ----
 > **DISCLAIMER:**
