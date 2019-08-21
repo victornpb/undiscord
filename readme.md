@@ -4,7 +4,12 @@
 
 2. Open DevTools pressing <kbd>F12</kbd> or <kbd>⌘ command</kbd>+<kbd>option</kbd>+<kbd>J</kbd>;
 
-3. Copy the [deleteDiscordMessages.js](#file-deletediscordmessages-js) script and paste it in the Console, then press <kbd>ENTER</kbd>;
+3. Copy the [deleteDiscordMessages.js](https://github.com/victornpb/deleteDiscordMessages) script and paste it in the Console, then press <kbd>ENTER</kbd>;  
+
+4. A window will be opened, fill the variables and click the <button>START</button> button.
+   
+  <img src="https://user-images.githubusercontent.com/3372598/63403726-f0f8e200-c3cf-11e9-97ef-d1e73a225027.png" height="300">
+
 
 ## Variables
 > 
@@ -39,7 +44,7 @@
 
 ----
 #### DeveloperMode
-If the `Copy ID` menu doens't show up when right clicking:  
+If the `Copy ID` menu doesn't show up when right clicking:  
  - Enable developer mode in discord
    Go to user **Settings** > **Appearance** in discord and enable **Developer mode**.  
    <img src="https://user-images.githubusercontent.com/3372598/58374693-fa3df400-7f31-11e9-9abd-ba17b9440326.png" height="50">  
