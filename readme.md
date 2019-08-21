@@ -67,10 +67,12 @@ If you are unsure do not share screenshots, or copy paste logs on the internet.
 
 ----
 
-#### Script size:
+#### Script
 
 The script started small and it grew with time, as I made it more reliable and user friendly.
 I did not attempt to make this script short, I deliberately choose to make it readable, so people can analyze it before running.
+
+Started originally at https://gist.github.com/victornpb/135f5b346dea4decfc8f63ad7d9cc182
 
 ----
 > **DISCLAIMER:**
