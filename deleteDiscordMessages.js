@@ -27,11 +27,11 @@
     const startBtn = popup.document.querySelector('#start');
     const stopBtn = popup.document.querySelector('#stop');
     startBtn.onclick = (e) => {
-        authToken = popup.document.querySelector('#authToken').value;
-        authorId = popup.document.querySelector('#authorId').value;
-        channelId = popup.document.querySelector('#channelId').value;
-        afterMessageId = popup.document.querySelector('#afterMessageId').value;
-        beforeMessageId = popup.document.querySelector('#beforeMessageId').value;
+        authToken = popup.document.querySelector('#authToken').value.trim();
+        authorId = popup.document.querySelector('#authorId').value.trim();
+        channelId = popup.document.querySelector('#channelId').value.trim();
+        afterMessageId = popup.document.querySelector('#afterMessageId').value.trim();
+        beforeMessageId = popup.document.querySelector('#beforeMessageId').value.trim();
 
         stop = stopBtn.disabled = !(startBtn.disabled = true);
         deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, extLogger, () => !(stop === true || popup.closed)).then(() => {
