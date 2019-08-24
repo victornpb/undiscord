@@ -125,7 +125,7 @@
                 throttledTotalTime += w;
                 log.warn(`This channel wasn't indexed, waiting ${w} ms for discord to index it...`);
                 await wait(w);
-                return recurse();
+                return await recurse();
             }
     
             if (!resp.ok) {
@@ -136,7 +136,7 @@
                     throttledTotalTime += x;
                     log.warn(`! Rate limited by the API! Waiting ${x} ms ...`);
                     await wait(x);
-                    return recurse();
+                    return await recurse();
                 } else {
                     log.error('API respondend with not OK status!', await resp.json());
                     return;
@@ -208,7 +208,7 @@
 
                 if (stopHndl && stopHndl()===false) return log.error('STOPPED by user!');
 
-                return recurse();
+                return await recurse();
             } else {
                 if (data.messages.length === 0 && total > 0) log.warn('Ended prematurely, because API returned an empty page.\nYou may try again with different before/after range.');
                 log.success('---- DONE! ----');
@@ -221,7 +221,7 @@
 
         log.success(`\n---- Started at ${start.toLocaleString()} ----`);
         log.debug(`authorId=${authorId} channelId=${channelId} afterMessageId=${afterMessageId} beforeMessageId=${beforeMessageId} `);
-        await recurse();
+        return await recurse();
     }
 })();
 
