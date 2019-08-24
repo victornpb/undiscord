@@ -4,7 +4,7 @@
 
 2. Open DevTools pressing <kbd>F12</kbd> or <kbd>⌘ command</kbd>+<kbd>option</kbd>+<kbd>J</kbd>;
 
-3. Copy the [deleteDiscordMessages.js](https://github.com/victornpb/deleteDiscordMessages) script and paste it in the Console, then press <kbd>ENTER</kbd>;  
+3. Copy the [deleteDiscordMessages.js](https://github.com/victornpb/deleteDiscordMessages/blob/master/deleteDiscordMessages.js) script and paste it in the Console, then press <kbd>ENTER</kbd>;  
 
 4. A window will be opened, fill the variables and click the <button>START</button> button.
    
