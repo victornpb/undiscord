@@ -20,8 +20,9 @@
         <pre style="margin-top: 50px;"></pre>`;
     
     let extLogger = (args, style = '') => {
+        const atScrollEnd = popup.document.documentElement.scrollHeight - popup.document.body.clientHeight - popup.scrollY < 30;
         pp.insertAdjacentHTML('beforeend', `<div style="${style}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o) : o).join('\t')}</div>`);
-        popup.scrollTo(0, popup.document.documentElement.clientHeight);
+        if(atScrollEnd) popup.scrollTo(0, popup.document.documentElement.clientHeight);
     }
     const pp = popup.document.querySelector('pre');
     const startBtn = popup.document.querySelector('#start');
