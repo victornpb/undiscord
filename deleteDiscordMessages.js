@@ -174,7 +174,7 @@
                             headers,
                             method: 'DELETE'
                         });
-                        const lastPing = (Date.now() - s);
+                        lastPing = (Date.now() - s);
                         estimatedPing = (estimatedPing + lastPing) / 2;
                         delCount++;
                     } catch (err) {
