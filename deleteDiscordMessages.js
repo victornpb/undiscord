@@ -10,22 +10,24 @@
     popup.document.body.style = `background-color:#36393f;color:#dcddde;font-family:sans-serif;`;
     popup.document.body.innerHTML = `
         <style>
+        body.hide q{display:none;}body.hide [priv]{-webkit-text-security:disc;}q::after,q::before{display:none;}
         button:disabled{display:none;} button{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;}a{color:00b0f4;}
         input{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
         </style>
         <div style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
             <div style="display:flex;flex-wrap:wrap;">
                 <span>Auth Token <br><input type="password" id="authToken" placeholder="Auth Token"></span>
-                <span>Author Id <button id="author">get</button> <br><input id="authorId" placeholder="Author ID"></span>
-                <span>Channel Id <button id="channel">get</button> <br><input id="channelId" placeholder="Channel ID"></span><br>
+                <span>Author Id <button id="author">get</button> <br><input id="authorId" placeholder="Author ID" priv></span>
+                <span>Channel Id <button id="channel">get</button> <br><input id="channelId" placeholder="Channel ID" priv></span><br>
                 <span>Range <small>(blank for all)</small><br>
-                <input id="afterMessageId" placeholder="After messageId"><br>
-                <input id="beforeMessageId" placeholder="Before messageId">
+                <input id="afterMessageId" placeholder="After messageId" priv><br>
+                <input id="beforeMessageId" placeholder="Before messageId" priv>
                 </span>
             </div>
             <button id="start" style="background:#43b581;width:80px;">Start</button>
             <button id="stop" style="background:#f04747;width:80px;" disabled>Stop</button>
             <button id="clear" style="width:80px;">Clear log</button>
+            <button id="hide" style="width:80px;">Hide info</button>
         </div>
         <pre style="margin-top:150px;font-size:0.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;"></pre>`;
     
@@ -58,6 +60,10 @@
         popup.document.querySelector('#channelId').value = location.href.match(/channels\/.*\/(\d+)/)[1];
     };
     popup.document.querySelector('button#clear').onclick = (e) => { pp.innerHTML = ""; };
+    popup.document.querySelector('button#hide').onclick = (e) => {
+        popup.document.body.classList.toggle('hide') &&
+        popup.alert(`This will attempt to hide personal information, it's NOT 100%.\nDouble check before posting anything online.\n\nClick again to unhide.`);
+    };
     extLogger([`<center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n` +
         `<a href="https://github.com/victornpb/deleteDiscordMessages/issues" target="_blank">Issues or help</a></center>`]);
     return 'Looking good!';
@@ -101,6 +107,7 @@
 
         const wait = async (ms) => new Promise(done => setTimeout(done, ms));
         const msToHMS = (s) => `${s / 3.6e6 | 0}h ${(s % 3.6e6) / 6e4 | 0}m ${(s % 6e4) / 1000 | 0}s`;
+        const escapeHTML = html => html.replace(/[&<"']/g, m => ({ '&': '&amp;', '<': '&lt;', '"': '&quot;', '\'': '&#039;' })[m]);
                  
         async function recurse() {
             const headers = {
@@ -175,9 +182,9 @@
                     const message = deletableMessages[i];
                     if (stopHndl && stopHndl()===false) return log.error('STOPPED by you!');
 
-                    log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal}) Deleting ID:${message.id}`,
-                        `[${new Date(message.timestamp).toLocaleString()}] ${message.author.username}#${message.author.discriminator}: ${message.content}`,
-                        message.attachments.length ? message.attachments : '');
+                    log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal}) Deleting ID:<q>${message.id}</q>`,
+                        `[${new Date(message.timestamp).toLocaleString()}] <q>${message.author.username}#${message.author.discriminator}: ${escapeHTML(message.content)}</q>`,
+                        '<q>', message.attachments.length ? message.attachments : '', '</q>');
                     
                     let lastPing;
                     let resp;
@@ -238,7 +245,7 @@
         }
 
         log.success(`\nStarted at ${start.toLocaleString()}`);
-        log.debug(`authorId="${authorId}" channelId="${channelId}" afterMessageId="${afterMessageId}" beforeMessageId="${beforeMessageId}"`);
+        log.debug(`<q>authorId="${authorId}" channelId="${channelId}" afterMessageId="${afterMessageId}" beforeMessageId="${beforeMessageId}"</q>`);
         return await recurse();
     }
 })();
