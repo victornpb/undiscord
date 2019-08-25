@@ -74,12 +74,12 @@
         let offset = 0;
        
         const log = {
-            debug() { this.logger('log', arguments, 'black'); },
-            info() { this.logger('info', arguments, 'color:darkturquoise;'); },
-            verb() { this.logger('debug', arguments, 'color:gray;'); },
-            warn() { this.logger('warn', arguments, 'color:orange;'); },
-            error() { this.logger('error', arguments, 'color:red;'); },
-            success() { this.logger('log', arguments, 'color:green;'); },
+            debug() { this.logger('log', arguments, ''); },
+            info() { this.logger('info', arguments, 'color:#00b0f4;'); },
+            verb() { this.logger('debug', arguments, 'color:#72767d;'); },
+            warn() { this.logger('warn', arguments, 'color:#faa61a;'); },
+            error() { this.logger('error', arguments, 'color:#f04747;'); },
+            success() { this.logger('log', arguments, 'color:#43b581;'); },
             logger(type, args, style = '') {
                 // console[type].apply(console, args);
                 extLogger && extLogger(args,style);
