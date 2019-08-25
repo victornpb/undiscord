@@ -65,7 +65,7 @@
         let searchDelay = 100;
         let delCount = 0;
         let failCount = 0;
-        let sysCount = 0;
+        let sysMsgs = new Set();
         let estimatedPing;
         let grandTotal;
         let throttledCount = 0;
@@ -134,7 +134,7 @@
                     throttledCount++;
                     throttledTotalTime += w;
                     searchDelay += w; // increase delay
-                    log.warn(`Being rate limited by the API! Adjusted delay to ${searchDelay}.`);
+                    log.warn(`Being rate limited by the API! Adjusted delay to ${searchDelay}ms.`);
                     log.verb(`Waiting ${w}ms before retrying...`);
                     await wait(w);
                     return await recurse();
@@ -150,12 +150,12 @@
             const systemMessages = myMessages.filter(msg => msg.type === 3);
             const deletableMessages = myMessages.filter(msg => msg.type !== 3);
             
-            log.info(`Total messages found: ${data.total_results}`, `(Messages in current page: ${data.messages.length}, Author: ${deletableMessages.length}, System: ${systemMessages.length})`);
+            log.info(`Total messages found: ${data.total_results}`, `(Messages in current page: ${data.messages.length}, Author: ${deletableMessages.length}, System: ${systemMessages.length})`, `offset: ${offset}`);
             log.verb(`Estimated time remaining: ${msToHMS((searchDelay * Math.round(total / 25)) + ((deleteDelay + estimatedPing) * total))}`, `(Delete delay: ${deleteDelay}ms`, `Average ping: ${estimatedPing << 0}ms)`);
             
-            sysCount += systemMessages.length;
+            systemMessages.forEach(m => sysMsgs.add(m.id));
 
-            if (data.total_results - sysCount > 0) {
+            if (myMessages.length > 0) {
                 
                 for (let i = 0; i < deletableMessages.length; i++) {
                     const message = deletableMessages[i];
@@ -188,7 +188,7 @@
                             throttledCount++;
                             throttledTotalTime += x;
                             deleteDelay += x; // increase delay
-                            log.warn(`Being rate limited by the API! Adjusted delay to ${deleteDelay}.`);
+                            log.warn(`Being rate limited by the API! Adjusted delay to ${deleteDelay}ms.`, `Last ping ${lastPing}ms`);
                             log.verb(`Waiting ${x}ms before retrying...`);
                             await wait(x);
                             i--; // retry
@@ -201,9 +201,10 @@
                     await wait(deleteDelay);
                 }
 
-                if (deletableMessages.length === 0 && systemMessages.length > 0) {
-                    offset += myMessages.length;
-                    log.verb(`Found a page containing only system messages, and no actual messages! increasing offset to ${offset}.`);
+                if (systemMessages.length > 0) {
+                    grandTotal -= systemMessages.length;
+                    offset += systemMessages.length;
+                    log.verb(`Found ${systemMessages.length} system messages! Decreasing grandTotal to ${grandTotal} and increasing offset to ${offset}.`);
                 }
                 
                 log.verb(`Searching next messages in ${searchDelay}ms...`, (offset ? `(offset: ${offset})` : '') );
@@ -213,7 +214,7 @@
 
                 return await recurse();
             } else {
-                if (data.messages.length === 0 && total > 0) log.warn('Ended prematurely, because API returned an empty page.\nYou may try again with different before/after range.');
+                if (total - offset > 0) log.warn('Ended because API returned an empty page.');
                 log.success(`Ended at ${new Date().toLocaleString()}! Total time: ${msToHMS(Date.now() - start.getTime())}`);
                 log.verb(`Search delay: ${searchDelay}ms, Delete delay: ${deleteDelay}ms, Average Ping: ${estimatedPing}`);
                 log.verb(`Rate Limited: ${throttledCount} times. Total time throttled: ${msToHMS(throttledTotalTime)}.`);
