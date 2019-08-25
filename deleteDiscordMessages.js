@@ -61,12 +61,12 @@
      */
     async function deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, extLogger, stopHndl) {
         const start = new Date();
-        let deleteDelay = 500;
-        let searchDelay = 1000;
+        let deleteDelay = 100;
+        let searchDelay = 100;
         let delCount = 0;
         let failCount = 0;
         let sysCount = 0;
-        let estimatedPing = 1;
+        let estimatedPing;
         let grandTotal;
         let throttledCount = 0;
         let throttledTotalTime = 0;
@@ -110,12 +110,11 @@
     
             let resp;
             try {
-                resp = await fetch(baseURL + 'search?' + queryString, {
-                    headers
-                });
+                const s = Date.now();
+                resp = await fetch(baseURL + 'search?' + queryString, { headers });
+                estimatedPing = (Date.now() - s);
             } catch (err) {
-                log.error('Something went wrong!', err);
-                return;
+                return log.error('Something went wrong!', err);
             }
     
             // not indexed yet
@@ -123,58 +122,59 @@
                 const w = (await resp.json()).retry_after;
                 throttledCount++;
                 throttledTotalTime += w;
-                log.warn(`This channel wasn't indexed, waiting ${w} ms for discord to index it...`);
+                log.warn(`This channel wasn't indexed, waiting ${w}ms for discord to index it...`);
                 await wait(w);
                 return await recurse();
             }
     
             if (!resp.ok) {
+                // searching messages too fast
                 if (resp.status === 429) {
-                    const r = await resp.json();
-                    const x = r.retry_after;
+                    const w = (await resp.json()).retry_after;
                     throttledCount++;
-                    throttledTotalTime += x;
-                    log.warn(`! Rate limited by the API! Waiting ${x} ms ...`);
-                    await wait(x);
+                    throttledTotalTime += w;
+                    searchDelay += w; // increase delay
+                    log.warn(`Being rate limited by the API! Adjusted delay to ${searchDelay}.`);
+                    log.verb(`Waiting ${w}ms before retrying...`);
+                    await wait(w);
                     return await recurse();
                 } else {
-                    log.error('API respondend with not OK status!', await resp.json());
-                    return;
+                    return log.error('API responded with an error!', await resp.json());
                 }
             }
     
             const data = await resp.json();
             const total = data.total_results;
             if (!grandTotal) grandTotal = total;
-            log.info(`Messages to delete: ${data.total_results}`, `Time remaining: ${msToHMS((searchDelay * Math.round(total / 25)) + ((deleteDelay + estimatedPing) * total))} (ping: ${estimatedPing << 0}ms)`);
-    
-            const myMessages = data.messages.map(convo => {
-                return convo.find(message => message.author.id === authorId && message.hit===true);
-            });
-
+            const myMessages = data.messages.map(convo => convo.find(message => message.author.id === authorId && message.hit===true));
             const systemMessages = myMessages.filter(msg => msg.type === 3);
             const deletableMessages = myMessages.filter(msg => msg.type !== 3);
             
-            log.verb(`Own messages:${deletableMessages.length} System:${systemMessages.length}`);
+            log.info(`Total messages found: ${data.total_results}`, `(Messages in current page: ${data.messages.length}, Author: ${deletableMessages.length}, System: ${systemMessages.length})`);
+            log.verb(`Estimated time remaining: ${msToHMS((searchDelay * Math.round(total / 25)) + ((deleteDelay + estimatedPing) * total))}`, `(Delete delay: ${deleteDelay}ms`, `Average ping: ${estimatedPing << 0}ms)`);
+            
             sysCount += systemMessages.length;
 
             if (data.total_results - sysCount > 0) {
                 
                 for (let i = 0; i < deletableMessages.length; i++) {
                     const message = deletableMessages[i];
-                    if (stopHndl && stopHndl()===false) return log.error('STOPPED by user!');
+                    if (stopHndl && stopHndl()===false) return log.error('STOPPED by you!');
 
                     log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal}) Deleting ID:${message.id}`,
                         `[${new Date(message.timestamp).toLocaleString()}] ${message.author.username}#${message.author.discriminator}: ${message.content}`,
                         message.attachments.length ? message.attachments : '');
-                    const s = Date.now();
 
+                    let lastPing;
                     let resp;
                     try {
+                        const s = Date.now();
                         resp = await fetch(baseURL + message.id, {
                             headers,
                             method: 'DELETE'
                         });
+                        const lastPing = (Date.now() - s);
+                        estimatedPing = (estimatedPing + lastPing) / 2;
                         delCount++;
                     } catch (err) {
                         log.error('Failed to delete message:', message, 'Error:', err);
@@ -182,45 +182,48 @@
                     }
 
                     if (!resp.ok) {
+                        // deleting messages too fast
                         if (resp.status === 429) {
-                            const r = await resp.json();
-                            const x = r.retry_after;
+                            const x = (await resp.json()).retry_after;
                             throttledCount++;
                             throttledTotalTime += x;
-                            log.warn(`! Rate limited by the API! Waiting ${x} ms ...`);
+                            deleteDelay += x; // increase delay
+                            log.warn(`Being rate limited by the API! Adjusted delay to ${deleteDelay}.`);
+                            log.verb(`Waiting ${x}ms before retrying...`);
                             await wait(x);
                             i--; // retry
                         } else {
                             log.error('API respondend with not OK status!', resp);
+                            failCount++;
                         }
                     }
-                    estimatedPing = (estimatedPing + (Date.now() - s)) / 2;
+                    
                     await wait(deleteDelay);
                 }
 
                 if (deletableMessages.length === 0 && systemMessages.length > 0) {
                     offset += myMessages.length;
-                    log.verb(`Found a page containing only system messages, and no actual messages! increasing offset to ${offset}`);
+                    log.verb(`Found a page containing only system messages, and no actual messages! increasing offset to ${offset}.`);
                 }
                 
-                log.verb(`Getting next messages... offset=${offset}`);
+                log.verb(`Searching next messages in ${searchDelay}ms...`, (offset ? `(offset: ${offset})` : '') );
                 await wait(searchDelay);
 
-                if (stopHndl && stopHndl()===false) return log.error('STOPPED by user!');
+                if (stopHndl && stopHndl()===false) return log.error('STOPPED by you!');
 
                 return await recurse();
             } else {
                 if (data.messages.length === 0 && total > 0) log.warn('Ended prematurely, because API returned an empty page.\nYou may try again with different before/after range.');
-                log.success('---- DONE! ----');
-                log.info(`Ended at ${new Date().toLocaleString()}! Total time: ${msToHMS(Date.now() - start.getTime())}`);
-                log.debug(`Rate Limited: ${throttledCount} times. Total time throttled: ${msToHMS(throttledTotalTime)}`);
-                log.debug(`Deleted ${delCount} messages, System: ${sysCount}, ${failCount} failed.`);
+                log.success(`Ended at ${new Date().toLocaleString()}! Total time: ${msToHMS(Date.now() - start.getTime())}`);
+                log.verb(`Search delay: ${searchDelay}ms, Delete delay: ${deleteDelay}ms, Average Ping: ${estimatedPing}`);
+                log.verb(`Rate Limited: ${throttledCount} times. Total time throttled: ${msToHMS(throttledTotalTime)}.`);
+                log.debug(`Deleted ${delCount} messages, ${failCount} failed.`);
                 return data;
             }
         }
 
-        log.success(`\n---- Started at ${start.toLocaleString()} ----`);
-        log.debug(`authorId=${authorId} channelId=${channelId} afterMessageId=${afterMessageId} beforeMessageId=${beforeMessageId} `);
+        log.success(`\nStarted at ${start.toLocaleString()}`);
+        log.debug(`authorId="${authorId}" channelId="${channelId}" afterMessageId="${afterMessageId}" beforeMessageId="${beforeMessageId}"`);
         return await recurse();
     }
 })();
