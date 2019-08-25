@@ -6,18 +6,28 @@
     popup = window.open('', '', 'width=800,height=1000,top=0,left=0');
     if (!popup) return console.error('Popup blocked! Please allow popups and try again.');
     popup.document.write('<span>...</span>');
+    popup.document.title = 'Delete Discord Messages';
+    popup.document.body.style = `background-color:#36393f;color:#dcddde;font-family:sans-serif;`;
     popup.document.body.innerHTML = `
-        <div style="position:fixed;top:0;left:0;right:0;background:silver;">
-            <label>Auth Token<input type="password" id="authToken" placeholder="Auth Token" value=""></label>
-            <label>Author Id <input id="authorId" placeholder="Author ID" value=""><button id="author">Fill</button></label>
-            <label>Channel Id <input id="channelId" placeholder="Channel ID" value=""><button id="channel">Fill</button></label><br>
-            <label>After <input id="afterMessageId" placeholder="After messageId" value=""></label>
-            <label>Before <input id="beforeMessageId" placeholder="Before messageId" value=""></label><br>
-            
-            <button id="start">START</button>
-            <button id="stop" disabled>STOP</button>
+        <style>
+        button:disabled{display:none;} button{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;}a{color:00b0f4;}
+        input{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
+        </style>
+        <div style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
+            <div style="display:flex;flex-wrap:wrap;">
+                <span>Auth Token <br><input type="password" id="authToken" placeholder="Auth Token"></span>
+                <span>Author Id <button id="author">get</button> <br><input id="authorId" placeholder="Author ID"></span>
+                <span>Channel Id <button id="channel">get</button> <br><input id="channelId" placeholder="Channel ID"></span><br>
+                <span>Range <small>(blank for all)</small><br>
+                <input id="afterMessageId" placeholder="After messageId"><br>
+                <input id="beforeMessageId" placeholder="Before messageId">
+                </span>
+            </div>
+            <button id="start" style="background:#43b581;width:80px;">Start</button>
+            <button id="stop" style="background:#f04747;width:80px;" disabled>Stop</button>
+            <button id="clear" style="width:80px;">Clear log</button>
         </div>
-        <pre style="margin-top: 50px;"></pre>`;
+        <pre style="margin-top:150px;font-size:0.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;"></pre>`;
     
     let extLogger = (args, style = '') => {
         const atScrollEnd = popup.document.documentElement.scrollHeight - popup.document.body.clientHeight - popup.scrollY < 30;
@@ -47,7 +57,10 @@
     popup.document.querySelector('button#channel').onclick = (e) => {
         popup.document.querySelector('#channelId').value = location.href.match(/channels\/.*\/(\d+)/)[1];
     };
-    
+    popup.document.querySelector('button#clear').onclick = (e) => { pp.innerHTML = ""; };
+    extLogger([`<center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n` +
+        `<a href="https://github.com/victornpb/deleteDiscordMessages/issues" target="_blank">Issues or help</a></center>`]);
+    return 'Looking good!';
     /**
      * Delete all messages in a Discord channel or DM
      * @param {string} authToken Your authorization token
@@ -108,7 +121,7 @@
                 .join('&');
             
             const baseURL = `https://discordapp.com/api/v6/channels/${channelId}/messages/`;
-    
+
             let resp;
             try {
                 const s = Date.now();
@@ -155,7 +168,7 @@
             log.verb(`Estimated time remaining: ${msToHMS((searchDelay * Math.round(total / 25)) + ((deleteDelay + estimatedPing) * total))}`, `(Delete delay: ${deleteDelay}ms`, `Average ping: ${estimatedPing << 0}ms)`);
             
             systemMessages.forEach(m => sysMsgs.add(m.id));
-
+            
             if (myMessages.length > 0) {
                 
                 for (let i = 0; i < deletableMessages.length; i++) {
@@ -165,7 +178,7 @@
                     log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal}) Deleting ID:${message.id}`,
                         `[${new Date(message.timestamp).toLocaleString()}] ${message.author.username}#${message.author.discriminator}: ${message.content}`,
                         message.attachments.length ? message.attachments : '');
-
+                    
                     let lastPing;
                     let resp;
                     try {
