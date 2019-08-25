@@ -8,7 +8,7 @@
 
 4. A window will be opened, fill the variables and click the <button>START</button> button.
    
-  <img src="https://user-images.githubusercontent.com/3372598/63403726-f0f8e200-c3cf-11e9-97ef-d1e73a225027.png" height="300">
+  <img src="https://user-images.githubusercontent.com/3372598/63647194-f158ec00-c6f3-11e9-9419-79cfb04e2399.png" height="600">
 
 ------------
 
