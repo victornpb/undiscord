@@ -14,27 +14,28 @@
     button{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
     input[type="text"],input[type="password"]{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
     </style></head><body>
-        <div style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
-            <div style="display:flex;flex-wrap:wrap;">
+    <div style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
+        <div style="display:flex;flex-wrap:wrap;">
             <span>Authorization <br><input type="password" id="authToken" placeholder="Auth Token" autofocus></span>
             <span>Author <button id="author">Current</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
             <span>Channel <button id="channel">Current</button><br><input id="channelId" type="text" placeholder="Channel ID" priv></span><br>
             <span>Range <small>(leave blank for all)</small><br>
                 <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
                 <input id="beforeMessageId" type="text" placeholder="Before messageId" priv>
-                </span>
-            </div>
-            <button id="start" style="background:#43b581;width:80px;">Start</button>
-            <button id="stop" style="background:#f04747;width:80px;" disabled>Stop</button>
-            <button id="clear" style="width:80px;">Clear log</button>
-        <label><input id="redact" type="checkbox"><small>Hide sensitive information</small></label> <span></span>
+            </span>
         </div>
+        <button id="start" style="background:#43b581;width:80px;">Start</button>
+        <button id="stop" style="background:#f04747;width:80px;" disabled>Stop</button>
+        <button id="clear" style="width:80px;">Clear log</button>
+        <label><input id="redact" type="checkbox"><small>Hide sensitive information</small></label> <span></span>
+    </div>
     <pre style="margin-top:150px;font-size:0.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;">
     <center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n
         <a href="https://github.com/victornpb/deleteDiscordMessages/issues" target="_blank">Issues or help</a></center>
     </pre></body></html>`);
     
-    let extLogger = (args, style = '') => {
+    let extLogger = (type, args) => {
+        const style = { info: 'color:#00b0f4;', verb: 'color:#72767d;', warn: 'color:#faa61a;', error: 'color:#f04747;', success: 'color:#43b581;' } [type];
         const atScrollEnd = popup.document.documentElement.scrollHeight - popup.document.body.clientHeight - popup.scrollY < 30;
         pp.insertAdjacentHTML('beforeend', `<div style="${style}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o) : o).join('\t')}</div>`);
         if(atScrollEnd) popup.scrollTo(0, popup.document.documentElement.clientHeight);
@@ -74,10 +75,10 @@
      * @param {string} channelId Channel were the messages are located
      * @param {string} afterMessageId Only delete messages after this, leave blank do delete all
      * @param {string} beforeMessageId Only delete messages before this, leave blank do delete all
-     * @param {function} extLogger Function for logging
+     * @param {function(string, Array)} extLogger Function for logging
      * @param {function} stopHndl stopHndl used for stopping
      * @author Victornpb <https://www.github.com/victornpb>
-     * @see https://gist.github.com/victornpb/135f5b346dea4decfc8f63ad7d9cc182
+     * @see https://github.com/victornpb/deleteDiscordMessages
      */
     async function deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, extLogger, stopHndl) {
         const start = new Date();
@@ -92,24 +93,19 @@
         let throttledTotalTime = 0;
         let offset = 0;
        
+        const wait = async ms => new Promise(done => setTimeout(done, ms));
+        const msToHMS = s => `${s / 3.6e6 | 0}h ${(s % 3.6e6) / 6e4 | 0}m ${(s % 6e4) / 1000 | 0}s`;
+        const escapeHTML = html => html.replace(/[&<"']/g, m => ({ '&': '&amp;', '<': '&lt;', '"': '&quot;', '\'': '&#039;' })[m]);
         const redact = str => `<span class="priv">${escapeHTML(str)}</span><span class="mask">REDACTED</span>`;
         const log = {
-            debug() { this.logger('log', arguments, ''); },
-            info() { this.logger('info', arguments, 'color:#00b0f4;'); },
-            verb() { this.logger('debug', arguments, 'color:#72767d;'); },
-            warn() { this.logger('warn', arguments, 'color:#faa61a;'); },
-            error() { this.logger('error', arguments, 'color:#f04747;'); },
-            success() { this.logger('log', arguments, 'color:#43b581;'); },
-            logger(type, args, style = '') {
-                // console[type].apply(console, args);
-                extLogger && extLogger(args,style);
-            },
+            debug() { extLogger ? extLogger('debug', arguments) : console.debug.apply(console, arguments); },
+            info() { extLogger ? extLogger('info', arguments) : console.info.apply(console, arguments); },
+            verb() { extLogger ? extLogger('verb', arguments) : console.log.apply(console, arguments); },
+            warn() { extLogger ? extLogger('warn', arguments) : console.warn.apply(console, arguments); },
+            error() { extLogger ? extLogger('error', arguments) : console.error.apply(console, arguments); },
+            success() { extLogger ? extLogger('success', arguments) : console.info.apply(console, arguments); },
         };
 
-        const wait = async (ms) => new Promise(done => setTimeout(done, ms));
-        const msToHMS = (s) => `${s / 3.6e6 | 0}h ${(s % 3.6e6) / 6e4 | 0}m ${(s % 6e4) / 1000 | 0}s`;
-        const escapeHTML = html => html.replace(/[&<"']/g, m => ({ '&': '&amp;', '<': '&lt;', '"': '&quot;', '\'': '&#039;' })[m]);
-                 
         async function recurse() {
             const headers = {
                 'Authorization': authToken
