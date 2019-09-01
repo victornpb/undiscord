@@ -5,31 +5,34 @@
     let popup;
     popup = window.open('', '', 'width=800,height=1000,top=0,left=0');
     if (!popup) return console.error('Popup blocked! Please allow popups and try again.');
-    popup.document.write('<span>...</span>');
-    popup.document.title = 'Delete Discord Messages';
-    popup.document.body.style = `background-color:#36393f;color:#dcddde;font-family:sans-serif;`;
-    popup.document.body.innerHTML = `
-        <style>
-        body.hide q{display:none;}body.hide [priv]{-webkit-text-security:disc;}q::after,q::before{display:none;}
-        button:disabled{display:none;} button{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;}a{color:00b0f4;}
-        input{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
-        </style>
+    popup.document.write(`
+    <!DOCTYPE html>
+    <html><head><meta charset='utf-8'><title>Delete Discord Messages</title>
+    <base target="_blank" href="https://github.com/victornpb/deleteDiscordMessages">
+    <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;} a{color:00b0f4;}
+    body.redact .priv{display:none;} body:not(.redact) .mask{display:none;} body.redact [priv]{-webkit-text-security:disc;}
+    button{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
+    input[type="text"],input[type="password"]{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
+    </style></head><body>
         <div style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
             <div style="display:flex;flex-wrap:wrap;">
-                <span>Auth Token <br><input type="password" id="authToken" placeholder="Auth Token"></span>
-                <span>Author Id <button id="author">get</button> <br><input id="authorId" placeholder="Author ID" priv></span>
-                <span>Channel Id <button id="channel">get</button> <br><input id="channelId" placeholder="Channel ID" priv></span><br>
-                <span>Range <small>(blank for all)</small><br>
-                <input id="afterMessageId" placeholder="After messageId" priv><br>
-                <input id="beforeMessageId" placeholder="Before messageId" priv>
+            <span>Authorization <br><input type="password" id="authToken" placeholder="Auth Token" autofocus></span>
+            <span>Author <button id="author">Current</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
+            <span>Channel <button id="channel">Current</button><br><input id="channelId" type="text" placeholder="Channel ID" priv></span><br>
+            <span>Range <small>(leave blank for all)</small><br>
+                <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
+                <input id="beforeMessageId" type="text" placeholder="Before messageId" priv>
                 </span>
             </div>
             <button id="start" style="background:#43b581;width:80px;">Start</button>
             <button id="stop" style="background:#f04747;width:80px;" disabled>Stop</button>
             <button id="clear" style="width:80px;">Clear log</button>
-            <button id="hide" style="width:80px;">Hide info</button>
+        <label><input id="redact" type="checkbox"><small>Hide sensitive information</small></label> <span></span>
         </div>
-        <pre style="margin-top:150px;font-size:0.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;"></pre>`;
+    <pre style="margin-top:150px;font-size:0.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;">
+    <center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n
+        <a href="https://github.com/victornpb/deleteDiscordMessages/issues" target="_blank">Issues or help</a></center>
+    </pre></body></html>`);
     
     let extLogger = (args, style = '') => {
         const atScrollEnd = popup.document.documentElement.scrollHeight - popup.document.body.clientHeight - popup.scrollY < 30;
