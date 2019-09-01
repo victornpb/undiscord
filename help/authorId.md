@@ -2,7 +2,8 @@
 
 ## The easy way
 
- - Just click <button>get</button> button in front of "Author Id" it should auto detect your ID.
+ - Just click "<button>Current</button>" button next to "Author" in the popup window, 
+   it should auto detect your ID.
 
 
 ## The manual way

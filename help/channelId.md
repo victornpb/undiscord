@@ -3,7 +3,7 @@
 ## The easy way
 
 1.  Go to the desired channel or DM conversation on discord
-2. Click the <button>GET</button> button in the popup window 
+2. Click the "<button>Current</button>" button next to Channel in the popup window
 
 ----
 

@@ -15,10 +15,10 @@
 4. Provide your [authToken](./help/authToken.md) (click for instructions)
 
 5. On discord go to a channel or a DM conversation, then
- click the <button>get</button> buttons.  
+ click on the buttons named "<button>Current</button>".  
    (Intructions on how to get [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md)  manually)
 
-6. Click the <button>START</button> button.
+6. Click the "<button>START</button>" button.
    
   <img src="https://user-images.githubusercontent.com/3372598/63647194-f158ec00-c6f3-11e9-9419-79cfb04e2399.png" height="600">
 
