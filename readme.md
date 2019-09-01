@@ -4,9 +4,9 @@
 
 2. Open DevTools pressing <kbd>F12</kbd> or <kbd>⌘ command</kbd>+<kbd>option</kbd>+<kbd>J</kbd>;
 
-3. Copy the [deleteDiscordMessages.js](https://github.com/victornpb/deleteDiscordMessages/blob/master/deleteDiscordMessages.js) script and paste it in the Console, then press <kbd>ENTER</kbd>;  
+3. Copy the [deleteDiscordMessages.js](https://github.com/victornpb/deleteDiscordMessages/blob/master/deleteDiscordMessages.js) script and paste it in the Console tab, then press <kbd>ENTER</kbd>;  
 
-4. A window will be opened, fill the variables and click the <button>START</button> button.
+4. A window will be opened, fill the [variables](#Variables) and click the <button>START</button> button.
    
   <img src="https://user-images.githubusercontent.com/3372598/63647194-f158ec00-c6f3-11e9-9419-79cfb04e2399.png" height="600">
 
@@ -23,9 +23,11 @@ After that if you need help post comments, questions or issues: [here](https://g
 > ### authToken
 > <img src="https://user-images.githubusercontent.com/3372598/58374446-e5f7f800-7f2d-11e9-9db0-d1a723571d6d.png" width="100%"> 
 > 
-> 1. Open the dev tools (F12), open the Network tab. (You should clear all requests for better readability if you see some.)
-> 2. Delete one message manually. In the request log, you will see a request with a DELETE method.
-> 3. Click on the request to open the details, and on the Headers tab, copy the 'authorization' token. It's a long text > with dots like `MTX5MzQ1MjAyMjU0NjA2MzM2.ROFLMAO.UvqZqBMXLpDuOY3Z456J3JRIfbk`.
+> 1. Open the DevTools (<kbd>F12</kbd> or <kbd>⌘ command</kbd>+<kbd>option</kbd>+<kbd>J</kbd>), open the "Network" tab.
+> 2. Click on "XHR"
+> 2. Type `api/v6` on the filter box.
+> 4. Click on any request in the list, and then click on "Headers" tab in the side panel.
+>   You're looking for something like this **authorization:** `MTX5MzQ1MjAyMjU0NjA2MzM2.ROFLMAO.UvqZqBMXLpDuOY3Z456J3JRIfbk`.
 > 
 > ### authorId
 > - Right click your **avatar** in a message you sent in the chat, [Copy ID](#DeveloperMode)  
