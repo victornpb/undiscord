@@ -40,15 +40,14 @@
         if(atScrollEnd) popup.scrollTo(0, popup.document.documentElement.clientHeight);
     }
     const pp = popup.document.querySelector('pre');
-    const startBtn = popup.document.querySelector('#start');
-    const stopBtn = popup.document.querySelector('#stop');
+    const startBtn = popup.document.querySelector('button#start');
+    const stopBtn = popup.document.querySelector('button#stop');
     startBtn.onclick = (e) => {
-        authToken = popup.document.querySelector('#authToken').value.trim();
-        authorId = popup.document.querySelector('#authorId').value.trim();
-        channelId = popup.document.querySelector('#channelId').value.trim();
-        afterMessageId = popup.document.querySelector('#afterMessageId').value.trim();
-        beforeMessageId = popup.document.querySelector('#beforeMessageId').value.trim();
-
+        authToken = popup.document.querySelector('input#authToken').value.trim();
+        authorId = popup.document.querySelector('input#authorId').value.trim();
+        channelId = popup.document.querySelector('input#channelId').value.trim();
+        afterMessageId = popup.document.querySelector('input#afterMessageId').value.trim();
+        beforeMessageId = popup.document.querySelector('input#beforeMessageId').value.trim();
         stop = stopBtn.disabled = !(startBtn.disabled = true);
         deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, extLogger, () => !(stop === true || popup.closed)).then(() => {
             stop = stopBtn.disabled = !(startBtn.disabled = false);
@@ -57,18 +56,16 @@
     stopBtn.onclick = () => stop = stopBtn.disabled = !(startBtn.disabled = false);
 
     popup.document.querySelector('button#author').onclick = (e) => {
-        popup.document.querySelector('#authorId').value = JSON.parse(popup.localStorage.user_id_cache);
+        popup.document.querySelector('input#authorId').value = JSON.parse(popup.localStorage.user_id_cache);
     };
     popup.document.querySelector('button#channel').onclick = (e) => {
-        popup.document.querySelector('#channelId').value = location.href.match(/channels\/.*\/(\d+)/)[1];
+        popup.document.querySelector('input#channelId').value = location.href.match(/channels\/.*\/(\d+)/)[1];
     };
     popup.document.querySelector('button#clear').onclick = (e) => { pp.innerHTML = ""; };
-    popup.document.querySelector('button#hide').onclick = (e) => {
-        popup.document.body.classList.toggle('hide') &&
-        popup.alert(`This will attempt to hide personal information, it's NOT 100%.\nDouble check before posting anything online.\n\nClick again to unhide.`);
+    popup.document.querySelector('#redact').onchange = (e) => {
+        popup.document.body.classList.toggle('redact') &&
+        popup.alert(`This will attempt to redact personal information, it's NOT 100%.\nDouble check before posting screenshots online.\n\nClick again to unhide.`);
     };
-    extLogger([`<center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n` +
-        `<a href="https://github.com/victornpb/deleteDiscordMessages/issues" target="_blank">Issues or help</a></center>`]);
     return 'Looking good!';
     /**
      * Delete all messages in a Discord channel or DM
@@ -95,6 +92,7 @@
         let throttledTotalTime = 0;
         let offset = 0;
        
+        const redact = str => `<span class="priv">${escapeHTML(str)}</span><span class="mask">REDACTED</span>`;
         const log = {
             debug() { this.logger('log', arguments, ''); },
             info() { this.logger('info', arguments, 'color:#00b0f4;'); },
@@ -185,9 +183,9 @@
                     const message = deletableMessages[i];
                     if (stopHndl && stopHndl()===false) return log.error('STOPPED by you!');
 
-                    log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal}) Deleting ID:<q>${message.id}</q>`,
-                        `[${new Date(message.timestamp).toLocaleString()}] <q>${message.author.username}#${message.author.discriminator}: ${escapeHTML(message.content)}</q>`,
-                        '<q>', message.attachments.length ? message.attachments : '', '</q>');
+                    log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal})`,
+                        `Deleting ID:${redact(message.id)} <b>${redact(message.author.username+'#'+message.author.discriminator)} <small>(${redact(new Date(message.timestamp).toLocaleString())})</small>:</b> <i>${redact(message.content).replace(/\n/g,'↵')}</i>`,
+                        message.attachments.length ? redact(JSON.stringify(message.attachments)) : '');
                     
                     let lastPing;
                     let resp;
@@ -248,7 +246,7 @@
         }
 
         log.success(`\nStarted at ${start.toLocaleString()}`);
-        log.debug(`<q>authorId="${authorId}" channelId="${channelId}" afterMessageId="${afterMessageId}" beforeMessageId="${beforeMessageId}"</q>`);
+        log.debug(`authorId="${redact(authorId)}" channelId="${redact(channelId)}" afterMessageId="${redact(afterMessageId)}" beforeMessageId="${redact(beforeMessageId)}"`);
         return await recurse();
     }
 })();
