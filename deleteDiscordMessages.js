@@ -5,8 +5,7 @@
     let popup;
     popup = window.open('', '', 'width=800,height=1000,top=0,left=0');
     if (!popup) return console.error('Popup blocked! Please allow popups and try again.');
-    popup.document.write(`
-    <!DOCTYPE html>
+    popup.document.write(`<!DOCTYPE html>
     <html><head><meta charset='utf-8'><title>Delete Discord Messages</title>
     <base target="_blank" href="https://github.com/victornpb/deleteDiscordMessages">
     <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;} a{color:00b0f4;}
@@ -17,8 +16,8 @@
     <div style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
         <div style="display:flex;flex-wrap:wrap;">
             <span>Authorization <br><input type="password" id="authToken" placeholder="Auth Token" autofocus></span>
-            <span>Author <button id="author">Current</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
-            <span>Channel <button id="channel">Current</button><br><input id="channelId" type="text" placeholder="Channel ID" priv></span><br>
+            <span>Author <button id="getAuthor">Current</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
+            <span>Channel <button id="getChannel">Current</button><br><input id="channelId" type="text" placeholder="Channel ID" priv></span><br>
             <span>Range <small>(leave blank for all)</small><br>
                 <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
                 <input id="beforeMessageId" type="text" placeholder="Before messageId" priv>
@@ -33,14 +32,8 @@
     <center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n
         <a href="https://github.com/victornpb/deleteDiscordMessages/issues" target="_blank">Issues or help</a></center>
     </pre></body></html>`);
-    
-    let extLogger = (type, args) => {
-        const style = { info: 'color:#00b0f4;', verb: 'color:#72767d;', warn: 'color:#faa61a;', error: 'color:#f04747;', success: 'color:#43b581;' } [type];
-        const atScrollEnd = popup.document.documentElement.scrollHeight - popup.document.body.clientHeight - popup.scrollY < 30;
-        pp.insertAdjacentHTML('beforeend', `<div style="${style}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o) : o).join('\t')}</div>`);
-        if(atScrollEnd) popup.scrollTo(0, popup.document.documentElement.clientHeight);
-    }
-    const pp = popup.document.querySelector('pre');
+
+    const logArea = popup.document.querySelector('pre');
     const startBtn = popup.document.querySelector('button#start');
     const stopBtn = popup.document.querySelector('button#stop');
     startBtn.onclick = (e) => {
@@ -50,23 +43,30 @@
         afterMessageId = popup.document.querySelector('input#afterMessageId').value.trim();
         beforeMessageId = popup.document.querySelector('input#beforeMessageId').value.trim();
         stop = stopBtn.disabled = !(startBtn.disabled = true);
-        deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, extLogger, () => !(stop === true || popup.closed)).then(() => {
+        deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, logger, () => !(stop === true || popup.closed)).then(() => {
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         });
     };
     stopBtn.onclick = () => stop = stopBtn.disabled = !(startBtn.disabled = false);
-
-    popup.document.querySelector('button#author').onclick = (e) => {
+    popup.document.querySelector('button#clear').onclick = (e) => { logArea.innerHTML = ""; };
+    popup.document.querySelector('button#getAuthor').onclick = (e) => {
         popup.document.querySelector('input#authorId').value = JSON.parse(popup.localStorage.user_id_cache);
     };
-    popup.document.querySelector('button#channel').onclick = (e) => {
+    popup.document.querySelector('button#getChannel').onclick = (e) => {
         popup.document.querySelector('input#channelId').value = location.href.match(/channels\/.*\/(\d+)/)[1];
     };
-    popup.document.querySelector('button#clear').onclick = (e) => { pp.innerHTML = ""; };
     popup.document.querySelector('#redact').onchange = (e) => {
         popup.document.body.classList.toggle('redact') &&
         popup.alert(`This will attempt to redact personal information, it's NOT 100%.\nDouble check before posting screenshots online.\n\nClick again to unhide.`);
     };
+
+    const logger = (type='', args) => {
+        const style = { info: 'color:#00b0f4;', verb: 'color:#72767d;', warn: 'color:#faa61a;', error: 'color:#f04747;', success: 'color:#43b581;' } [type];
+        const atScrollEnd = popup.document.documentElement.scrollHeight - popup.document.body.clientHeight - popup.scrollY < 30;
+        logArea.insertAdjacentHTML('beforeend', `<div style="${style}">${Array.from(args).map(o => typeof o === 'object' ?  JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
+        if(atScrollEnd) popup.scrollTo(0, popup.document.documentElement.clientHeight);
+    };
+
     return 'Looking good!';
     /**
      * Delete all messages in a Discord channel or DM
