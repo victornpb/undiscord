@@ -48,7 +48,7 @@
         });
     };
     stopBtn.onclick = () => stop = stopBtn.disabled = !(startBtn.disabled = false);
-    popup.document.querySelector('button#clear').onclick = (e) => { logArea.innerHTML = ""; };
+    popup.document.querySelector('button#clear').onclick = (e) => { logArea.innerHTML = ''; };
     popup.document.querySelector('button#getAuthor').onclick = (e) => {
         popup.document.querySelector('input#authorId').value = JSON.parse(popup.localStorage.user_id_cache);
     };
@@ -57,7 +57,7 @@
     };
     popup.document.querySelector('#redact').onchange = (e) => {
         popup.document.body.classList.toggle('redact') &&
-        popup.alert(`This will attempt to redact personal information, it's NOT 100%.\nDouble check before posting screenshots online.\n\nClick again to unhide.`);
+        popup.alert('This will attempt to hide personal information, but make sure to double check before sharing screenshots.');
     };
 
     const logger = (type='', args) => {
@@ -132,7 +132,7 @@
                 resp = await fetch(baseURL + 'search?' + queryString, { headers });
                 estimatedPing = (Date.now() - s);
             } catch (err) {
-                return log.error('Something went wrong!', err);
+                return log.error('Search request throwed an error:', err);
             }
     
             // not indexed yet
@@ -157,7 +157,7 @@
                     await wait(w);
                     return await recurse();
                 } else {
-                    return log.error('API responded with an error!', await resp.json());
+                    return log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
                 }
             }
     
@@ -195,7 +195,8 @@
                         estimatedPing = (estimatedPing + lastPing) / 2;
                         delCount++;
                     } catch (err) {
-                        log.error('Failed to delete message:', message, 'Error:', err);
+                        log.error('Delete request throwed an error:', err);
+                        log.verb('Related object:', redact(JSON.stringify(message)));
                         failCount++;
                     }
 
@@ -211,7 +212,8 @@
                             await wait(x);
                             i--; // retry
                         } else {
-                            log.error('API respondend with not OK status!', resp);
+                            log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
+                            log.verb('Related object:', redact(JSON.stringify(message)));
                             failCount++;
                         }
                     }
