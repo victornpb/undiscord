@@ -7,18 +7,18 @@
     if (!popup) return console.error('Popup blocked! Please allow popups and try again.');
     popup.document.write(`<!DOCTYPE html>
     <html><head><meta charset='utf-8'><title>Delete Discord Messages</title><base target="_blank">
-    <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;} a{color:00b0f4;}
+    <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;} a{color:#00b0f4;}
     body.redact .priv{display:none;} body:not(.redact) .mask{display:none;} body.redact [priv]{-webkit-text-security:disc;}
     button{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
     input[type="text"],input[type="password"]{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
     </style></head><body>
     <div style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
         <div style="display:flex;flex-wrap:wrap;">
-            <span>Authorization <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authToken.md" title="help">?</a>
+            <span>Authorization <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authToken.md" title="Help">?</a>
             <br><input type="password" id="authToken" placeholder="Auth Token" autofocus></span>
             <span>Author <button id="getAuthor">Current</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
             <span>Channel <button id="getChannel">Current</button><br><input id="channelId" type="text" placeholder="Channel ID" priv></span><br>
-            <span>Range <small>(leave blank for all)</small><br>
+            <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md" title="Help">?</a><br>
                 <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
                 <input id="beforeMessageId" type="text" placeholder="Before messageId" priv>
             </span>
