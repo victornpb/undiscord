@@ -9,10 +9,6 @@
   You're looking for something like this **authorization:** `MTX5MzQ1MjAyMjU0NjA2MzM2.ROFLMAO.UvqZqBMXLpDuOY3Z456J3JRIfbk`.
 
 
-<br>
-<br>
-<br>
-
 ----
 
 # DO NOT SHARE YOUR `authToken`!
