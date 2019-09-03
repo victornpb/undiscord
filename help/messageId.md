@@ -1,13 +1,17 @@
 # messageId
-
 You can delete messages after as specific message, before a specific message, or everything between two points. For that you need to provide a messageID:
+- Right click a message, [Copy ID](./developerMode.md)
 
+----
 
-- Right click a message, [Copy ID](./developerMode.md)  
-  <img src="https://user-images.githubusercontent.com/3372598/58374442-daa4cc80-7f2d-11e9-843b-10aec30fe349.png" height="250">
+## Delete everything after a message
+<img src="https://user-images.githubusercontent.com/3372598/64141154-6ce62780-cddd-11e9-8b73-5fa54b866e46.png" height="400">
 
+## Delete everything before a message
+<img src="https://user-images.githubusercontent.com/3372598/64141156-6ce62780-cddd-11e9-984f-db53060443fb.png" height="400">
 
-If you don't specify any messageID, it will try to delete every message in that channel.
+## Delete everything between two messages
+<img src="https://user-images.githubusercontent.com/3372598/64141157-6d7ebe00-cddd-11e9-9184-f2bf41acf959.png" height="400">
 
 
 -----
