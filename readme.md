@@ -1,5 +1,7 @@
 # Delete all messages in a Discord channel or DM
 
+<img src="https://user-images.githubusercontent.com/3372598/64483026-59b6cb80-d1d2-11e9-858a-caac4ff8cb0d.png" height="600">
+
 1. Open Discord in a **browser** like Chrome, Safari or Firefox;
 
 2. Open DevTools pressing
@@ -16,18 +18,17 @@
 
 5. On discord go to a channel or a DM conversation, then
  click on the buttons named "<button>Current</button>".  
-   (Intructions on how to get [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md)  manually)
+   *(Optional: Intructions on how to get [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md)  manually)*
 
 6. Click the "<button>START</button>" button.
    
-  <img src="https://user-images.githubusercontent.com/3372598/63647194-f158ec00-c6f3-11e9-9419-79cfb04e2399.png" height="600">
+If you have issues or just need help [open an issue here](https://github.com/victornpb/deleteDiscordMessages/issues)
 
-
-
+I made this tool just for you, it would be awesome if you could just click the Star button at the top! 
 
 ----
 
-Originally at https://gist.github.com/victornpb/135f5b346dea4decfc8f63ad7d9cc182
+Originally from https://gist.github.com/victornpb/135f5b346dea4decfc8f63ad7d9cc182
 
 ----
 
@@ -49,7 +50,6 @@ If you are unsure do not share screenshots, or copy paste logs on the internet.
 > THE SOFTWARE AND ALL INFORMATION HERE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 >
 > By using any code or information provided here you are agreeing to all parts of the above Disclaimer.
-
 ----
 
-Last tested: 2019-AUG-21
+Last tested: 2019-SEP-8
