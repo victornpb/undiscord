@@ -9,10 +9,11 @@
     <html><head><meta charset='utf-8'><title>Delete Discord Messages</title><base target="_blank">
     <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;} a{color:#00b0f4;}
     body.redact .priv{display:none;} body:not(.redact) .mask{display:none;} body.redact [priv]{-webkit-text-security:disc;}
+    .toolbar span{margin-right:8px;}
     button{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
     input[type="text"],input[type="password"]{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
     </style></head><body>
-    <div style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
+    <div class="toolbar" style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
         <div style="display:flex;flex-wrap:wrap;">
             <span>Authorization <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authToken.md" title="Help">?</a>
             <br><input type="password" id="authToken" placeholder="Auth Token" autofocus></span>
@@ -21,6 +22,10 @@
             <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md" title="Help">?</a><br>
                 <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
                 <input id="beforeMessageId" type="text" placeholder="Before messageId" priv>
+            </span>
+            <span>Filter <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/filters.md" title="Help">?</a><br>
+                <label><input id="hasLink" type="checkbox">has: link</label><br>
+                <label><input id="hasFile" type="checkbox">has: file</label>
             </span>
         </div>
         <button id="start" style="background:#43b581;width:80px;">Start</button>
@@ -37,13 +42,15 @@
     const startBtn = popup.document.querySelector('button#start');
     const stopBtn = popup.document.querySelector('button#stop');
     startBtn.onclick = (e) => {
-        authToken = popup.document.querySelector('input#authToken').value.trim();
-        authorId = popup.document.querySelector('input#authorId').value.trim();
-        channelId = popup.document.querySelector('input#channelId').value.trim();
-        afterMessageId = popup.document.querySelector('input#afterMessageId').value.trim();
-        beforeMessageId = popup.document.querySelector('input#beforeMessageId').value.trim();
+        const authToken = popup.document.querySelector('input#authToken').value.trim();
+        const authorId = popup.document.querySelector('input#authorId').value.trim();
+        const channelId = popup.document.querySelector('input#channelId').value.trim();
+        const afterMessageId = popup.document.querySelector('input#afterMessageId').value.trim();
+        const beforeMessageId = popup.document.querySelector('input#beforeMessageId').value.trim();
+        const hasLink = popup.document.querySelector('input#hasLink').checked;
+        const hasFile = popup.document.querySelector('input#hasFile').checked;
         stop = stopBtn.disabled = !(startBtn.disabled = true);
-        deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, logger, () => !(stop === true || popup.closed)).then(() => {
+        deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, logger, () => !(stop === true || popup.closed)).then(() => {
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         });
     };
@@ -75,12 +82,14 @@
      * @param {string} channelId Channel were the messages are located
      * @param {string} afterMessageId Only delete messages after this, leave blank do delete all
      * @param {string} beforeMessageId Only delete messages before this, leave blank do delete all
+     * @param {boolean} hasLink Filter messages that contains link
+     * @param {boolean} hasFile Filter messages that contains file
      * @param {function(string, Array)} extLogger Function for logging
      * @param {function} stopHndl stopHndl used for stopping
      * @author Victornpb <https://www.github.com/victornpb>
      * @see https://github.com/victornpb/deleteDiscordMessages
      */
-    async function deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, extLogger, stopHndl) {
+    async function deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, extLogger, stopHndl) {
         const start = new Date();
         let deleteDelay = 100;
         let searchDelay = 100;
@@ -111,18 +120,17 @@
                 'Authorization': authToken
             };
             
-            const params = {
-                author_id: authorId,
-                min_id: afterMessageId || undefined,
-                max_id: beforeMessageId || undefined,
-                offset: offset,
-                sort_by: 'timestamp'
-            };
+            const params = [
+                [ 'author_id',  authorId || undefined],
+                [ 'min_id',  afterMessageId || undefined ],
+                [ 'max_id',  beforeMessageId || undefined ],
+                [ 'offset',  offset || undefined ],
+                [ 'sort_by',  'timestamp' ],
+                [ 'has',  hasLink ? 'link' : undefined ],
+                [ 'has',  hasFile ? 'file' : undefined ],
+            ];
     
-            const queryString = Object.entries(params)
-                .filter(p => p[1] !== undefined)
-                .map(p => p[0] + '=' + encodeURIComponent(p[1]))
-                .join('&');
+            const queryString = params.filter(p => p[1] !== undefined).map(p => p[0] + '=' + encodeURIComponent(p[1])).join('&');
             
             const baseURL = `https://discordapp.com/api/v6/channels/${channelId}/messages/`;
 
