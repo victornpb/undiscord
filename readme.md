@@ -1,6 +1,5 @@
 # Delete all messages in a Discord channel or DM
 
-<img src="https://user-images.githubusercontent.com/3372598/64483026-59b6cb80-d1d2-11e9-858a-caac4ff8cb0d.png" height="600">
 
 1. Open Discord in a **browser** like Chrome, Safari or Firefox;
 
@@ -25,6 +24,24 @@
 If you have issues or just need help [open an issue here](https://github.com/victornpb/deleteDiscordMessages/issues)
 
 I made this tool just for you, it would be awesome if you could just click the Star button at the top! 
+
+<img src="https://user-images.githubusercontent.com/3372598/64483026-59b6cb80-d1d2-11e9-858a-caac4ff8cb0d.png" height="600">
+
+----
+
+#### Features
+
+- Fastest script out there, it auto adjusts the delay to be the fastest your internet and discords allows!
+- Easy interface with instructions (only the Auth have to be provided manually)
+- Respect discord API rate limits
+- Auto detect current Author ID and current Channel ID
+- It can delete a specific [range of messages](./help/messageId.md)
+- Comprehensive log of messages being deleted (with their content)
+- Hide private information for taking screenshots
+- Detects system messages and skips them like "You started a voice call"
+- You can use your computer and discord while it is running (unlike macro key scripts)
+- Start/stop whenever you want
+- Works with even thousands of messages
 
 ----
 
