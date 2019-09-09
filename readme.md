@@ -1,7 +1,11 @@
 # Delete all messages in a Discord channel or DM
 
+1. Select and Copy this script: [deleteDiscordMessages.js](https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.js)
 
-1. Open Discord in a **browser** like Chrome, Safari or Firefox;
+
+1. Open Discord in a __browser__ like Chrome, Safari or Firefox;
+
+4. Go to a #Channel or a DM conversation
 
 2. Open DevTools pressing
     - Chrome (Windows, Linux, Chrome OS):
@@ -10,14 +14,14 @@
     <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>J</kbd>
     - Safari (Mac): <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>C</kbd>
 
+5. Paste  (<kbd>Ctrl</kbd>+<kbd>V</kbd>) the script in the "Console" tab, then press <kbd>ENTER</kbd>, a popup window will open;
 
-3. Copy the [deleteDiscordMessages.js](https://github.com/victornpb/deleteDiscordMessages/blob/master/deleteDiscordMessages.js) script and paste it in the "Console" tab, then press <kbd>ENTER</kbd>, a popup window will open;
 
-4. Provide your [authToken](./help/authToken.md) (click for instructions)
 
-5. On discord go to a channel or a DM conversation, then
- click on the buttons named "<button>Current</button>".  
-   *(Optional: Intructions on how to get [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md)  manually)*
+
+
+5. Click on the blue buttons near **Authorization**, **Author** and **Channel**.  
+   *(Optional: Intructions on how to get [authToken](./help/authToken.md), [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md)  manually)*
 
 6. Click the "<button>START</button>" button.
    
@@ -32,10 +36,11 @@ I made this tool just for you, it would be awesome if you could just click the S
 #### Features
 
 - Fastest script out there, it auto adjusts the delay to be the fastest your internet and discords allows!
-- Easy interface with instructions (only the Auth have to be provided manually)
+- Easy interface with instructions
 - Respect discord API rate limits
-- Auto detect current Author ID and current Channel ID
+- Auto detect current [authToken](./help/authToken.md), [authorId](./help/authorId.md), [channelId](./help/channelId.md)
 - It can delete a specific [range of messages](./help/messageId.md)
+- It can delete only [links or attached files](./help/filters.md)
 - Comprehensive log of messages being deleted (with their content)
 - Hide private information for taking screenshots
 - Detects system messages and skips them like "You started a voice call"
