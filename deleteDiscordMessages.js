@@ -106,11 +106,13 @@
         let throttledCount = 0;
         let throttledTotalTime = 0;
         let offset = 0;
+        let iterations = -1;
        
         const wait = async ms => new Promise(done => setTimeout(done, ms));
         const msToHMS = s => `${s / 3.6e6 | 0}h ${(s % 3.6e6) / 6e4 | 0}m ${(s % 6e4) / 1000 | 0}s`;
         const escapeHTML = html => html.replace(/[&<"']/g, m => ({ '&': '&amp;', '<': '&lt;', '"': '&quot;', '\'': '&#039;' })[m]);
         const redact = str => `<span class="priv">${escapeHTML(str)}</span><span class="mask">REDACTED</span>`;
+        const ask = async (msg) => new Promise(resolve => setTimeout(() => resolve(popup.confirm(msg)), 10));
         const log = {
             debug() { extLogger ? extLogger('debug', arguments) : console.debug.apply(console, arguments); },
             info() { extLogger ? extLogger('info', arguments) : console.info.apply(console, arguments); },
@@ -121,6 +123,8 @@
         };
 
         async function recurse() {
+            iterations++;
+
             const headers = {
                 'Authorization': authToken
             };
@@ -187,6 +191,14 @@
             systemMessages.forEach(m => sysMsgs.add(m.id));
             
             if (myMessages.length > 0) {
+                
+                if (iterations < 1) {
+                    log.verb(`Waiting for your confirmation...`);
+                    if (!await ask(`Do you want to delete ~${total} messages?\nEstimated time: ${etr}\n\n---- Preview ----\n` +
+                        myMessages.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n')))
+                            return log.error('Aborted by you!');
+                    log.verb(`OK`);
+                }
                 
                 for (let i = 0; i < deletableMessages.length; i++) {
                     const message = deletableMessages[i];
