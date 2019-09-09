@@ -16,9 +16,10 @@
     <div class="toolbar" style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
         <div style="display:flex;flex-wrap:wrap;">
             <span>Authorization <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authToken.md" title="Help">?</a>
-            <br><input type="password" id="authToken" placeholder="Auth Token" autofocus></span>
-            <span>Author <button id="getAuthor">Current</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
-            <span>Channel <button id="getChannel">Current</button><br><input id="channelId" type="text" placeholder="Channel ID" priv></span><br>
+            <button id="getToken">Get</button>
+            <br><input type="password" id="authToken" placeholder="Auth Token" autofocus>*</span>
+            <span>Author <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv>*</span>
+            <span>Channel <button id="getChannel">Current</button><br><input id="channelId" type="text" placeholder="Channel ID" priv>*</span><br>
             <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md" title="Help">?</a><br>
                 <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
                 <input id="beforeMessageId" type="text" placeholder="Before messageId" priv>
@@ -56,6 +57,10 @@
     };
     stopBtn.onclick = () => stop = stopBtn.disabled = !(startBtn.disabled = false);
     popup.document.querySelector('button#clear').onclick = (e) => { logArea.innerHTML = ''; };
+    popup.document.querySelector('button#getToken').onclick = (e) => {
+        window.dispatchEvent(new Event('beforeunload'));
+        popup.document.querySelector('input#authToken').value = JSON.parse(popup.localStorage.token);
+    };
     popup.document.querySelector('button#getAuthor').onclick = (e) => {
         popup.document.querySelector('input#authorId').value = JSON.parse(popup.localStorage.user_id_cache);
     };
