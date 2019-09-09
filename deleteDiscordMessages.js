@@ -18,8 +18,10 @@
             <span>Authorization <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authToken.md" title="Help">?</a>
             <button id="getToken">Get</button>
             <br><input type="password" id="authToken" placeholder="Auth Token" autofocus>*</span>
-            <span>Author <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv>*</span>
-            <span>Channel <button id="getChannel">Current</button><br><input id="channelId" type="text" placeholder="Channel ID" priv>*</span><br>
+            <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md" title="Help">?</a>
+            <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv>*</span>
+            <span>Channel <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help">?</a>
+            <button id="getChannel">Current</button><br><input id="channelId" type="text" placeholder="Channel ID" priv>*</span><br>
             <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md" title="Help">?</a><br>
                 <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
                 <input id="beforeMessageId" type="text" placeholder="Before messageId" priv>
