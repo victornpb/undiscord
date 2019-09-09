@@ -181,7 +181,7 @@
             const data = await resp.json();
             const total = data.total_results;
             if (!grandTotal) grandTotal = total;
-            const myMessages = data.messages.map(convo => convo.find(message => message.author.id === authorId && message.hit===true));
+            const myMessages = data.messages.map(convo => convo.find(message => message.hit===true));
             const systemMessages = myMessages.filter(msg => msg.type === 3);
             const deletableMessages = myMessages.filter(msg => msg.type !== 3);
             
