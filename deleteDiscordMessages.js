@@ -33,6 +33,7 @@
         <button id="stop" style="background:#f04747;width:80px;" disabled>Stop</button>
         <button id="clear" style="width:80px;">Clear log</button>
         <label><input id="redact" type="checkbox"><small>Hide sensitive information</small></label> <span></span>
+        <label><input id="autoScroll" type="checkbox" checked><small>Auto scroll</small></label> <span></span>
     </div>
     <pre style="margin-top:150px;font-size:0.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;">
     <center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n
@@ -42,6 +43,7 @@
     const logArea = popup.document.querySelector('pre');
     const startBtn = popup.document.querySelector('button#start');
     const stopBtn = popup.document.querySelector('button#stop');
+    const autoScroll = popup.document.querySelector('#autoScroll');
     startBtn.onclick = (e) => {
         const authToken = popup.document.querySelector('input#authToken').value.trim();
         const authorId = popup.document.querySelector('input#authorId').value.trim();
@@ -73,10 +75,9 @@
     };
 
     const logger = (type='', args) => {
-        const style = { info: 'color:#00b0f4;', verb: 'color:#72767d;', warn: 'color:#faa61a;', error: 'color:#f04747;', success: 'color:#43b581;' } [type];
-        const atScrollEnd = popup.document.documentElement.scrollHeight - popup.document.body.clientHeight - popup.scrollY < 30;
+        const style = { '': '', info: 'color:#00b0f4;', verb: 'color:#72767d;', warn: 'color:#faa61a;', error: 'color:#f04747;', success: 'color:#43b581;' }[type];
         logArea.insertAdjacentHTML('beforeend', `<div style="${style}">${Array.from(args).map(o => typeof o === 'object' ?  JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
-        if(atScrollEnd) popup.scrollTo(0, popup.document.documentElement.clientHeight);
+        if (autoScroll.checked) logArea.querySelector('div:last-child').scrollIntoView(false);
     };
 
     return 'Looking good!';
