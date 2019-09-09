@@ -2,34 +2,29 @@
 
 1. Select and Copy this script: [deleteDiscordMessages.js](https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.js)
 
+2. Open [Discord](https://discordapp.com/channels/@me) in a __browser__ (like Chrome, Safari or Firefox)  
+and go to a #Channel or a DM conversation
 
-1. Open Discord in a __browser__ like Chrome, Safari or Firefox;
-
-4. Go to a #Channel or a DM conversation
-
-2. Open DevTools pressing
+3. Open DevTools pressing
     - Chrome (Windows, Linux, Chrome OS):
     <kbd>F12</kbd> or <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>J</kbd> 
     - Chrome (Mac): 
     <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>J</kbd>
     - Safari (Mac): <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>C</kbd>
-
-5. Paste  (<kbd>Ctrl</kbd>+<kbd>V</kbd>) the script in the "Console" tab, then press <kbd>ENTER</kbd>, a popup window will open;
-
-
-
-
+  
+4. Paste  (<kbd>Ctrl</kbd>+<kbd>V</kbd>) the script in the "Console" tab, then press <kbd>ENTER</kbd>, a popup window will open;
 
 5. Click on the blue buttons near **Authorization**, **Author** and **Channel**.  
-   *(Optional: Intructions on how to get [authToken](./help/authToken.md), [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md)  manually)*
+   *(Optional: getting [authToken](./help/authToken.md), [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md)  manually)*
 
 6. Click the "<button>START</button>" button.
+
+<img src="https://user-images.githubusercontent.com/3372598/64500336-28ea9b00-d293-11e9-8c24-eac6b98e04c0.png" height="600">
+
+I made this tool just for you, it would be awesome if you could just click the Star button at the top! 
    
 If you have issues or just need help [open an issue here](https://github.com/victornpb/deleteDiscordMessages/issues)
 
-I made this tool just for you, it would be awesome if you could just click the Star button at the top! 
-
-<img src="https://user-images.githubusercontent.com/3372598/64483026-59b6cb80-d1d2-11e9-858a-caac4ff8cb0d.png" height="600">
 
 ----
 
