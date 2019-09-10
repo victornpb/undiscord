@@ -21,7 +21,7 @@ and go to a #Channel or a DM conversation
 
 <img src="https://user-images.githubusercontent.com/3372598/64500336-28ea9b00-d293-11e9-8c24-eac6b98e04c0.png" height="600">
 
-I made this tool just for you, it would be awesome if you could just click the Star button at the top! 
+I made this tool just for you ❤️ , it would be awesome if you could just click the ⭐️ Star button at the top! 
    
 If you have issues or just need help [open an issue here](https://github.com/victornpb/deleteDiscordMessages/issues)
 
