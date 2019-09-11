@@ -173,7 +173,7 @@
                     searchDelay += w; // increase delay
                     log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
                     printDelayStats();
-                    log.verb(`Colling down for ${w * 2}ms before retrying...`);
+                    log.verb(`Cooling down for ${w * 2}ms before retrying...`);
                     
                     await wait(w*2);
                     return await recurse();
@@ -244,7 +244,7 @@
                             deleteDelay += w; // increase delay
                             log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${deleteDelay}ms.`);
                             printDelayStats();
-                            log.verb(`Colling down for ${w*2}ms before retrying...`);
+                            log.verb(`Cooling down for ${w*2}ms before retrying...`);
                             await wait(w*2);
                             i--; // retry
                         } else {
