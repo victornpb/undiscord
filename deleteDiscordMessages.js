@@ -186,8 +186,8 @@
             const total = data.total_results;
             if (!grandTotal) grandTotal = total;
             const myMessages = data.messages.map(convo => convo.find(message => message.hit===true));
-            const systemMessages = myMessages.filter(msg => msg.type === 3);
-            const deletableMessages = myMessages.filter(msg => msg.type !== 3);
+            const systemMessages = myMessages.filter(msg => msg.type !== 0); // https://discordapp.com/developers/docs/resources/channel#message-object-message-types
+            const deletableMessages = myMessages.filter(msg => msg.type === 0);
             const end = () => {
                 log.success(`Ended at ${new Date().toLocaleString()}! Total time: ${msToHMS(Date.now() - start.getTime())}`);
                 printDelayStats();
