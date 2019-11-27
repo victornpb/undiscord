@@ -271,7 +271,13 @@
                 return await recurse();
             } else {
                 if (total - offset > 0) log.warn('Ended because API returned an empty page.');
-                return end();
+                
+                // ghetto fix for anyone who needs asap.
+                // the search page offset isnt increasing.
+                offset = offset + 25;
+				return await recurse();
+                
+                //return end();
             }
         }
 
