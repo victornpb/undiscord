@@ -48,7 +48,7 @@
     const startBtn = popup.document.querySelector('button#start');
     const stopBtn = popup.document.querySelector('button#stop');
     const autoScroll = popup.document.querySelector('#autoScroll');
-    startBtn.onclick = (e) => {
+    startBtn.onclick = e => {
         const authToken = popup.document.querySelector('input#authToken').value.trim();
         const authorId = popup.document.querySelector('input#authorId').value.trim();
         const guildId = popup.document.querySelector('input#guildId').value.trim();
@@ -62,13 +62,13 @@
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         });
     };
-    stopBtn.onclick = () => stop = stopBtn.disabled = !(startBtn.disabled = false);
-    popup.document.querySelector('button#clear').onclick = (e) => { logArea.innerHTML = ''; };
-    popup.document.querySelector('button#getToken').onclick = (e) => {
+    stopBtn.onclick = e => stop = stopBtn.disabled = !(startBtn.disabled = false);
+    popup.document.querySelector('button#clear').onclick = e => { logArea.innerHTML = ''; };
+    popup.document.querySelector('button#getToken').onclick = e => {
         window.dispatchEvent(new Event('beforeunload'));
         popup.document.querySelector('input#authToken').value = JSON.parse(popup.localStorage.token);
     };
-    popup.document.querySelector('button#getAuthor').onclick = (e) => {
+    popup.document.querySelector('button#getAuthor').onclick = e => {
         popup.document.querySelector('input#authorId').value = JSON.parse(popup.localStorage.user_id_cache);
     };
     popup.document.querySelector('button#getGuildAndChannel').onclick = e => {
@@ -76,7 +76,7 @@
         popup.document.querySelector('input#guildId').value = m[1];
         popup.document.querySelector('input#channelId').value = m[2];
     };
-    popup.document.querySelector('#redact').onchange = (e) => {
+    popup.document.querySelector('#redact').onchange = e => {
         popup.document.body.classList.toggle('redact') &&
         popup.alert('This will attempt to hide personal information, but make sure to double check before sharing screenshots.');
     };
@@ -122,7 +122,7 @@
         const escapeHTML = html => html.replace(/[&<"']/g, m => ({ '&': '&amp;', '<': '&lt;', '"': '&quot;', '\'': '&#039;' })[m]);
         const redact = str => `<span class="priv">${escapeHTML(str)}</span><span class="mask">REDACTED</span>`;
         const queryString = params => params.filter(p => p[1] !== undefined).map(p => p[0] + '=' + encodeURIComponent(p[1])).join('&');
-        const ask = async (msg) => new Promise(resolve => setTimeout(() => resolve(popup.confirm(msg)), 10));
+        const ask = async msg => new Promise(resolve => setTimeout(() => resolve(popup.confirm(msg)), 10));
         const printDelayStats = () => log.verb(`Delete delay: ${deleteDelay}ms, Search delay: ${searchDelay}ms`, `Last Ping: ${lastPing}ms, Average Ping: ${avgPing|0}ms`);
 
         const log = {
