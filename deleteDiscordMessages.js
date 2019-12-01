@@ -1,11 +1,11 @@
-//Paste this function in DevTools console inside Discord
+// Paste this code inside discordapp.com console
 
 (function () {
     let stop;
     let popup;
     popup = window.open('', '', 'width=800,height=1000,top=0,left=0');
     if (!popup) return console.error('Popup blocked! Please allow popups and try again.');
-    popup.document.write(`<!DOCTYPE html>
+    popup.document.write(/*html*/`<!DOCTYPE html>
     <html><head><meta charset='utf-8'><title>Delete Discord Messages</title><base target="_blank">
     <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;} a{color:#00b0f4;}
     body.redact .priv{display:none;} body:not(.redact) .mask{display:none;} body.redact [priv]{-webkit-text-security:disc;}
@@ -16,12 +16,14 @@
     <div class="toolbar" style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
         <div style="display:flex;flex-wrap:wrap;">
             <span>Authorization <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authToken.md" title="Help">?</a>
-            <button id="getToken">Get</button>
-            <br><input type="password" id="authToken" placeholder="Auth Token" autofocus>*</span>
+                <button id="getToken">Get</button>
+                <br><input type="password" id="authToken" placeholder="Auth Token" autofocus>*</span>
             <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md" title="Help">?</a>
-            <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv>*</span>
-            <span>Channel <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help">?</a>
-            <button id="getChannel">Current</button><br><input id="channelId" type="text" placeholder="Channel ID" priv>*</span><br>
+                <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv>*</span>
+            <span>Guild/Channel <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help">?</a>
+                <button id="getGuildAndChannel">Get</button><br>
+                <input id="guildId" type="text" placeholder="Guild ID" priv>*<br>
+                <input id="channelId" type="text" placeholder="Channel ID" priv>*</span><br>
             <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md" title="Help">?</a><br>
                 <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
                 <input id="beforeMessageId" type="text" placeholder="Before messageId" priv>
@@ -38,9 +40,9 @@
         <label><input id="autoScroll" type="checkbox" checked><small>Auto scroll</small></label> <span></span>
     </div>
     <pre style="margin-top:150px;font-size:0.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;">
-    <center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n
-        <a href="https://github.com/victornpb/deleteDiscordMessages/issues" target="_blank">Issues or help</a></center>
-    </pre></body></html>`);
+        <center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n
+            <a href="https://github.com/victornpb/deleteDiscordMessages/issues" target="_blank">Issues or help</a></center>
+        </pre></body></html>`);
 
     const logArea = popup.document.querySelector('pre');
     const startBtn = popup.document.querySelector('button#start');
@@ -49,13 +51,14 @@
     startBtn.onclick = (e) => {
         const authToken = popup.document.querySelector('input#authToken').value.trim();
         const authorId = popup.document.querySelector('input#authorId').value.trim();
+        const guildId = popup.document.querySelector('input#guildId').value.trim();
         const channelId = popup.document.querySelector('input#channelId').value.trim();
         const afterMessageId = popup.document.querySelector('input#afterMessageId').value.trim();
         const beforeMessageId = popup.document.querySelector('input#beforeMessageId').value.trim();
         const hasLink = popup.document.querySelector('input#hasLink').checked;
         const hasFile = popup.document.querySelector('input#hasFile').checked;
         stop = stopBtn.disabled = !(startBtn.disabled = true);
-        deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, logger, () => !(stop === true || popup.closed)).then(() => {
+        deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, logger, () => !(stop === true || popup.closed)).then(() => {
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         });
     };
@@ -68,8 +71,10 @@
     popup.document.querySelector('button#getAuthor').onclick = (e) => {
         popup.document.querySelector('input#authorId').value = JSON.parse(popup.localStorage.user_id_cache);
     };
-    popup.document.querySelector('button#getChannel').onclick = (e) => {
-        popup.document.querySelector('input#channelId').value = location.href.match(/channels\/.*\/(\d+)/)[1];
+    popup.document.querySelector('button#getGuildAndChannel').onclick = e => {
+        const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
+        popup.document.querySelector('input#guildId').value = m[1];
+        popup.document.querySelector('input#channelId').value = m[2];
     };
     popup.document.querySelector('#redact').onchange = (e) => {
         popup.document.body.classList.toggle('redact') &&
@@ -87,6 +92,7 @@
      * Delete all messages in a Discord channel or DM
      * @param {string} authToken Your authorization token
      * @param {string} authorId Author of the messages you want to delete
+     * @param {string} guildId Server were the messages are located
      * @param {string} channelId Channel were the messages are located
      * @param {string} afterMessageId Only delete messages after this, leave blank do delete all
      * @param {string} beforeMessageId Only delete messages before this, leave blank do delete all
@@ -97,7 +103,7 @@
      * @author Victornpb <https://www.github.com/victornpb>
      * @see https://github.com/victornpb/deleteDiscordMessages
      */
-    async function deleteMessages(authToken, authorId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, extLogger, stopHndl) {
+    async function deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, extLogger, stopHndl) {
         const start = new Date();
         let deleteDelay = 100;
         let searchDelay = 100;
@@ -131,7 +137,14 @@
         async function recurse() {
             iterations++;
 
-            const baseURL = `https://discordapp.com/api/v6/channels/${channelId}/messages/`;
+            let API_SEARCH_URL;
+            if (guildId === '@me') {
+                API_SEARCH_URL = `https://discordapp.com/api/v6/channels/${channelId}/messages/`; // DMs
+            }
+            else {
+                API_SEARCH_URL = `https://discordapp.com/api/v6/guilds/${guildId}/messages/`; // Server
+            }
+
             const headers = {
                 'Authorization': authToken
             };
@@ -139,12 +152,14 @@
             let resp;
             try {
                 const s = Date.now();
-                resp = await fetch(baseURL + 'search?' + queryString([
-                    [ 'author_id', authorId || undefined],
+                resp = await fetch(API_SEARCH_URL + 'search?' + queryString([
+                    [ 'author_id', authorId || undefined ],
+                    [ 'channel_id', (guildId !== '@me' ? channelId : undefined) || undefined ],
                     [ 'min_id', afterMessageId || undefined ],
                     [ 'max_id', beforeMessageId || undefined ],
-                    [ 'offset', offset || undefined ],
                     [ 'sort_by', 'timestamp' ],
+                    [ 'sort_order', 'desc' ],
+                    [ 'offset', offset ],
                     [ 'has', hasLink ? 'link' : undefined ],
                     [ 'has', hasFile ? 'file' : undefined ],
                 ]), { headers });
@@ -222,7 +237,8 @@
                     let resp;
                     try {
                         const s = Date.now();
-                        resp = await fetch(baseURL + message.id, {
+                        const API_DELETE_URL = `https://discordapp.com/api/v6/channels/${channelId}/messages/`;
+                        resp = await fetch(API_DELETE_URL + message.id, {
                             headers,
                             method: 'DELETE'
                         });
@@ -276,7 +292,7 @@
         }
 
         log.success(`\nStarted at ${start.toLocaleString()}`);
-        log.debug(`authorId="${redact(authorId)}" channelId="${redact(channelId)}" afterMessageId="${redact(afterMessageId)}" beforeMessageId="${redact(beforeMessageId)}" hasLink=${!!hasLink} hasFile=${!!hasFile}`);
+        log.debug(`authorId="${redact(authorId)}" guildId="${redact(guildId)}" channelId="${redact(channelId)}" afterMessageId="${redact(afterMessageId)}" beforeMessageId="${redact(beforeMessageId)}" hasLink=${!!hasLink} hasFile=${!!hasFile}`);
         return await recurse();
     }
 })();
