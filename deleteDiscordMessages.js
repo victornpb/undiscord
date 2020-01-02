@@ -160,6 +160,7 @@
                     [ 'sort_by', 'timestamp' ],
                     [ 'sort_order', 'desc' ],
                     [ 'offset', offset ],
+                    [ 'include_nsfw', true ],
                     [ 'has', hasLink ? 'link' : undefined ],
                     [ 'has', hasFile ? 'file' : undefined ],
                 ]), { headers });
