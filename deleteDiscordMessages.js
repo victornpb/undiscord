@@ -3,15 +3,16 @@
 (function () {
     let stop;
     let popup;
-    popup = window.open('', '', `top=0,left=${screen.width-800},width=800,height=${screen.height}`);
+    popup = window.open('', '', `top=0,left=${screen.width-800},width=830,height=${screen.height}`);
     if (!popup) return console.error('Popup blocked! Please allow popups and try again.');
     popup.document.write(/*html*/`<!DOCTYPE html>
     <html><head><meta charset='utf-8'><title>Delete Discord Messages</title><base target="_blank">
     <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;} a{color:#00b0f4;}
     body.redact .priv{display:none;} body:not(.redact) .mask{display:none;} body.redact [priv]{-webkit-text-security:disc;}
     .toolbar span{margin-right:8px;}
-    button{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
+    button,label[for="file"]{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
     input[type="text"],input[type="password"]{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
+    input#file{display: none}
     </style></head><body>
     <div class="toolbar" style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
         <div style="display:flex;flex-wrap:wrap;">
@@ -21,7 +22,9 @@
                 <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md" title="Help">?</a></span>
                 <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
             <span>Guild/Channel <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help">?</a>
-                <button id="getGuildAndChannel">Get</button><br>
+                <button id="getGuildAndChannel">Get</button>
+                <input id="file" type="file">
+                <label for="file">Import JSON</label><br>
                 <input id="guildId" type="text" placeholder="Guild ID" priv><br>
                 <input id="channelId" type="text" placeholder="Channel ID" priv></span><br>
             <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md" title="Help">?</a><br>
@@ -50,6 +53,22 @@
     const startBtn = popup.document.querySelector('button#start');
     const stopBtn = popup.document.querySelector('button#stop');
     const autoScroll = popup.document.querySelector('#autoScroll');
+    const fileSelection = popup.document.querySelector("input#file");
+    fileSelection.addEventListener("change", () => {
+        const files = fileSelection.files;
+        const channelIdField = popup.document.querySelector('input#channelId');
+        if (files.length > 0) {
+            const file = files[0];
+            file.text().then(text => {
+                let json = JSON.parse(text);
+                let channels = []
+                Object.keys(json).forEach(k => {
+                    channels.push(k);
+                })
+                channelIdField.value = channels.join(";");
+            });
+        }
+    }, false);
     startBtn.onclick = e => {
         const authToken = popup.document.querySelector('input#authToken').value.trim();
         const authorId = popup.document.querySelector('input#authorId').value.trim();
