@@ -16,9 +16,9 @@
     <div class="toolbar" style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
         <div style="display:flex;flex-wrap:wrap;">
             <span>Authorization <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authToken.md" title="Help">?</a>
-                <button id="getToken">Get</button>
-                <br><input type="password" id="authToken" placeholder="Auth Token" autofocus>*</span>
-            <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md" title="Help">?</a>
+                <button id="getToken">Get</button><br>
+                <input type="password" id="authToken" placeholder="Auth Token" autofocus>*<br>
+                <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md" title="Help">?</a></span>
                 <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
             <span>Guild/Channel <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help">?</a>
                 <button id="getGuildAndChannel">Get</button><br>
@@ -29,6 +29,7 @@
                 <input id="beforeMessageId" type="text" placeholder="Before messageId" priv>
             </span>
             <span>Filter <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/filters.md" title="Help">?</a><br>
+                <input id="content" type="text" placeholder="Containing text" priv><br>
                 <label><input id="hasLink" type="checkbox">has: link</label><br>
                 <label><input id="hasFile" type="checkbox">has: file</label><br>
                 <label><input id="includeNsfw" type="checkbox">Include NSFW</label>
@@ -56,11 +57,12 @@
         const channelId = popup.document.querySelector('input#channelId').value.trim();
         const afterMessageId = popup.document.querySelector('input#afterMessageId').value.trim();
         const beforeMessageId = popup.document.querySelector('input#beforeMessageId').value.trim();
+        const content = popup.document.querySelector('input#content').value.trim();
         const hasLink = popup.document.querySelector('input#hasLink').checked;
         const hasFile = popup.document.querySelector('input#hasFile').checked;
         const includeNsfw = popup.document.querySelector('input#includeNsfw').checked;
         stop = stopBtn.disabled = !(startBtn.disabled = true);
-        deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, includeNsfw, logger, () => !(stop === true || popup.closed)).then(() => {
+        deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, logger, () => !(stop === true || popup.closed)).then(() => {
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         });
     };
@@ -98,6 +100,7 @@
      * @param {string} channelId Channel were the messages are located
      * @param {string} afterMessageId Only delete messages after this, leave blank do delete all
      * @param {string} beforeMessageId Only delete messages before this, leave blank do delete all
+     * @param {string} content Filter messages that contains this text content
      * @param {boolean} hasLink Filter messages that contains link
      * @param {boolean} hasFile Filter messages that contains file
      * @param {boolean} includeNsfw Search in NSFW channels
@@ -106,7 +109,7 @@
      * @author Victornpb <https://www.github.com/victornpb>
      * @see https://github.com/victornpb/deleteDiscordMessages
      */
-    async function deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, includeNsfw, extLogger, stopHndl) {
+    async function deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content,hasLink, hasFile, includeNsfw, extLogger, stopHndl) {
         const start = new Date();
         let deleteDelay = 100;
         let searchDelay = 100;
@@ -163,9 +166,10 @@
                     [ 'sort_by', 'timestamp' ],
                     [ 'sort_order', 'desc' ],
                     [ 'offset', offset ],
-                    [ 'include_nsfw', includeNsfw ? true : undefined ],
                     [ 'has', hasLink ? 'link' : undefined ],
                     [ 'has', hasFile ? 'file' : undefined ],
+                    [ 'content', content || undefined ],
+                    [ 'include_nsfw', includeNsfw ? true : undefined ],
                 ]), { headers });
                 lastPing = (Date.now() - s);
                 avgPing = avgPing>0 ? (avgPing*0.9) + (lastPing*0.1):lastPing;
