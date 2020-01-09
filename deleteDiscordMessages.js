@@ -19,18 +19,19 @@
                 <button id="getToken">Get</button>
                 <br><input type="password" id="authToken" placeholder="Auth Token" autofocus>*</span>
             <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md" title="Help">?</a>
-                <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv>*</span>
+                <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
             <span>Guild/Channel <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help">?</a>
                 <button id="getGuildAndChannel">Get</button><br>
-                <input id="guildId" type="text" placeholder="Guild ID" priv>*<br>
-                <input id="channelId" type="text" placeholder="Channel ID" priv>*</span><br>
+                <input id="guildId" type="text" placeholder="Guild ID" priv><br>
+                <input id="channelId" type="text" placeholder="Channel ID" priv></span><br>
             <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md" title="Help">?</a><br>
                 <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
                 <input id="beforeMessageId" type="text" placeholder="Before messageId" priv>
             </span>
             <span>Filter <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/filters.md" title="Help">?</a><br>
                 <label><input id="hasLink" type="checkbox">has: link</label><br>
-                <label><input id="hasFile" type="checkbox">has: file</label>
+                <label><input id="hasFile" type="checkbox">has: file</label><br>
+                <label><input id="includeNsfw" type="checkbox">Include NSFW</label>
             </span>
         </div>
         <button id="start" style="background:#43b581;width:80px;">Start</button>
@@ -57,8 +58,9 @@
         const beforeMessageId = popup.document.querySelector('input#beforeMessageId').value.trim();
         const hasLink = popup.document.querySelector('input#hasLink').checked;
         const hasFile = popup.document.querySelector('input#hasFile').checked;
+        const includeNsfw = popup.document.querySelector('input#includeNsfw').checked;
         stop = stopBtn.disabled = !(startBtn.disabled = true);
-        deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, logger, () => !(stop === true || popup.closed)).then(() => {
+        deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, includeNsfw, logger, () => !(stop === true || popup.closed)).then(() => {
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         });
     };
@@ -98,12 +100,13 @@
      * @param {string} beforeMessageId Only delete messages before this, leave blank do delete all
      * @param {boolean} hasLink Filter messages that contains link
      * @param {boolean} hasFile Filter messages that contains file
+     * @param {boolean} includeNsfw Search in NSFW channels
      * @param {function(string, Array)} extLogger Function for logging
      * @param {function} stopHndl stopHndl used for stopping
      * @author Victornpb <https://www.github.com/victornpb>
      * @see https://github.com/victornpb/deleteDiscordMessages
      */
-    async function deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, extLogger, stopHndl) {
+    async function deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, hasLink, hasFile, includeNsfw, extLogger, stopHndl) {
         const start = new Date();
         let deleteDelay = 100;
         let searchDelay = 100;
@@ -160,6 +163,7 @@
                     [ 'sort_by', 'timestamp' ],
                     [ 'sort_order', 'desc' ],
                     [ 'offset', offset ],
+                    [ 'include_nsfw', includeNsfw ? true : undefined ],
                     [ 'has', hasLink ? 'link' : undefined ],
                     [ 'has', hasFile ? 'file' : undefined ],
                 ]), { headers });
