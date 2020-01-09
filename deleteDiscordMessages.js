@@ -54,7 +54,7 @@
         const authToken = popup.document.querySelector('input#authToken').value.trim();
         const authorId = popup.document.querySelector('input#authorId').value.trim();
         const guildId = popup.document.querySelector('input#guildId').value.trim();
-        const channelId = popup.document.querySelector('input#channelId').value.trim();
+        const channelIds = popup.document.querySelector('input#channelId').value.trim().split(";");
         const afterMessageId = popup.document.querySelector('input#afterMessageId').value.trim();
         const beforeMessageId = popup.document.querySelector('input#beforeMessageId').value.trim();
         const content = popup.document.querySelector('input#content').value.trim();
@@ -62,7 +62,7 @@
         const hasFile = popup.document.querySelector('input#hasFile').checked;
         const includeNsfw = popup.document.querySelector('input#includeNsfw').checked;
         stop = stopBtn.disabled = !(startBtn.disabled = true);
-        deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, logger, () => !(stop === true || popup.closed)).then(() => {
+        deleteMessages(authToken, authorId, guildId, channelIds, afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, logger, () => !(stop === true || popup.closed)).then(() => {
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         });
     };
@@ -97,7 +97,7 @@
      * @param {string} authToken Your authorization token
      * @param {string} authorId Author of the messages you want to delete
      * @param {string} guildId Server were the messages are located
-     * @param {string} channelId Channel were the messages are located
+     * @param {string[]} channelIds List of channels where the messages are located
      * @param {string} afterMessageId Only delete messages after this, leave blank do delete all
      * @param {string} beforeMessageId Only delete messages before this, leave blank do delete all
      * @param {string} content Filter messages that contains this text content
@@ -109,7 +109,7 @@
      * @author Victornpb <https://www.github.com/victornpb>
      * @see https://github.com/victornpb/deleteDiscordMessages
      */
-    async function deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content,hasLink, hasFile, includeNsfw, extLogger, stopHndl) {
+    async function deleteMessages(authToken, authorId, guildId, channelIds, afterMessageId, beforeMessageId, content,hasLink, hasFile, includeNsfw, extLogger, stopHndl) {
         const start = new Date();
         let deleteDelay = 100;
         let searchDelay = 100;
@@ -122,6 +122,11 @@
         let throttledTotalTime = 0;
         let offset = 0;
         let iterations = -1;
+
+        if (channelIds.length == 0) {
+            return;
+        }
+        let channelId = channelIds[0];
        
         const wait = async ms => new Promise(done => setTimeout(done, ms));
         const msToHMS = s => `${s / 3.6e6 | 0}h ${(s % 3.6e6) / 6e4 | 0}m ${(s % 6e4) / 1000 | 0}s`;
@@ -295,7 +300,10 @@
                 return await recurse();
             } else {
                 if (total - offset > 0) log.warn('Ended because API returned an empty page.');
-                return end();
+                end();
+                channelIds.shift();
+                await wait(searchDelay);
+                return deleteMessages(authToken, authorId, guildId, channelIds, afterMessageId, beforeMessageId, content,hasLink, hasFile, includeNsfw, extLogger, stopHndl);
             }
         }
 
