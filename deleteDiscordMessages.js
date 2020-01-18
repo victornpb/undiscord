@@ -245,7 +245,7 @@
                     let resp;
                     try {
                         const s = Date.now();
-                        const API_DELETE_URL = `https://discordapp.com/api/v6/channels/${channelId}/messages/`;
+                        const API_DELETE_URL = `https://discordapp.com/api/v6/channels/${message.channel_id}/messages/`;
                         resp = await fetch(API_DELETE_URL + message.id, {
                             headers,
                             method: 'DELETE'
