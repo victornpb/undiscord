@@ -1,9 +1,16 @@
-# channelId
+# guildId / channelId
 
 ## The easy way
 
-1.  Go to the desired channel or DM conversation on discord
-2. Click the "<button>Current</button>" button next to Channel in the popup window
+### DMs or a Channel
+1.  Go to the desired Channel or DM conversation on discord
+2. Click the ![Get](https://user-images.githubusercontent.com/3372598/72776133-cf568d80-3bef-11ea-8ee7-4f1b9da9670d.png) button
+
+### Entire Server
+1. Go to any Channel in the Server you want to delete
+2. Click the ![Get](https://user-images.githubusercontent.com/3372598/72776133-cf568d80-3bef-11ea-8ee7-4f1b9da9670d.png) button
+3. Leave the *Channel ID* box empty  
+  ![image](https://user-images.githubusercontent.com/3372598/72776409-dcc04780-3bf0-11ea-91da-e722d6f2f064.png)
 
 ----
 
