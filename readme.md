@@ -6,7 +6,7 @@
 and go to a #Channel or a DM conversation
 
 3. Open DevTools pressing:
-    - Chrome (Windows, Linux, Chrome OS):
+    - Chrome and Firefox (Windows, Linux, Chrome OS):
     <kbd>F12</kbd> or <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>J</kbd> 
     - Chrome (Mac): 
     <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>J</kbd>
