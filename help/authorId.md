@@ -2,7 +2,7 @@
 
 ## The easy way
 
- - Just click "<button>Current</button>" button next to "Author" in the popup window, 
+ - Just click **Me** button next to "Author" in the popup window, 
    it should auto detect your ID.
 
 
