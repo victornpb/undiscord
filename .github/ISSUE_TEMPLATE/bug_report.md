@@ -1,0 +1,38 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: "[BUG] "
+labels: ''
+assignees: ''
+
+---
+
+**Describe the bug**
+A clear and concise description of what the bug is.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
+
+**Screenshots / Logs**
+(You may want to check "Hide sensitive information" before taking screenshots or copying logs)
+If applicable, add screenshots and or copy log to help explain your problem.
+
+```
+Paste logs here
+```
+
+**Affects** (Add an X to items that apply)
+- [ ] DMs
+- [ ] DM Groups
+- [ ] Channel
+- [ ] Channel (NSFW)
+- [ ] Server (All Channels)
+- [ ] Other (explain)
+
+**System:**
+ - OS: [e.g. Windows 10, macOS 10.15.0]
+ - Browser [e.g. chrome, safari]
