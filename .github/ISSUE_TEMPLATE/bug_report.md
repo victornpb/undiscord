@@ -7,6 +7,9 @@ assignees: ''
 
 ---
 
+> WARNING: Github Issues are publicly visible, do not post sensitive information here.
+> You may want to check "Hide sensitive information" before taking screenshots or copying logs.
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
@@ -18,7 +21,6 @@ Steps to reproduce the behavior:
 4. See error
 
 **Screenshots / Logs**
-(You may want to check "Hide sensitive information" before taking screenshots or copying logs)
 If applicable, add screenshots and or copy log to help explain your problem.
 
 ```
