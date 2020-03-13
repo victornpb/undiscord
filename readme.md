@@ -19,7 +19,7 @@ and go to a #Channel or a DM conversation
 
 6. Click the "<button>START</button>" button.
 
-or [Watch this 40 seconds video](https://imgur.com/a/vYmDNSZ)
+**TLDR:** Watch this [40s video instructions](https://imgur.com/a/vYmDNSZ)
 
 <img src="https://user-images.githubusercontent.com/3372598/64500336-28ea9b00-d293-11e9-8c24-eac6b98e04c0.png" height="600">
 
