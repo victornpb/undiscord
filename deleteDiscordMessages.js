@@ -1,4 +1,4 @@
-// Paste this code inside discordapp.com console
+// Paste this code inside discord.com console
 
 (function () {
     let stop;
@@ -145,10 +145,10 @@
 
             let API_SEARCH_URL;
             if (guildId === '@me') {
-                API_SEARCH_URL = `https://discordapp.com/api/v6/channels/${channelId}/messages/`; // DMs
+                API_SEARCH_URL = `https://discord.com/api/v6/channels/${channelId}/messages/`; // DMs
             }
             else {
-                API_SEARCH_URL = `https://discordapp.com/api/v6/guilds/${guildId}/messages/`; // Server
+                API_SEARCH_URL = `https://discord.com/api/v6/guilds/${guildId}/messages/`; // Server
             }
 
             const headers = {
@@ -209,7 +209,7 @@
             const total = data.total_results;
             if (!grandTotal) grandTotal = total;
             const myMessages = data.messages.map(convo => convo.find(message => message.hit===true));
-            const systemMessages = myMessages.filter(msg => msg.type !== 0); // https://discordapp.com/developers/docs/resources/channel#message-object-message-types
+            const systemMessages = myMessages.filter(msg => msg.type !== 0); // https://discord.com/developers/docs/resources/channel#message-object-message-types
             const deletableMessages = myMessages.filter(msg => msg.type === 0);
             const end = () => {
                 log.success(`Ended at ${new Date().toLocaleString()}! Total time: ${msToHMS(Date.now() - start.getTime())}`);
@@ -245,7 +245,7 @@
                     let resp;
                     try {
                         const s = Date.now();
-                        const API_DELETE_URL = `https://discordapp.com/api/v6/channels/${channelId}/messages/`;
+                        const API_DELETE_URL = `https://discord.com/api/v6/channels/${channelId}/messages/`;
                         resp = await fetch(API_DELETE_URL + message.id, {
                             headers,
                             method: 'DELETE'
