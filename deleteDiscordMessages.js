@@ -265,7 +265,7 @@
                             const w = (await resp.json()).retry_after;
                             throttledCount++;
                             throttledTotalTime += w;
-                            deleteDelay += w; // increase delay
+                            deleteDelay = w; // increase delay
                             log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${deleteDelay}ms.`);
                             printDelayStats();
                             log.verb(`Cooling down for ${w*2}ms before retrying...`);
