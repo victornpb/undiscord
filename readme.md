@@ -29,6 +29,7 @@ I made this tool just for you ❤️ , it would be awesome if you could just cli
    
 If you have issues or just need help [open an issue here](https://github.com/victornpb/deleteDiscordMessages/issues)
 
+> A few extra generous people asked for this, so here you can [buy me a coffee](https://www.buymeacoffee.com/vitim). Thank you! You'll be in my special list ^_^
 
 ----
 
