@@ -32,7 +32,8 @@
                 <input id="content" type="text" placeholder="Containing text" priv><br>
                 <label><input id="hasLink" type="checkbox">has: link</label><br>
                 <label><input id="hasFile" type="checkbox">has: file</label><br>
-                <label><input id="includeNsfw" type="checkbox">Include NSFW</label>
+                <label><input id="includeNsfw" type="checkbox">Include NSFW</label><br>
+                <label><input id="includePinned" type="checkbox" checked>Include pinned</label>
             </span>
         </div>
         <button id="start" style="background:#43b581;width:80px;">Start</button>
@@ -61,8 +62,9 @@
         const hasLink = popup.document.querySelector('input#hasLink').checked;
         const hasFile = popup.document.querySelector('input#hasFile').checked;
         const includeNsfw = popup.document.querySelector('input#includeNsfw').checked;
+        const includePinned = popup.document.querySelector('input#includePinned').checked;
         stop = stopBtn.disabled = !(startBtn.disabled = true);
-        deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, logger, () => !(stop === true || popup.closed)).then(() => {
+        deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, includePinned, logger, () => !(stop === true || popup.closed)).then(() => {
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         });
     };
@@ -109,7 +111,7 @@
      * @author Victornpb <https://www.github.com/victornpb>
      * @see https://github.com/victornpb/deleteDiscordMessages
      */
-    async function deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content,hasLink, hasFile, includeNsfw, extLogger, stopHndl) {
+    async function deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content,hasLink, hasFile, includeNsfw, includePinned, extLogger, stopHndl) {
         const start = new Date();
         let deleteDelay = 100;
         let searchDelay = 100;
@@ -211,6 +213,10 @@
             const myMessages = data.messages.map(convo => convo.find(message => message.hit===true));
             const systemMessages = myMessages.filter(msg => msg.type !== 0); // https://discord.com/developers/docs/resources/channel#message-object-message-types
             const deletableMessages = myMessages.filter(msg => msg.type === 0);
+            const messagesToDelete = deletableMessages.filter(msg => {
+                if (!includePinned && msg.pinned) return false;
+                return true;
+            });
             const end = () => {
                 log.success(`Ended at ${new Date().toLocaleString()}! Total time: ${msToHMS(Date.now() - start.getTime())}`);
                 printDelayStats();
@@ -224,18 +230,18 @@
             log.verb(`Estimated time remaining: ${etr}`)
             
             
-            if (myMessages.length > 0) {
+            if (messagesToDelete.length > 0) {
 
                 if (iterations < 1) {
                     log.verb(`Waiting for your confirmation...`);
                     if (!await ask(`Do you want to delete ~${total} messages?\nEstimated time: ${etr}\n\n---- Preview ----\n` +
-                        myMessages.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n')))
+                        messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n')))
                             return end(log.error('Aborted by you!'));
                     log.verb(`OK`);
                 }
                 
-                for (let i = 0; i < deletableMessages.length; i++) {
-                    const message = deletableMessages[i];
+                for (let i = 0; i < messagesToDelete.length; i++) {
+                    const message = messagesToDelete[i];
                     if (stopHndl && stopHndl()===false) return end(log.error('Stopped by you!'));
 
                     log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal})`,
