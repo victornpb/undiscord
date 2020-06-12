@@ -143,8 +143,6 @@
         };
 
         async function recurse() {
-            iterations++;
-
             let API_SEARCH_URL;
             if (guildId === '@me') {
                 API_SEARCH_URL = `https://discord.com/api/v6/channels/${channelId}/messages/`; // DMs
@@ -212,7 +210,7 @@
             if (!grandTotal) grandTotal = total;
             const myMessages = data.messages.map(convo => convo.find(message => message.hit===true));
             const systemMessages = myMessages.filter(msg => msg.type !== 0); // https://discord.com/developers/docs/resources/channel#message-object-message-types
-            const deletableMessages = myMessages.filter(msg => msg.type === 0);
+            const deletableMessages = myMessages.filter(msg => msg.type === 0 || msg.type === 6);
             const messagesToDelete = deletableMessages.filter(msg => {
                 if (!includePinned && msg.pinned) return false;
                 return true;
@@ -232,7 +230,7 @@
             
             if (messagesToDelete.length > 0) {
 
-                if (iterations < 1) {
+                if (++iterations < 1) {
                     log.verb(`Waiting for your confirmation...`);
                     if (!await ask(`Do you want to delete ~${total} messages?\nEstimated time: ${etr}\n\n---- Preview ----\n` +
                         messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n')))
