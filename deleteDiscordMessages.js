@@ -172,7 +172,7 @@
                 lastPing = (Date.now() - s);
                 avgPing = avgPing>0 ? (avgPing*0.9) + (lastPing*0.1):lastPing;
             } catch (err) {
-                return log.error('Search request throwed an error:', err);
+                return log.error('Search request threw an error:', err);
             }
     
             // not indexed yet
