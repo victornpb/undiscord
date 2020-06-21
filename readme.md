@@ -1,15 +1,18 @@
 # Delete all messages in a Discord channel or DM
 
+
+**TLDR:** Watch this [40s video instructions](https://imgur.com/a/vYmDNSZ)
+
 1. Select and Copy this script: [deleteDiscordMessages.js](https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.js)
 
 2. Open [Discord](https://discordapp.com/channels/@me) in a __browser__ (like Chrome, Safari or Firefox)  
 and go to a #Channel or a DM conversation
 
 3. Open DevTools pressing:
-    - Firefox (Windows, Linux, Chrome OS):
-    <kbd>F12</kbd> or <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd>
     - Chrome (Windows, Linux, Chrome OS):
     <kbd>F12</kbd> or <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>J</kbd>
+    - Firefox (Windows, Linux, Chrome OS):
+    <kbd>F12</kbd> or <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd>
     - Chrome (Mac): 
     <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>J</kbd>
     - Safari (Mac): <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>C</kbd>
@@ -19,9 +22,8 @@ and go to a #Channel or a DM conversation
 5. Click on the blue buttons near **Authorization**, **Author** and **Channel**.  
    *(Optional: getting [authToken](./help/authToken.md), [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md)  manually)*
 
-6. Click the "<button>START</button>" button.
+6. Click the **START** button.
 
-**TLDR:** Watch this [40s video instructions](https://imgur.com/a/vYmDNSZ)
 
 <img src="https://user-images.githubusercontent.com/3372598/64500336-28ea9b00-d293-11e9-8c24-eac6b98e04c0.png" height="600">
 
