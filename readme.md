@@ -25,7 +25,7 @@ and go to a #Channel or a DM conversation
 6. Click the **START** button.
 
 
-<img src="https://user-images.githubusercontent.com/3372598/64500336-28ea9b00-d293-11e9-8c24-eac6b98e04c0.png" height="600">
+![Screenshot](https://user-images.githubusercontent.com/3372598/85232240-e6362180-b3d3-11ea-9e28-f675d62e29e9.gif)
 
 I made this tool just for you ❤️ , it would be awesome if you could just click the ⭐️ Star button at the top! 
    
