@@ -3,8 +3,8 @@
 (function () {
     let stop;
     let popup;
-    popup = window.open('', '', `top=0,left=${screen.width-800},width=800,height=${screen.height}`);
-    if (!popup) return console.error('Popup blocked! Please allow popups and try again.');
+    if (popup && popup.document && popup.document.write) popup = window.open('', '', `top=0,left=${screen.width-800},width=980,height=${screen.height}`);
+    else return console.error('Popup blocked! Please allow popups and try again.');
     popup.document.write(/*html*/`<!DOCTYPE html>
     <html><head><meta charset='utf-8'><title>Delete Discord Messages</title><base target="_blank">
     <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;} a{color:#00b0f4;}
