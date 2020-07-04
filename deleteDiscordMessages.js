@@ -10,8 +10,8 @@
     <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;} a{color:#00b0f4;}
     body.redact .priv{display:none;} body:not(.redact) .mask{display:none;} body.redact [priv]{-webkit-text-security:disc;}
     .toolbar span{margin-right:8px;}
-    button,label[for="file"]{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
-    input[type="text"],input[type="password"]{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
+    button{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
+    input[type="text"],input[type="datetime-local"],input[type="password"]{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
     input#file{display: none}
     </style></head><body>
     <div class="toolbar" style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
@@ -22,23 +22,23 @@
                 <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md" title="Help">?</a></span>
                 <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
             <span>Guild/Channel <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help">?</a>
-                <button id="getGuildAndChannel">Get</button>
-                <input id="file" type="file">
-                <label for="file">Import JSON</label><br>
+                <button id="getGuildAndChannel">Get</button><br>
                 <input id="guildId" type="text" placeholder="Guild ID" priv><br>
-                <input id="channelId" type="text" placeholder="Channel ID" priv></span><br>
+                <input id="channelId" type="text" placeholder="Channel ID" priv><br>
+                <label><input id="includeNsfw" type="checkbox">NSFW Channel</label><br><br>
+                <label for="file"><a>Import JSON</a><input id="file" type="file" accept="application/json,.json"></label>
+            </span><br>
             <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md" title="Help">?</a><br>
+                <input id="minId" type="datetime-local" placeholder="After" priv><br>
+                <input id="maxId" type="datetime-local" placeholder="Before" priv><br>
                 <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
                 <input id="beforeMessageId" type="text" placeholder="Before messageId" priv><br>
-                <input id="minId" type="datetime-local" placeholder="After" priv><br>
-                <input id="maxId" type="datetime-local" placeholder="Before" priv>
             </span>
             <span>Filter <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/filters.md" title="Help">?</a><br>
                 <input id="content" type="text" placeholder="Containing text" priv><br>
                 <label><input id="hasLink" type="checkbox">has: link</label><br>
                 <label><input id="hasFile" type="checkbox">has: file</label><br>
-                <label><input id="includeNsfw" type="checkbox">NSFW Channel</label>
-                <label><input id="includePinned" type="checkbox" checked>Include pinned</label>
+                <label><input id="includePinned" type="checkbox">Include pinned</label>
             </span>
         </div>
         <button id="start" style="background:#43b581;width:80px;">Start</button>
@@ -46,6 +46,8 @@
         <button id="clear" style="width:80px;">Clear log</button>
         <label><input id="redact" type="checkbox"><small>Hide sensitive information</small></label> <span></span>
         <label><input id="autoScroll" type="checkbox" checked><small>Auto scroll</small></label> <span></span>
+        <progress id="progress" style="display:none;"></progress>
+
     </div>
     <pre style="margin-top:150px;font-size:0.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;">
         <center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n
@@ -71,6 +73,7 @@
         const hasFile = $('input#hasFile').checked;
         const includeNsfw = $('input#includeNsfw').checked;
         const includePinned = $('input#includePinned').checked;
+        const progress = $('#progress');
 
         const fileSelection = $("input#file");
         fileSelection.addEventListener("change", () => {
@@ -98,7 +101,7 @@
         stop = stopBtn.disabled = !(startBtn.disabled = true);
         for (let i = 0; i < channelIds.length; i++) {
             await deleteMessages(authToken, authorId, guildId, channelIds[i], afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, includePinned, logger, stopHndl, onProg);
-                stop = stopBtn.disabled = !(startBtn.disabled = false);
+            stop = stopBtn.disabled = !(startBtn.disabled = false);
         }
     };
     stopBtn.onclick = e => stop = stopBtn.disabled = !(startBtn.disabled = false);
@@ -241,13 +244,12 @@
             const data = await resp.json();
             const total = data.total_results;
             if (!grandTotal) grandTotal = total;
-            const myMessages = data.messages.map(convo => convo.find(message => message.hit===true));
-            const systemMessages = myMessages.filter(msg => msg.type !== 0); // https://discord.com/developers/docs/resources/channel#message-object-message-types
-            const deletableMessages = myMessages.filter(msg => msg.type === 0 || msg.type === 6);
-            const messagesToDelete = deletableMessages.filter(msg => {
-                if (!includePinned && msg.pinned) return false;
-                return true;
+            const discoveredMessages = data.messages.map(convo => convo.find(message => message.hit===true));
+            const messagesToDelete = discoveredMessages.filter(msg => {
+                return msg.type === 0 || msg.type === 6 || (msg.pinned && includePinned);
             });
+            const skippedMessages = discoveredMessages.filter(msg=>!messagesToDelete.find(m=> m.id===msg.id));
+
             const end = () => {
                 log.success(`Ended at ${new Date().toLocaleString()}! Total time: ${msToHMS(Date.now() - start.getTime())}`);
                 printDelayStats();
@@ -256,7 +258,7 @@
             }
 
             const etr = msToHMS((searchDelay * Math.round(total / 25)) + ((deleteDelay + avgPing) * total));
-            log.info(`Total messages found: ${data.total_results}`, `(Messages in current page: ${data.messages.length}, Author: ${deletableMessages.length}, System: ${systemMessages.length})`, `offset: ${offset}`);
+            log.info(`Total messages found: ${data.total_results}`, `(Messages in current page: ${data.messages.length}, To be deleted: ${messagesToDelete.length}, System: ${skippedMessages.length})`, `offset: ${offset}`);
             printDelayStats();
             log.verb(`Estimated time remaining: ${etr}`)
             
@@ -319,10 +321,10 @@
                     await wait(deleteDelay);
                 }
 
-                if (systemMessages.length > 0) {
-                    grandTotal -= systemMessages.length;
-                    offset += systemMessages.length;
-                    log.verb(`Found ${systemMessages.length} system messages! Decreasing grandTotal to ${grandTotal} and increasing offset to ${offset}.`);
+                if (skippedMessages.length > 0) {
+                    grandTotal -= skippedMessages.length;
+                    offset += skippedMessages.length;
+                    log.verb(`Found ${skippedMessages.length} system messages! Decreasing grandTotal to ${grandTotal} and increasing offset to ${offset}.`);
                 }
                 
                 log.verb(`Searching next messages in ${searchDelay}ms...`, (offset ? `(offset: ${offset})` : '') );
