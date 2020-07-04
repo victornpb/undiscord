@@ -10,8 +10,9 @@
     <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;} a{color:#00b0f4;}
     body.redact .priv{display:none;} body:not(.redact) .mask{display:none;} body.redact [priv]{-webkit-text-security:disc;}
     .toolbar span{margin-right:8px;}
-    button{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
+    button,label[for="file"]{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
     input[type="text"],input[type="password"]{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
+    input#file{display: none}
     </style></head><body>
     <div class="toolbar" style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
         <div style="display:flex;flex-wrap:wrap;">
@@ -21,7 +22,9 @@
                 <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md" title="Help">?</a></span>
                 <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
             <span>Guild/Channel <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help">?</a>
-                <button id="getGuildAndChannel">Get</button><br>
+                <button id="getGuildAndChannel">Get</button>
+                <input id="file" type="file">
+                <label for="file">Import JSON</label><br>
                 <input id="guildId" type="text" placeholder="Guild ID" priv><br>
                 <input id="channelId" type="text" placeholder="Channel ID" priv></span><br>
             <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md" title="Help">?</a><br>
@@ -53,11 +56,11 @@
     const startBtn = $('button#start');
     const stopBtn = $('button#stop');
     const autoScroll = $('#autoScroll');
-    startBtn.onclick = e => {
+    startBtn.onclick = async e => {
         const authToken = $('input#authToken').value.trim();
         const authorId = $('input#authorId').value.trim();
         const guildId = $('input#guildId').value.trim();
-        const channelId = $('input#channelId').value.trim();
+        const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
         const afterMessageId = $('input#afterMessageId').value.trim();
         const beforeMessageId = $('input#beforeMessageId').value.trim();
         const minId = $('input#minId').value.trim();
@@ -66,10 +69,27 @@
         const hasLink = $('input#hasLink').checked;
         const hasFile = $('input#hasFile').checked;
         const includeNsfw = $('input#includeNsfw').checked;
+
+        const fileSelection = $("input#file");
+        fileSelection.addEventListener("change", () => {
+            const files = fileSelection.files;
+            const channelIdField = $('input#channelId');
+            if (files.length > 0) {
+                const file = files[0];
+                file.text().then(text => {
+                    let json = JSON.parse(text);
+                    let channels = Object.keys(json);
+                    channelIdField.value = channels.join(",");
+                });
+            }
+        }, false);
+
         stop = stopBtn.disabled = !(startBtn.disabled = true);
-        deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, logger, () => !(stop === true || popup.closed)).then(() => {
-            stop = stopBtn.disabled = !(startBtn.disabled = false);
-        });
+        for (let i = 0; i < channelIds.length; i++) {
+            await deleteMessages(authToken, authorId, guildId, channelIds[i], afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, logger, () => !(stop === true || popup.closed)).then(() => {
+                stop = stopBtn.disabled = !(startBtn.disabled = false);
+            });
+        }
     };
     stopBtn.onclick = e => stop = stopBtn.disabled = !(startBtn.disabled = false);
     $('button#clear').onclick = e => { logArea.innerHTML = ''; };
