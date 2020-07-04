@@ -32,7 +32,7 @@
                 <input id="content" type="text" placeholder="Containing text" priv><br>
                 <label><input id="hasLink" type="checkbox">has: link</label><br>
                 <label><input id="hasFile" type="checkbox">has: file</label><br>
-                <label><input id="includeNsfw" type="checkbox">Include NSFW</label>
+                <label><input id="includeNsfw" type="checkbox">NSFW Channel</label>
             </span>
         </div>
         <button id="start" style="background:#43b581;width:80px;">Start</button>
