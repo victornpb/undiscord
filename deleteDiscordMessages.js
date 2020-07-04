@@ -46,41 +46,44 @@
             <a href="https://github.com/victornpb/deleteDiscordMessages/issues" target="_blank">Issues or help</a></center>
         </pre></body></html>`);
 
-    const logArea = popup.document.querySelector('pre');
-    const startBtn = popup.document.querySelector('button#start');
-    const stopBtn = popup.document.querySelector('button#stop');
-    const autoScroll = popup.document.querySelector('#autoScroll');
+    const $ = s => popup.document.querySelector(s);
+    const logArea = $('pre');
+    const startBtn = $('button#start');
+    const stopBtn = $('button#stop');
+    const autoScroll = $('#autoScroll');
     startBtn.onclick = e => {
-        const authToken = popup.document.querySelector('input#authToken').value.trim();
-        const authorId = popup.document.querySelector('input#authorId').value.trim();
-        const guildId = popup.document.querySelector('input#guildId').value.trim();
-        const channelId = popup.document.querySelector('input#channelId').value.trim();
-        const afterMessageId = popup.document.querySelector('input#afterMessageId').value.trim();
-        const beforeMessageId = popup.document.querySelector('input#beforeMessageId').value.trim();
-        const content = popup.document.querySelector('input#content').value.trim();
-        const hasLink = popup.document.querySelector('input#hasLink').checked;
-        const hasFile = popup.document.querySelector('input#hasFile').checked;
-        const includeNsfw = popup.document.querySelector('input#includeNsfw').checked;
+        const authToken = $('input#authToken').value.trim();
+        const authorId = $('input#authorId').value.trim();
+        const guildId = $('input#guildId').value.trim();
+        const channelId = $('input#channelId').value.trim();
+        const afterMessageId = $('input#afterMessageId').value.trim();
+        const beforeMessageId = $('input#beforeMessageId').value.trim();
+        const minId = $('input#minId').value.trim();
+        const maxId = $('input#maxId').value.trim();
+        const content = $('input#content').value.trim();
+        const hasLink = $('input#hasLink').checked;
+        const hasFile = $('input#hasFile').checked;
+        const includeNsfw = $('input#includeNsfw').checked;
         stop = stopBtn.disabled = !(startBtn.disabled = true);
         deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, logger, () => !(stop === true || popup.closed)).then(() => {
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         });
     };
     stopBtn.onclick = e => stop = stopBtn.disabled = !(startBtn.disabled = false);
-    popup.document.querySelector('button#clear').onclick = e => { logArea.innerHTML = ''; };
-    popup.document.querySelector('button#getToken').onclick = e => {
+    $('button#clear').onclick = e => { logArea.innerHTML = ''; };
+    $('button#getToken').onclick = e => {
         window.dispatchEvent(new Event('beforeunload'));
-        popup.document.querySelector('input#authToken').value = JSON.parse(popup.localStorage.token);
+        $('input#authToken').value = JSON.parse(popup.localStorage.token);
     };
-    popup.document.querySelector('button#getAuthor').onclick = e => {
-        popup.document.querySelector('input#authorId').value = JSON.parse(popup.localStorage.user_id_cache);
+    $('button#getAuthor').onclick = e => {
+        $('input#authorId').value = JSON.parse(popup.localStorage.user_id_cache);
     };
-    popup.document.querySelector('button#getGuildAndChannel').onclick = e => {
+    $('button#getGuildAndChannel').onclick = e => {
         const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
-        popup.document.querySelector('input#guildId').value = m[1];
-        popup.document.querySelector('input#channelId').value = m[2];
+        $('input#guildId').value = m[1];
+        $('input#channelId').value = m[2];
     };
-    popup.document.querySelector('#redact').onchange = e => {
+    $('#redact').onchange = e => {
         popup.document.body.classList.toggle('redact') &&
         popup.alert('This will attempt to hide personal information, but make sure to double check before sharing screenshots.');
     };
