@@ -26,7 +26,9 @@
                 <input id="channelId" type="text" placeholder="Channel ID" priv></span><br>
             <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md" title="Help">?</a><br>
                 <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
-                <input id="beforeMessageId" type="text" placeholder="Before messageId" priv>
+                <input id="beforeMessageId" type="text" placeholder="Before messageId" priv><br>
+                <input id="minId" type="datetime-local" placeholder="After" priv><br>
+                <input id="maxId" type="datetime-local" placeholder="Before" priv>
             </span>
             <span>Filter <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/filters.md" title="Help">?</a><br>
                 <input id="content" type="text" placeholder="Containing text" priv><br>
@@ -173,7 +175,7 @@
                     [ 'include_nsfw', includeNsfw ? true : undefined ],
                 ]), { headers });
                 lastPing = (Date.now() - s);
-                avgPing = avgPing>0 ? (avgPing*0.9) + (lastPing*0.1):lastPing;
+                avgPing = avgPing>0 ? (avgPing*0.9) + (lastPing*0.1) : lastPing;
             } catch (err) {
                 return log.error('Search request threw an error:', err);
             }
