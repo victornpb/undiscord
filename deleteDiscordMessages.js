@@ -86,11 +86,19 @@
             }
         }, false);
 
+        const stopHndl = () => !(stop === true || popup.closed);
+
+        const onProg = (value, max) => {
+            progress.setAttribute('max', max);
+            progress.value = value;
+            progress.style.display = max ? '' : 'none';
+        };
+
+
         stop = stopBtn.disabled = !(startBtn.disabled = true);
         for (let i = 0; i < channelIds.length; i++) {
-            await deleteMessages(authToken, authorId, guildId, channelIds[i], afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, includePinned, logger, () => !(stop === true || popup.closed)).then(() => {
+            await deleteMessages(authToken, authorId, guildId, channelIds[i], afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, includePinned, logger, stopHndl, onProg);
                 stop = stopBtn.disabled = !(startBtn.disabled = false);
-            });
         }
     };
     stopBtn.onclick = e => stop = stopBtn.disabled = !(startBtn.disabled = false);
@@ -136,7 +144,7 @@
      * @author Victornpb <https://www.github.com/victornpb>
      * @see https://github.com/victornpb/deleteDiscordMessages
      */
-    async function deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content,hasLink, hasFile, includeNsfw, includePinned, extLogger, stopHndl) {
+    async function deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content,hasLink, hasFile, includeNsfw, includePinned, extLogger, stopHndl, onProgress) {
         const start = new Date();
         let deleteDelay = 100;
         let searchDelay = 100;
@@ -270,6 +278,7 @@
                     log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal})`,
                         `Deleting ID:${redact(message.id)} <b>${redact(message.author.username+'#'+message.author.discriminator)} <small>(${redact(new Date(message.timestamp).toLocaleString())})</small>:</b> <i>${redact(message.content).replace(/\n/g,'↵')}</i>`,
                         message.attachments.length ? redact(JSON.stringify(message.attachments)) : '');
+                    if (onProgress) onProgress(delCount + 1, grandTotal);
                     
                     let resp;
                     try {
@@ -330,6 +339,7 @@
 
         log.success(`\nStarted at ${start.toLocaleString()}`);
         log.debug(`authorId="${redact(authorId)}" guildId="${redact(guildId)}" channelId="${redact(channelId)}" afterMessageId="${redact(afterMessageId)}" beforeMessageId="${redact(beforeMessageId)}" hasLink=${!!hasLink} hasFile=${!!hasFile}`);
+        if (onProgress) onProgress(null, 1);
         return await recurse();
     }
 })();
