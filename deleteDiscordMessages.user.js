@@ -1,11 +1,15 @@
 // ==UserScript==
 // @name          Undiscord - Delete all messages in a Discord channel or DM (Bulk deletion)
+// @description   Extends the discord interface so you can mass delete messages from discord
 // @namespace     https://github.com/victornpb/deleteDiscordMessages
 // @version       4.0
-// @icon          http://www.example.net/icon.png
-// @description   Delete all messages in a Discord channel or DM (Bulk deletion)
 // @match         https://discord.com/*
-// @grant        none
+// @downloadURL   https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
+// @homepageURL   https://github.com/victornpb/deleteDiscordMessages
+// @supportURL    https://github.com/victornpb/deleteDiscordMessages/issues
+// @contributionURL https://www.buymeacoffee.com/vitim
+// @grant         none
+// @license       MIT
 // ==/UserScript==
 
 /**
