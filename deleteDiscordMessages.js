@@ -3,53 +3,53 @@
 (function () {
     let stop;
     let popup;
-    popup = window.open('', '', `top=0,left=${screen.width-800},width=980,height=${screen.height}`);
+    popup = window.open('', '', `top=0,left=${screen.width-800},width=850,height=${screen.height}`);
     if(!popup || !popup.document || !popup.document.write) return console.error('Popup blocked! Please allow popups and try again.');
     popup.document.write(/*html*/`<!DOCTYPE html>
     <html><head><meta charset='utf-8'><title>Delete Discord Messages</title><base target="_blank">
-    <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;} a{color:#00b0f4;}
+    <style>body{background-color:#36393f;color:#dcddde;font-family:sans-serif;font-size: 9pt;} a{color:#00b0f4;}
     body.redact .priv{display:none;} body:not(.redact) .mask{display:none;} body.redact [priv]{-webkit-text-security:disc;}
     .toolbar span{margin-right:8px;}
-    button{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
-    input[type="text"],input[type="datetime-local"],input[type="password"]{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
-    input#file{display: none}
+    button,.btn{color:#fff;background:#7289da;border:0;border-radius:4px;font-size:14px;} button:disabled{display:none;}
+    input[type="text"],input[type="search"],input[type="password"],input[type="datetime-local"]{background-color:#202225;color:#b9bbbe;border-radius:4px;border:0;padding:0 .5em;height:24px;width:144px;margin:2px;}
+    input#file{display: none}hr{border-color:rgba(255,255,255,0.1);}
     </style></head><body>
     <div class="toolbar" style="position:fixed;top:0;left:0;right:0;padding:8px;background:#36393f;box-shadow: 0 1px 0 rgba(0,0,0,.2), 0 1.5px 0 rgba(0,0,0,.05), 0 2px 0 rgba(0,0,0,.05);">
         <div style="display:flex;flex-wrap:wrap;">
-            <span>Authorization <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authToken.md" title="Help">?</a>
-                <button id="getToken">Get</button><br>
+            <span>Authorization <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authToken.md" title="Help">?</a> <button id="getToken">auto</button><br>
                 <input type="password" id="authToken" placeholder="Auth Token" autofocus>*<br>
-                <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md" title="Help">?</a></span>
-                <button id="getAuthor">Me</button><br><input id="authorId" type="text" placeholder="Author ID" priv></span>
+                <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md" title="Help">?</a> <button id="getAuthor">auto</button></span>
+                <br><input id="authorId" type="text" placeholder="Author ID" priv></span>
             <span>Guild/Channel <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help">?</a>
-                <button id="getGuildAndChannel">Get</button><br>
+                <button id="getGuildAndChannel">auto</button><br>
                 <input id="guildId" type="text" placeholder="Guild ID" priv><br>
                 <input id="channelId" type="text" placeholder="Channel ID" priv><br>
                 <label><input id="includeNsfw" type="checkbox">NSFW Channel</label><br><br>
-                <label for="file"><a>Import JSON</a><input id="file" type="file" accept="application/json,.json"></label>
+                <label for="file"  title="Import list of channels from messages/index.json file"> Import: <span class="btn">...</span> <input id="file" type="file" accept="application/json,.json"></label>
             </span><br>
             <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md" title="Help">?</a><br>
-                <input id="minId" type="datetime-local" placeholder="After" priv><br>
-                <input id="maxId" type="datetime-local" placeholder="Before" priv><br>
-                <input id="afterMessageId" type="text" placeholder="After messageId" priv><br>
-                <input id="beforeMessageId" type="text" placeholder="Before messageId" priv><br>
+                <input id="minDate" type="datetime-local" title="After" style="width:auto;"><br>
+                <input id="maxDate" type="datetime-local" title="Before" style="width:auto;"><br>
+                <input id="minId" type="text" placeholder="After message with Id" priv><br>
+                <input id="maxId" type="text" placeholder="Before message with Id" priv><br>
             </span>
-            <span>Filter <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/filters.md" title="Help">?</a><br>
+            <span>Search messages <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/filters.md" title="Help">?</a><br>
                 <input id="content" type="text" placeholder="Containing text" priv><br>
                 <label><input id="hasLink" type="checkbox">has: link</label><br>
                 <label><input id="hasFile" type="checkbox">has: file</label><br>
                 <label><input id="includePinned" type="checkbox">Include pinned</label>
             </span>
         </div>
+        <hr>
         <button id="start" style="background:#43b581;width:80px;">Start</button>
         <button id="stop" style="background:#f04747;width:80px;" disabled>Stop</button>
         <button id="clear" style="width:80px;">Clear log</button>
-        <label><input id="redact" type="checkbox"><small>Hide sensitive information</small></label> <span></span>
-        <label><input id="autoScroll" type="checkbox" checked><small>Auto scroll</small></label> <span></span>
+        <label><input id="autoScroll" type="checkbox" checked>Auto scroll</label>
+        <label title="Hide sensitive information for taking screenshots"><input id="redact" type="checkbox" checked>Screenshot mode</label>
         <progress id="progress" style="display:none;"></progress>
 
     </div>
-    <pre style="margin-top:150px;font-size:0.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;">
+    <pre style="margin-top:200px;font-size:0.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;">
         <center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n
             <a href="https://github.com/victornpb/deleteDiscordMessages/issues" target="_blank">Issues or help</a></center>
         </pre></body></html>`);
@@ -64,10 +64,10 @@
         const authorId = $('input#authorId').value.trim();
         const guildId = $('input#guildId').value.trim();
         const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
-        const afterMessageId = $('input#afterMessageId').value.trim();
-        const beforeMessageId = $('input#beforeMessageId').value.trim();
         const minId = $('input#minId').value.trim();
         const maxId = $('input#maxId').value.trim();
+        const minDate = $('input#minDate').value.trim();
+        const maxDate = $('input#maxDate').value.trim();
         const content = $('input#content').value.trim();
         const hasLink = $('input#hasLink').checked;
         const hasFile = $('input#hasFile').checked;
@@ -100,7 +100,7 @@
 
         stop = stopBtn.disabled = !(startBtn.disabled = true);
         for (let i = 0; i < channelIds.length; i++) {
-            await deleteMessages(authToken, authorId, guildId, channelIds[i], afterMessageId, beforeMessageId, content, hasLink, hasFile, includeNsfw, includePinned, logger, stopHndl, onProg);
+            await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, logger, stopHndl, onProg);
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         }
     };
@@ -136,8 +136,8 @@
      * @param {string} authorId Author of the messages you want to delete
      * @param {string} guildId Server were the messages are located
      * @param {string} channelId Channel were the messages are located
-     * @param {string} afterMessageId Only delete messages after this, leave blank do delete all
-     * @param {string} beforeMessageId Only delete messages before this, leave blank do delete all
+     * @param {string} minId Only delete messages after this, leave blank do delete all
+     * @param {string} maxId Only delete messages before this, leave blank do delete all
      * @param {string} content Filter messages that contains this text content
      * @param {boolean} hasLink Filter messages that contains link
      * @param {boolean} hasFile Filter messages that contains file
@@ -147,7 +147,7 @@
      * @author Victornpb <https://www.github.com/victornpb>
      * @see https://github.com/victornpb/deleteDiscordMessages
      */
-    async function deleteMessages(authToken, authorId, guildId, channelId, afterMessageId, beforeMessageId, content,hasLink, hasFile, includeNsfw, includePinned, extLogger, stopHndl, onProgress) {
+    async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content,hasLink, hasFile, includeNsfw, includePinned, extLogger, stopHndl, onProgress) {
         const start = new Date();
         let deleteDelay = 100;
         let searchDelay = 100;
@@ -168,7 +168,8 @@
         const queryString = params => params.filter(p => p[1] !== undefined).map(p => p[0] + '=' + encodeURIComponent(p[1])).join('&');
         const ask = async msg => new Promise(resolve => setTimeout(() => resolve(popup.confirm(msg)), 10));
         const printDelayStats = () => log.verb(`Delete delay: ${deleteDelay}ms, Search delay: ${searchDelay}ms`, `Last Ping: ${lastPing}ms, Average Ping: ${avgPing|0}ms`);
-
+        const toSnowflake = (date) => /:/.test(date) ? ((new Date(date).getTime() - 1420070400000) * Math.pow(2, 22)) : date;
+            
         const log = {
             debug() { extLogger ? extLogger('debug', arguments) : console.debug.apply(console, arguments); },
             info() { extLogger ? extLogger('info', arguments) : console.info.apply(console, arguments); },
@@ -197,8 +198,8 @@
                 resp = await fetch(API_SEARCH_URL + 'search?' + queryString([
                     [ 'author_id', authorId || undefined ],
                     [ 'channel_id', (guildId !== '@me' ? channelId : undefined) || undefined ],
-                    [ 'min_id', afterMessageId || undefined ],
-                    [ 'max_id', beforeMessageId || undefined ],
+                    [ 'min_id', minId ? toSnowflake(minId) : undefined ],
+                    [ 'max_id', maxId ? toSnowflake(maxId) : undefined ],
                     [ 'sort_by', 'timestamp' ],
                     [ 'sort_order', 'desc' ],
                     [ 'offset', offset ],
@@ -340,7 +341,7 @@
         }
 
         log.success(`\nStarted at ${start.toLocaleString()}`);
-        log.debug(`authorId="${redact(authorId)}" guildId="${redact(guildId)}" channelId="${redact(channelId)}" afterMessageId="${redact(afterMessageId)}" beforeMessageId="${redact(beforeMessageId)}" hasLink=${!!hasLink} hasFile=${!!hasFile}`);
+        log.debug(`authorId="${redact(authorId)}" guildId="${redact(guildId)}" channelId="${redact(channelId)}" minId="${redact(minId)}" maxId="${redact(maxId)}" hasLink=${!!hasLink} hasFile=${!!hasFile}`);
         if (onProgress) onProgress(null, 1);
         return await recurse();
     }
