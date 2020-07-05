@@ -19,7 +19,7 @@
 
 1. Click the **START** button.
 
-![Screenshot](https://user-images.githubusercontent.com/3372598/85232240-e6362180-b3d3-11ea-9e28-f675d62e29e9.gif)
+![Screenshot](https://user-images.githubusercontent.com/3372598/86538983-b60c7980-becf-11ea-8cad-1a33950e77fc.gif)
 
 I made this tool just for you ❤️ , it would be awesome if you could just click the ⭐️ Star button at the top! 
    
