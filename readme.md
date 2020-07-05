@@ -10,7 +10,7 @@
 
 1. Install the [deleteDiscordMessages.user.js](https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js)
 
-1. Open [Discord](https://discordapp.com/channels/@me) in your __browser__ (Not the App)
+1. Open <a href="https://discordapp.com/channels/@me" target="_blank">Discord</a> in your __browser__ (Not the App)
 
 1. A Trash icon should appear on the top right corner
 
