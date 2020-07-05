@@ -8,7 +8,7 @@
     - Microsoft Edge: [Tampermonkey](https://www.microsoft.com/store/p/tampermonkey/9nblggh5162s)  
     - Opera: [Tampermonkey](https://addons.opera.com/extensions/details/tampermonkey-beta/) or [Violentmonkey](https://addons.opera.com/extensions/details/violent-monkey/)  
 
-1. Install the [deleteDiscordMessages.user.js](https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js)
+1. Install the <a href="https://openuserjs.org/scripts/victornpb/Undiscord_-_Delete_all_messages_in_a_Discord_channel_or_DM_(Bulk_deletion)" target="_blank">deleteDiscordMessages.user.js</a>
 
 1. Open <a href="https://discordapp.com/channels/@me" target="_blank">Discord</a> in your __browser__ (Not the App)
 
