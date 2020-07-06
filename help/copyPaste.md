@@ -1,21 +1,29 @@
-1. Install a **browser extension** for managing **user scripts** if you don't have one:
-    
-    - Chrome: [Violentmonkey](https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag) or [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)     
-    - Firefox: [Greasemonkey](https://addons.mozilla.org/firefox/addon/greasemonkey/), [Tampermonkey](https://addons.mozilla.org/firefox/addon/tampermonkey/), or [Violentmonkey](https://addons.mozilla.org/firefox/addon/violentmonkey/)  
-    - Safari: [Tampermonkey](http://tampermonkey.net/?browser=safari)  
-    - Microsoft Edge: [Tampermonkey](https://www.microsoft.com/store/p/tampermonkey/9nblggh5162s)  
-    - Opera: [Tampermonkey](https://addons.opera.com/extensions/details/tampermonkey-beta/) or [Violentmonkey](https://addons.opera.com/extensions/details/violent-monkey/)  
+# Delete all messages in a Discord channel or DM
 
-1. Install the [deleteDiscordMessages.user.js](https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js)
 
-1. Open [Discord](https://discordapp.com/channels/@me) in your __browser__ (Not the App)
+**TLDR:** Watch this [40s video instructions](https://imgur.com/a/vYmDNSZ)
 
-1. A Trash icon should appear on the top right corner
+1. Select and Copy this script: [deleteDiscordMessages.js](https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.js)
 
-1. Click on the blue buttons near **Authorization**, **Author** and **Channel**.  
+2. Open [Discord](https://discordapp.com/channels/@me) in a __browser__ (like Chrome, Safari or Firefox)  
+and go to a #Channel or a DM conversation
+
+3. Open DevTools pressing:
+    - Chrome (Windows, Linux, Chrome OS):
+    <kbd>F12</kbd> or <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>J</kbd>
+    - Firefox (Windows, Linux, Chrome OS):
+    <kbd>F12</kbd> or <kbd>Control</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd>
+    - Chrome (Mac): 
+    <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>J</kbd>
+    - Safari (Mac): <kbd>Command</kbd>+<kbd>Option</kbd>+<kbd>C</kbd>
+  
+4. Paste  (<kbd>Ctrl</kbd>+<kbd>V</kbd>) the script in the "Console" tab, then press <kbd>ENTER</kbd>, a popup window will open;
+
+5. Click on the blue buttons near **Authorization**, **Author** and **Channel**.  
    *(Optional: getting [authToken](./help/authToken.md), [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md)  manually)*
 
-1. Click the **START** button.
+6. Click the **START** button.
 
-----
+
+![Screenshot](https://user-images.githubusercontent.com/3372598/85232240-e6362180-b3d3-11ea-9e28-f675d62e29e9.gif)
 
