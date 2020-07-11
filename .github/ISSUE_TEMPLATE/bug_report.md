@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 > WARNING: Github Issues are publicly visible, do not post sensitive information here.
-> You may want to check "Hide sensitive information" before taking screenshots or copying logs.
+> You may want to use the "Screenshot mode" before taking screenshots or copying logs.
 
 **Describe the bug**
 A clear and concise description of what the bug is.
@@ -37,4 +37,4 @@ Paste logs here
 
 **System:**
  - OS: [e.g. Windows 10, macOS 10.15.0]
- - Browser [e.g. chrome, safari]
+ - Browser [e.g. chrome 69, firefox 42.0]
