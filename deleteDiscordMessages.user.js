@@ -307,7 +307,7 @@ function initUI() {
                 <span>Search Delay <a
                 href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/delay.md" title="Help"
                 target="_blank">?</a><br>
-                    <input id="searchDelay" type="number" value="1000" step="100"><br>
+                    <input id="searchDelay" type="number" value="100" step="100"><br>
                 </span>
                 <span>Delete Delay <a
                 href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/delay.md" title="Help"
