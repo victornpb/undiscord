@@ -64,8 +64,8 @@
         const authorId = $('input#authorId').value.trim();
         const guildId = $('input#guildId').value.trim();
         const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
-        const minId = $('input#minId').value.trim();
-        const maxId = $('input#maxId').value.trim();
+        const minId = $('input#minId').value.split("-").pop().trim();
+        const maxId = $('input#maxId').value.split("-").pop().trim();
         const minDate = $('input#minDate').value.trim();
         const maxDate = $('input#maxDate').value.trim();
         const content = $('input#content').value.trim();
