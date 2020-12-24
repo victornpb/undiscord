@@ -1,6 +1,6 @@
 # messageId
 You can delete all messages after a specific message, before a specific message, or everything between two points. For that you need to provide a messageID:
-- Right click a message, and click [Copy ID](./developerMode.md)
+- Hover the mouse over a message with your mouse while holding the shift key pressed, and click [Copy ID](./developerMode.md)
 > If the `Copy ID` doesn't show up, you need to enable [Developer mode](./developerMode.md) first.
 
 ----
