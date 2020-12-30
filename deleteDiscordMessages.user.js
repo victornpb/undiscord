@@ -221,7 +221,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                 }
                 
                 offset += skippedMessages.length;
-                await wait(1);
+                await wait(searchDelay);
                 return await recurse();
             }
         }

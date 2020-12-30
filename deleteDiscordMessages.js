@@ -341,9 +341,8 @@
                 }
                 
                 offset += skippedMessages.length;
-                await wait(1);
+                await wait(searchDelay);
                 return await recurse();
-            }
             }
         }
 
