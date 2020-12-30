@@ -336,7 +336,7 @@
                 return await recurse();
             } else {
                 if (data.total_results == 0) {
-                    log.warn('Ended because API returned an empty page.');
+                    log.warn('No deletable messages found.');
                     return end();
                 }
                 
