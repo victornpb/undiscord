@@ -215,15 +215,14 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
 
             return await recurse();
         } else {
-                if (data.total_results == 0) {
-                    log.warn('No deletable messages found.');
-                    return end();
-                }
-                
-                offset += skippedMessages.length;
-                await wait(searchDelay);
-                return await recurse();
+            if (data.total_results === 0) {
+                log.warn('No deletable messages found.');
+                return end();
             }
+            
+            offset += skippedMessages.length;
+            await wait(searchDelay);
+            return await recurse();
         }
     }
 

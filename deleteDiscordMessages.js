@@ -335,7 +335,7 @@
 
                 return await recurse();
             } else {
-                if (data.total_results == 0) {
+                if (data.total_results === 0) {
                     log.warn('No deletable messages found.');
                     return end();
                 }
