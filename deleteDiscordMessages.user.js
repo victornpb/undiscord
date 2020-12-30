@@ -215,8 +215,15 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
 
             return await recurse();
         } else {
-            if (total - offset > 0) log.warn('Ended because API returned an empty page.');
-            return end();
+                if (data.total_results == 0) {
+                    log.warn('Ended because API returned an empty page.');
+                    return end();
+                }
+                
+                offset += skippedMessages.length;
+                await wait(1);
+                return await recurse();
+            }
         }
     }
 
