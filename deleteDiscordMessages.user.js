@@ -215,8 +215,10 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
 
             return await recurse();
         } else {
-            if (data.total_results === 0) {
+            if (data.total_results != 0 && offset === data.total_results) {
                 log.warn('No deletable messages found.');
+                return end();
+            } else if (data.total_results === 0) {
                 return end();
             }
             
