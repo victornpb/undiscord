@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-> WARNING: Github Issues are publicly visible, do not post sensitive information here.
+> WARNING: GitHub Issues are publicly visible, do not post sensitive information here.
 > You may want to use the "Screenshot mode" before taking screenshots or copying logs.
 
 **Describe the bug**
@@ -21,7 +21,7 @@ Steps to reproduce the behavior:
 4. See error
 
 **Screenshots / Logs**
-If applicable, add screenshots and or copy log to help explain your problem.
+If applicable, add screenshots or copy the logs to help explain your problem.
 
 ```
 Paste logs here
@@ -37,4 +37,4 @@ Paste logs here
 
 **System:**
  - OS: [e.g. Windows 10, macOS 10.15.0]
- - Browser [e.g. chrome 69, firefox 42.0]
+ - Browser [e.g. Chrome 69, Firefox 42.0]

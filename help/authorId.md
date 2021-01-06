@@ -2,15 +2,15 @@
 
 ## The easy way
 
- - Just click **Me** button next to "Author" in the popup window, 
-   it should auto detect your ID.
+ - Just click **Me** button next to "Author" in the popup window,
+   it should auto-detect your ID.
 
 
 ## The manual way
-- Right click your **avatar** in a message you sent in the chat, [Copy ID](./developerMode.md)  
+- Right-click your **avatar** in a message you sent in the chat, [Copy ID](./developerMode.md)  
   <img src="https://media.giphy.com/media/YnNTRqKRxVcjOuyFps/giphy.gif">  
   NOT THE MESSAGE THE AVATAR.  
-  (You cannot delete the other's person messages a in DM channel, you will get Error 403)
+  (You can't delete messages from another person in a DM channel; you will get an Error 403.)
 
 
 -----
