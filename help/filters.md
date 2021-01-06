@@ -13,4 +13,4 @@ You can filter only messages that has links or contain files
 
 ----
 This feature uses the Discord search to find messages:
-https://support.discordapp.com/hc/en-us/articles/115000468588-Using-Search
+https://support.discord.com/hc/en-us/articles/115000468588-Using-Search

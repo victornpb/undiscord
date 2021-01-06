@@ -10,7 +10,7 @@
 
 1. Install Undiscord **<a href="https://openuserjs.org/scripts/victornpb/Undiscord_-_Delete_all_messages_in_a_Discord_channel_or_DM_(Bulk_deletion)" target="_blank">Install from OpenUserJS</a> or <a href="https://greasyfork.org/en/scripts/406540-undiscord-delete-all-messages-in-a-discord-channel-or-dm-bulk-deletion" target="_blank">Install from GreasyFork</a>**
 
-1. Open <a href="https://discordapp.com/channels/@me" target="_blank">Discord</a> in your __browser__ (Not the App) and go to the Channel/Conversation you want to delete
+1. Open <a href="https://discord.com/channels/@me" target="_blank">Discord</a> in your __browser__ (Not the App) and go to the Channel/Conversation you want to delete
 
 1. Click the *Trash icon* that was added in the *top right corner*
 
@@ -61,7 +61,7 @@ I don't recommend running code from random places you get on the internet. For t
 
 Sharing your authToken on the internet will give full access to your account! [There are bots gathering credentials all over the internet](https://github.com/rndinfosecguy/Scavenger).
 If you post your token by accident, LOGOUT from discord on that **same browser** you got that token imediately.
-Changing your password will make sure that you get logged out of every device. I advice that you turn on [2FA](https://support.discordapp.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
+Changing your password will make sure that you get logged out of every device. I advice that you turn on [2FA](https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
 
 If you are unsure do not share screenshots, or copy paste logs on the internet.
 
