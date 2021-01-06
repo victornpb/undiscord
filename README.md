@@ -25,11 +25,11 @@
     
 1. Install Undiscord:  
   [![][greasyfork_icon]][greasyfork_url] or [![][openuserjs_icon]][openuserjs_url]  
-  (NOTE: GreasyFork is recommended for now, OpenUserJS is not receiving updates)
+  (NOTE: Greasy Fork is recommended for now, OpenUserJS is not receiving updates)
 
 1. Open <a href="https://discord.com/channels/@me" target="_blank">Discord</a> in your __browser__ (Not the App) and go to the channel or direct message you would like to be wiped.
 
-1. Click the <kbd>🗑️</kbd> button that was added in the top right corner.
+1. Click the <kbd>🗑️</kbd> button that was added in the top-right corner.
 
 1. Click on the buttons near **Author ID** and **Server ID** and **Channel ID**.  
 
@@ -68,10 +68,10 @@ Originally from https://gist.github.com/victornpb/135f5b346dea4decfc8f63ad7d9cc1
 ## ⛔️ DO NOT SHARE YOUR AUTH TOKEN! ⛔️ ##
 
 Sharing your authToken on the internet will give full access to your account! [There are bots gathering credentials all over the internet](https://github.com/rndinfosecguy/Scavenger).
-If you post your token by accident, LOGOUT from discord on that **same browser** you got that token imediately.
-Changing your password will make sure that you get logged out of every device. I advice that you turn on [2FA](https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
+If you post your token accidentally, LOGOUT from Discord on that **same browser** you got that token immediately.
+Changing your password will make sure that you get logged out of every device. I advise that you turn on [2FA](https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
 
-If you are unsure do not post screenshots, or logs on the internet.
+If you are unsure, do not post screenshots or logs on the internet.
 
 ----
 ## Security Concerns
@@ -121,5 +121,5 @@ Please read: [what I'm doing to ensure this is safe for users][security_policy].
   [opera_violentmonkey]: https://addons.opera.com/extensions/details/violent-monkey/
 
 <!-- Download links -->
-  [greasyfork_url]: <https://greasyfork.org/en/scripts/406540-undiscord-delete-all-messages-in-a-discord-channel-or-dm-bulk-deletion> "Get Undiscord from GreasyFork"
+  [greasyfork_url]: <https://greasyfork.org/en/scripts/406540-undiscord-delete-all-messages-in-a-discord-channel-or-dm-bulk-deletion> "Get Undiscord from Greasy Fork"
   [openuserjs_url]: <https://openuserjs.org/scripts/victornpb/Undiscord_-_Delete_all_messages_in_a_Discord_channel_or_DM_(Bulk_deletion)> "Get Undiscord from OpenUserJS"

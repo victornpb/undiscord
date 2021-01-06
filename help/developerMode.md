@@ -1,6 +1,6 @@
 # Developer Mode
 
-If the `Copy ID` menu doesn't show up when right clicking:  
+If the `Copy ID` menu doesn't show up when right-clicking:  
  - Enable developer mode in discord
    Go to user **Settings** > **Appearance** in discord and enable **Developer mode**. 
 
