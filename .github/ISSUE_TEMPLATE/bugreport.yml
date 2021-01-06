@@ -16,7 +16,7 @@ body:
 - type: input
   attributes:
     label: Undiscord Version
-    description: You can see the version in the bottom right corner or in the ViolentMonkey or TamperMonkey settings.
+    description: You can see the version in the bottom right corner or in the Violentmonkey or TamperMonkey settings.
     placeholder: v0.0.0
   validations:
     required: true
@@ -31,7 +31,7 @@ body:
   attributes:
     label: Extension
     description: Which extension are you using
-    placeholder: ViolentMonkey / TamperMonkey / Other method
+    placeholder: Violentmonkey / TamperMonkey / Other method
   validations:
     required: true
 - type: textarea
@@ -65,10 +65,10 @@ body:
       - label: Channel (NSFW)
 - type: textarea
   attributes:
-    label: Additional information & file uploads  
+    label: Additional information & file uploads
     description: |
       You can add screenshots and additional information that is relevant to the issue in the comments below.
       IMPORTANT: Make sure to verify you're not sharing any personal information. Redact any ID's or Names that might appear.
-      Github Issues are publicly visible, do not post sensitive information here!
+      GitHub Issues are publicly visible, do not post sensitive information here!
   validations:
     required: true
