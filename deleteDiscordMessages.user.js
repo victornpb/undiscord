@@ -2,9 +2,8 @@
 // @name          Undiscord - Delete all messages in a Discord channel or DM (Bulk deletion)
 // @description   Extends the discord interface so you can mass delete messages from discord
 // @namespace     https://github.com/victornpb/deleteDiscordMessages
-// @version       4.2
+// @version       4.3
 // @match         https://discord.com/*
-// @downloadURL   https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
 // @homepageURL   https://github.com/victornpb/deleteDiscordMessages
 // @supportURL    https://github.com/victornpb/deleteDiscordMessages/issues
 // @contributionURL https://www.buymeacoffee.com/vitim
@@ -214,10 +213,30 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
             if (stopHndl && stopHndl() === false) return end(log.error('Stopped by you!'));
 
             return await recurse();
-        } else {
-            if (total - offset > 0) log.warn('Ended because API returned an empty page.');
+         } else {
+
+            if (total - offset > 0) {
+
+              log.warn(`Offset  ${offset}`);
+
+              offset += 25;
+
+              //log.warn(`Offset  ${offset}`);
+
+              await wait(searchDelay);
+
+              if (stopHndl && stopHndl() === false) return end(log.error('Stopped by you!'));
+
+              return await recurse();
+
+              log.warn('Ended because API returned an empty page.');
+
+            }
+
             return end();
+
         }
+
     }
 
     log.success(`\nStarted at ${start.toLocaleString()}`);
