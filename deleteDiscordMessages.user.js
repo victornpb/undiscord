@@ -2,7 +2,7 @@
 // @name          Undiscord - Delete all messages in a Discord channel or DM (Bulk deletion)
 // @description   Extends the discord interface so you can mass delete messages from discord
 // @namespace     https://github.com/victornpb/deleteDiscordMessages
-// @version       4.2
+// @version       4.3
 // @match         https://discord.com/*
 // @downloadURL   https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
 // @homepageURL   https://github.com/victornpb/deleteDiscordMessages
@@ -215,7 +215,15 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
 
             return await recurse();
         } else {
-            if (total - offset > 0) log.warn('Ended because API returned an empty page.');
+            if (total - offset > 0) {
+              log.warn(`Offset  ${offset}`);
+              offset += 25;
+              //log.warn(`Offset  ${offset}`);
+              await wait(searchDelay);
+              if (stopHndl && stopHndl() === false) return end(log.error('Stopped by you!'));
+              return await recurse();
+              log.warn('Ended because API returned an empty page.');
+            }
             return end();
         }
     }
@@ -285,7 +293,7 @@ function initUI() {
                     <button id="getGuildAndChannel">get</button><br>
                     <input id="guildId" type="text" placeholder="Guild ID" priv><br>
                     <input id="channelId" type="text" placeholder="Channel ID" priv><br>
-                    <label><input id="includeNsfw" type="checkbox">NSFW Channel</label><br><br>
+                    <label><input id="includeNsfw" type="checkbox" checked>NSFW Channel</label><br><br>
                     <label for="file" title="Import list of channels from messages/index.json file"> Import: <span
                             class="btn">...</span> <input id="file" type="file" accept="application/json,.json"></label>
                 </span><br>
