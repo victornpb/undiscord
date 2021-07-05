@@ -186,10 +186,10 @@
         async function recurse() {
             let API_SEARCH_URL;
             if (guildId === '@me') {
-                API_SEARCH_URL = `https://discord.com/api/v6/channels/${channelId}/messages/`; // DMs
+                API_SEARCH_URL = `https://discord.com/api/v9/channels/${channelId}/messages/`; // DMs
             }
             else {
-                API_SEARCH_URL = `https://discord.com/api/v6/guilds/${guildId}/messages/`; // Server
+                API_SEARCH_URL = `https://discord.com/api/v9/guilds/${guildId}/messages/`; // Server
             }
 
             const headers = {
@@ -296,7 +296,7 @@
                     let resp;
                     try {
                         const s = Date.now();
-                        const API_DELETE_URL = `https://discord.com/api/v6/channels/${message.channel_id}/messages/${message.id}`;
+                        const API_DELETE_URL = `https://discord.com/api/v9/channels/${message.channel_id}/messages/${message.id}`;
                         resp = await fetch(API_DELETE_URL, {
                             headers,
                             method: 'DELETE'
