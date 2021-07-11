@@ -312,7 +312,7 @@
                             await wait(deleteDelay);
                             log.error('Delete request throwed an error:', err);
                             log.verb('Related object:', redact(JSON.stringify(message)));
-                            deleteErrorCount++;
+                            delErrCount++;
                             failCount++;
                         }
                     }while(deleteError);
