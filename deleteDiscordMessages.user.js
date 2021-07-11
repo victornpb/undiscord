@@ -186,7 +186,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                         failCount++;
                         delErr = true;
                     }
-                }while(deleteError);
+                }while(deleteError && delErrCount < 5); // retry deleting a message up to five times if there's an error
 
                 if (!resp.ok) {
                     // deleting messages too fast
