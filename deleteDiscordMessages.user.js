@@ -166,21 +166,23 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                 let resp;
                 let deleteErrorCount = 0;
                 let deleteError = false;
-                try {
-                    const s = Date.now();
-                    const API_DELETE_URL = `https://discord.com/api/v6/channels/${message.channel_id}/messages/${message.id}`;
-                    resp = await fetch(API_DELETE_URL, {
-                        headers,
-                        method: 'DELETE'
-                    });
-                    lastPing = (Date.now() - s);
-                    avgPing = (avgPing * 0.9) + (lastPing * 0.1);
-                    delCount++;
-                } catch (err) {
-                    log.error('Delete request throwed an error:', err);
-                    log.verb('Related object:', redact(JSON.stringify(message)));
-                    failCount++;
-                }
+                do{
+                    try {
+                        const s = Date.now();
+                        const API_DELETE_URL = `https://discord.com/api/v6/channels/${message.channel_id}/messages/${message.id}`;
+                        resp = await fetch(API_DELETE_URL, {
+                            headers,
+                            method: 'DELETE'
+                        });
+                        lastPing = (Date.now() - s);
+                        avgPing = (avgPing*0.9) + (lastPing*0.1);
+                        delCount++;
+                    } catch (err) {
+                        log.error('Delete request throwed an error:', err);
+                        log.verb('Related object:', redact(JSON.stringify(message)));
+                        failCount++;
+                    }
+                }while(deleteError);
 
                 if (!resp.ok) {
                     // deleting messages too fast
