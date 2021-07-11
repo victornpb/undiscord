@@ -181,6 +181,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                         await wait(deleteDelay);
                         log.error('Delete request throwed an error:', err);
                         log.verb('Related object:', redact(JSON.stringify(message)));
+                        deleteErrorCount++;
                         failCount++;
                     }
                 }while(deleteError);
