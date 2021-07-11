@@ -308,6 +308,7 @@
                             avgPing = (avgPing*0.9) + (lastPing*0.1);
                             delCount++;
                         } catch (err) {
+                            await wait(deleteDelay);
                             log.error('Delete request throwed an error:', err);
                             log.verb('Related object:', redact(JSON.stringify(message)));
                             failCount++;
