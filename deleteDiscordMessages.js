@@ -294,8 +294,8 @@
                     if (onProgress) onProgress(delCount + 1, grandTotal);
                     
                     let resp;
-                    let deleteErrorCount = 0;
-                    let deleteError = false;
+                    let delErrCount = 0;
+                    let delErr = false;
                     do{
                         try {
                             const s = Date.now();
