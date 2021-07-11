@@ -168,6 +168,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                 let delErr = false;
                 do{
                     try {
+                        delErr = false;
                         const s = Date.now();
                         const API_DELETE_URL = `https://discord.com/api/v6/channels/${message.channel_id}/messages/${message.id}`;
                         resp = await fetch(API_DELETE_URL, {
