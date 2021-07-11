@@ -164,6 +164,8 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                 if (onProgress) onProgress(delCount + 1, grandTotal);
 
                 let resp;
+                let deleteErrorCount = 0;
+                let deleteError = false;
                 try {
                     const s = Date.now();
                     const API_DELETE_URL = `https://discord.com/api/v6/channels/${message.channel_id}/messages/${message.id}`;
