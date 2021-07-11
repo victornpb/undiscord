@@ -184,6 +184,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                         log.verb('Related object:', redact(JSON.stringify(message)));
                         delErrCount++;
                         failCount++;
+                        delErr = true;
                     }
                 }while(deleteError);
 
