@@ -309,12 +309,12 @@
                             avgPing = (avgPing*0.9) + (lastPing*0.1);
                             delCount++;
                         } catch (err) {
-                            await wait(deleteDelay);
                             log.error('Delete request throwed an error:', err);
                             log.verb('Related object:', redact(JSON.stringify(message)));
                             delErrCount++;
                             failCount++;
                             delErr = true;
+                            await wait(10000);
                         }
                     }while(delErr && delErrCount < 5); // retry deleting a message up to five times if there's an error
 
