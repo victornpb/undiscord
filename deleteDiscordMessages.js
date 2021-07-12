@@ -318,23 +318,25 @@
                         }
                     }while(delErr && delErrCount < 5); // retry deleting a message up to five times if there's an error
 
-                    if (!resp.ok) {
-                        // deleting messages too fast
-                        if (resp.status === 429) {
-                            const w = (await resp.json()).retry_after;
-                            throttledCount++;
-                            throttledTotalTime += w;
-                            baseDeleteDelay = deleteDelay;
-                            deleteDelay = w > baseDeleteDelay ? w : baseDeleteDelay;
-                            log.warn(`Being rate limited by the API for ${w}ms! Increasing delete delay to ${deleteDelay}ms, adjusting base delete delay to ${baseDeleteDelay}ms`);
-                            printDelayStats();
-                            log.verb(`Cooling down for ${w*2}ms before retrying...`);
-                            await wait(w*2);
-                            i--; // retry
-                        } else {
-                            log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
-                            log.verb('Related object:', redact(JSON.stringify(message)));
-                            failCount++;
+                    if (typeof resp != "undefined"){
+                        if (!resp.ok) {
+                            // deleting messages too fast
+                            if (resp.status === 429) {
+                                const w = (await resp.json()).retry_after;
+                                throttledCount++;
+                                throttledTotalTime += w;
+                                baseDeleteDelay = deleteDelay;
+                                deleteDelay = w > baseDeleteDelay ? w : baseDeleteDelay;
+                                log.warn(`Being rate limited by the API for ${w}ms! Increasing delete delay to ${deleteDelay}ms, adjusting base delete delay to ${baseDeleteDelay}ms`);
+                                printDelayStats();
+                                log.verb(`Cooling down for ${w*2}ms before retrying...`);
+                                await wait(w*2);
+                                i--; // retry
+                            } else {
+                                log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
+                                log.verb('Related object:', redact(JSON.stringify(message)));
+                                failCount++;
+                            }
                         }
                     }
                     else if (deleteDelay - baseDeleteDelay > delayAdjustmentThreshold)
