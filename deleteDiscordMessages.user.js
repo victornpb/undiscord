@@ -29,7 +29,7 @@
  * @author Victornpb <https://www.github.com/victornpb>
  * @see https://github.com/victornpb/deleteDiscordMessages
  */
-async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, includePinned, searchDelay, deleteDelay, extLogger, stopHndl, onProgress) {
+async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, includePinned, searchDelay, deleteDelay, retryDelay, extLogger, stopHndl, onProgress) {
     const start = new Date();
     let delCount = 0;
     let failCount = 0;
@@ -184,7 +184,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                         delErrCount++;
                         failCount++;
                         delErr = true;
-                        await wait(10000);
+                        await wait(retryDelay);
                     }
                 }while(delErr && delErrCount < 5); // retry deleting a message up to five times if there's an error
 
@@ -324,6 +324,12 @@ function initUI() {
                 target="_blank">?</a><br>
                     <input id="deleteDelay" type="number" value="1000" step="100">
                 </span>
+                </span>
+                <span>Retry Delay <a
+                href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/delay.md" title="Help"
+                target="_blank">?</a><br>
+                    <input id="retryDelay" type="number" value="5000" step="1000">
+                </span>
             </div>
             <hr>
             <button id="start" style="background:#43b581;width:80px;">Start</button>
@@ -397,6 +403,7 @@ function initUI() {
         const includePinned = $('input#includePinned').checked;
         const searchDelay = parseInt($('input#searchDelay').value.trim());
         const deleteDelay = parseInt($('input#deleteDelay').value.trim());
+        const retryDelay = parseInt($('input#retryDelay').value.trim());
         const progress = $('#progress');
         const progress2 = btn.querySelector('progress');
         const percent = $('.percent');
@@ -431,7 +438,7 @@ function initUI() {
 
         stop = stopBtn.disabled = !(startBtn.disabled = true);
         for (let i = 0; i < channelIds.length; i++) {
-            await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, searchDelay, deleteDelay, logger, stopHndl, onProg);
+            await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, searchDelay, deleteDelay, retryDelay, logger, stopHndl, onProg);
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         }
     };

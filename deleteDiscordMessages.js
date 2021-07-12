@@ -153,6 +153,8 @@
         const delayAdjustmentThreshold = 5; // ms
         let baseDeleteDelay = 100;
         let deleteDelay = baseDeleteDelay;
+        let baseRetryDelay = 5000;
+        let retryDelay = 5000;
         let baseSearchDelay = 100;
         let searchDelay = baseSearchDelay;
         let delCount = 0;
@@ -171,7 +173,7 @@
         const redact = str => `<span class="priv">${escapeHTML(str)}</span><span class="mask">REDACTED</span>`;
         const queryString = params => params.filter(p => p[1] !== undefined).map(p => p[0] + '=' + encodeURIComponent(p[1])).join('&');
         const ask = async msg => new Promise(resolve => setTimeout(() => resolve(popup.confirm(msg)), 10));
-        const printDelayStats = () => log.verb(`Delete delay: ${deleteDelay}ms, Search delay: ${searchDelay}ms`, `Last Ping: ${lastPing}ms, Average Ping: ${avgPing|0}ms`);
+        const printDelayStats = () => log.verb(`Delete delay: ${deleteDelay}ms, Search delay: ${searchDelay}ms`, `Retry delay: ${retryDelay}ms,` `Last Ping: ${lastPing}ms, Average Ping: ${avgPing|0}ms`);
         const toSnowflake = (date) => /:/.test(date) ? ((new Date(date).getTime() - 1420070400000) * Math.pow(2, 22)) : date;
             
         const log = {
@@ -314,7 +316,7 @@
                             delErrCount++;
                             failCount++;
                             delErr = true;
-                            await wait(10000);
+                            await wait(retryDelay);
                         }
                     }while(delErr && delErrCount < 5); // retry deleting a message up to five times if there's an error
 
