@@ -93,10 +93,9 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                 avgPing = avgPing > 0 ? (avgPing * 0.9) + (lastPing * 0.1) : lastPing;
             } catch (err) {
                 log.error('Search request threw an error:', err);
+                await wait(retryDelay);
             }
         }while(typeof resp === 'undefined');
-
-
         // not indexed yet
         if (resp.status === 202) {
             const w = (await resp.json()).retry_after;
