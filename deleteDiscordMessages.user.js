@@ -73,26 +73,29 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
         };
 
         let resp;
-        try {
-            const s = Date.now();
-            resp = await fetch(API_SEARCH_URL + 'search?' + queryString([
-                ['author_id', authorId || undefined],
-                ['channel_id', (guildId !== '@me' ? channelId : undefined) || undefined],
-                ['min_id', minId ? toSnowflake(minId) : undefined],
-                ['max_id', maxId ? toSnowflake(maxId) : undefined],
-                ['sort_by', 'timestamp'],
-                ['sort_order', 'desc'],
-                ['offset', offset],
-                ['has', hasLink ? 'link' : undefined],
-                ['has', hasFile ? 'file' : undefined],
-                ['content', content || undefined],
-                ['include_nsfw', includeNsfw ? true : undefined],
-            ]), { headers });
-            lastPing = (Date.now() - s);
-            avgPing = avgPing > 0 ? (avgPing * 0.9) + (lastPing * 0.1) : lastPing;
-        } catch (err) {
-            return log.error('Search request threw an error:', err);
-        }
+        do{
+            try {
+                const s = Date.now();
+                resp = await fetch(API_SEARCH_URL + 'search?' + queryString([
+                    ['author_id', authorId || undefined],
+                    ['channel_id', (guildId !== '@me' ? channelId : undefined) || undefined],
+                    ['min_id', minId ? toSnowflake(minId) : undefined],
+                    ['max_id', maxId ? toSnowflake(maxId) : undefined],
+                    ['sort_by', 'timestamp'],
+                    ['sort_order', 'desc'],
+                    ['offset', offset],
+                    ['has', hasLink ? 'link' : undefined],
+                    ['has', hasFile ? 'file' : undefined],
+                    ['content', content || undefined],
+                    ['include_nsfw', includeNsfw ? true : undefined],
+                ]), { headers });
+                lastPing = (Date.now() - s);
+                avgPing = avgPing > 0 ? (avgPing * 0.9) + (lastPing * 0.1) : lastPing;
+            } catch (err) {
+                log.error('Search request threw an error:', err);
+            }
+        }while(typeof resp === 'undefined');
+
 
         // not indexed yet
         if (resp.status === 202) {
