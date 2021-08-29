@@ -391,20 +391,6 @@ function initUI() {
         const progress2 = btn.querySelector('progress');
         const percent = $('.percent');
 
-        const fileSelection = $("input#file");
-        fileSelection.addEventListener("change", () => {
-            const files = fileSelection.files;
-            const channelIdField = $('input#channelId');
-            if (files.length > 0) {
-                const file = files[0];
-                file.text().then(text => {
-                    let json = JSON.parse(text);
-                    let channels = Object.keys(json);
-                    channelIdField.value = channels.join(",");
-                });
-            }
-        }, false);
-
         const stopHndl = () => !(stop === true);
 
         const onProg = (value, max) => {
@@ -426,6 +412,17 @@ function initUI() {
         }
     };
     stopBtn.onclick = e => stop = stopBtn.disabled = !(startBtn.disabled = false);
+    $('input#file').onchange = (e) => {
+      const files = e.target.files;
+      const channelIdField = $('input#channelId');
+      if (files.length > 0) {
+        const file = files[0];
+        file.text().then(text => {
+          let json = JSON.parse(text);
+          channelIdField.value = Object.keys(json).join(",");
+        });
+      }
+    }
     $('button#clear').onclick = e => { logArea.innerHTML = ''; };
     $('button#getToken').onclick = e => {
         window.dispatchEvent(new Event('beforeunload'));
