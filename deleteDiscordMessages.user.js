@@ -146,13 +146,18 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
 
         if (messagesToDelete.length > 0) {
 
-            if (++iterations < 1) {
-                log.verb(`Waiting for your confirmation...`);
-                if (!await ask(`Do you want to delete ~${total} messages?\nEstimated time: ${etr}\n\n---- Preview ----\n` +
-                    messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n')))
-                    return end(log.error('Aborted by you!'));
-                log.verb(`OK`);
+          if (++iterations < 1) {
+            const confirmation = $('#confirmation');
+
+            if (confirmation.checked) {
+              log.verb(`Waiting for your confirmation...`);
+              if (!await ask(`Do you want to delete ~${total} messages?\nEstimated time: ${etr}\n\n---- Preview ----\n` +
+                messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n')))
+                return end(log.error('Aborted by you!'));
             }
+
+            log.verb(`OK`);
+          }
 
             for (let i = 0; i < messagesToDelete.length; i++) {
                 const message = messagesToDelete[i];
@@ -319,6 +324,7 @@ function initUI() {
             <button id="start" style="background:#43b581;width:80px;">Start</button>
             <button id="stop" style="background:#f04747;width:80px;" disabled>Stop</button>
             <button id="clear" style="width:80px;">Clear log</button>
+            <label><input id="confirmation" type="checkbox" checked>Confirmation</label>
             <label><input id="autoScroll" type="checkbox" checked>Auto scroll</label>
             <label title="Hide sensitive information for taking screenshots"><input id="redact" type="checkbox">Screenshot
                 mode</label>
