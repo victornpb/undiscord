@@ -4,35 +4,35 @@
 > Discord appears to have recently started terminating accounts using self-bots ([thread](https://github.com/victornpb/deleteDiscordMessages/issues/193)). Use at your own risk.
 
 1. Install a **browser extension** for managing **user scripts** (skip if you already have one):
-    
-    - Chrome: [Violentmonkey](https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag) or [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)     
-    - Firefox: [Greasemonkey](https://addons.mozilla.org/firefox/addon/greasemonkey/), [Tampermonkey](https://addons.mozilla.org/firefox/addon/tampermonkey/), or [Violentmonkey](https://addons.mozilla.org/firefox/addon/violentmonkey/)  
-    - Safari: ~[Tampermonkey](https://github.com/victornpb/deleteDiscordMessages/issues/91#issuecomment-654514364)~ 
-    - Microsoft Edge: [Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd) or [Violentmonkey](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao)  
-    - Opera: [Tampermonkey](https://addons.opera.com/extensions/details/tampermonkey-beta/) or [Violentmonkey](https://addons.opera.com/extensions/details/violent-monkey/)  
+
+   - Chrome: [Violentmonkey](https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag) or [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+   - Firefox: [Greasemonkey](https://addons.mozilla.org/firefox/addon/greasemonkey/), [Tampermonkey](https://addons.mozilla.org/firefox/addon/tampermonkey/), or [Violentmonkey](https://addons.mozilla.org/firefox/addon/violentmonkey/)
+   - Safari: ~[Tampermonkey](https://github.com/victornpb/deleteDiscordMessages/issues/91#issuecomment-654514364)~
+   - Microsoft Edge: [Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd) or [Violentmonkey](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao)
+   - Opera: [Tampermonkey](https://addons.opera.com/extensions/details/tampermonkey-beta/) or [Violentmonkey](https://addons.opera.com/extensions/details/violent-monkey/)
 
 1. Install Undiscord **<a href="https://openuserjs.org/scripts/victornpb/Undiscord_-_Delete_all_messages_in_a_Discord_channel_or_DM_(Bulk_deletion)" target="_blank">Install from OpenUserJS</a> or <a href="https://greasyfork.org/en/scripts/406540-undiscord-delete-all-messages-in-a-discord-channel-or-dm-bulk-deletion" target="_blank">Install from GreasyFork</a>**
 
-1. Open <a href="https://discord.com/channels/@me" target="_blank">Discord</a> in your __browser__ (Not the App) and go to the Channel/Conversation you want to delete
+1. Open <a href="https://discord.com/channels/@me" target="_blank">Discord</a> in your **browser** (Not the App) and go to the Channel/Conversation you want to delete
 
-1. Click the *Trash icon* that was added in the *top right corner*
+1. Click the _Trash icon_ that was added in the _top right corner_
 
 1. Click on the blue buttons near **Authorization**, **Author** and **Channel**.  
-   *(Optional: getting [authToken](./help/authToken.md), [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md)  manually)*
+   _(Optional: getting [authToken](./help/authToken.md), [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md) manually)_
 
 1. Click the **START** button.
 
 ![Screenshot](https://user-images.githubusercontent.com/3372598/86538983-b60c7980-becf-11ea-8cad-1a33950e77fc.gif)
 
-I made this tool just for you ❤️ , it would be awesome if you could just click the [⭐️ Star button](https://github.com/victornpb/deleteDiscordMessages) at the top! 
-   
+I made this tool just for you ❤️ , it would be awesome if you could just click the [⭐️ Star button](https://github.com/victornpb/deleteDiscordMessages) at the top!
+
 If you have issues or just need help [open an issue here](https://github.com/victornpb/deleteDiscordMessages/issues)
 
-> A few extra generous people asked for this, so here you can [buy me a coffee](https://www.buymeacoffee.com/vitim). Thank you! You'll be in my special list ^_^
+> A few extra generous people asked for this, so here you can [buy me a coffee](https://www.buymeacoffee.com/vitim). Thank you! You'll be in my special list ^\_^
 
 \* Looking for the old Copy/Paste version? [here](./help/copyPaste.md)
 
-----
+---
 
 #### Features
 
@@ -49,17 +49,18 @@ If you have issues or just need help [open an issue here](https://github.com/vic
 - Start/stop whenever you want
 - Works with even thousands of messages
 
-----
+---
 
 Originally from https://gist.github.com/victornpb/135f5b346dea4decfc8f63ad7d9cc182
 
-----
+---
 
 #### About running code on your console
 
 I don't recommend running code from random places you get on the internet. For that same reason, I deliberately choose to make it readable (that's why it is a bit lenthy). That way people can analyze it and understand what does it does before running it, and be sure that nothing sketchy is happening under the hood.
 
-----
+---
+
 # DO NOT SHARE YOUR `authToken`!
 
 Sharing your authToken on the internet will give full access to your account! [There are bots gathering credentials all over the internet](https://github.com/rndinfosecguy/Scavenger).
@@ -68,7 +69,8 @@ Changing your password will make sure that you get logged out of every device. I
 
 If you are unsure do not share screenshots, or copy paste logs on the internet.
 
-----
+---
+
 > **DISCLAIMER:**
 > THE SOFTWARE AND ALL INFORMATION HERE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 >
