@@ -29,7 +29,7 @@
  * @author Victornpb <https://www.github.com/victornpb>
  * @see https://github.com/victornpb/deleteDiscordMessages
  */
-async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, includePinned, searchDelay, deleteDelay, extLogger, stopHndl, onProgress) {
+async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, includePinned, searchDelay, deleteDelay, retryDelay, extLogger, stopHndl, onProgress) {
     const start = new Date();
     let delCount = 0;
     let failCount = 0;
@@ -73,27 +73,29 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
         };
 
         let resp;
-        try {
-            const s = Date.now();
-            resp = await fetch(API_SEARCH_URL + 'search?' + queryString([
-                ['author_id', authorId || undefined],
-                ['channel_id', (guildId !== '@me' ? channelId : undefined) || undefined],
-                ['min_id', minId ? toSnowflake(minId) : undefined],
-                ['max_id', maxId ? toSnowflake(maxId) : undefined],
-                ['sort_by', 'timestamp'],
-                ['sort_order', 'desc'],
-                ['offset', offset],
-                ['has', hasLink ? 'link' : undefined],
-                ['has', hasFile ? 'file' : undefined],
-                ['content', content || undefined],
-                ['include_nsfw', includeNsfw ? true : undefined],
-            ]), { headers });
-            lastPing = (Date.now() - s);
-            avgPing = avgPing > 0 ? (avgPing * 0.9) + (lastPing * 0.1) : lastPing;
-        } catch (err) {
-            return log.error('Search request threw an error:', err);
-        }
-
+        do{
+            try {
+                const s = Date.now();
+                resp = await fetch(API_SEARCH_URL + 'search?' + queryString([
+                    ['author_id', authorId || undefined],
+                    ['channel_id', (guildId !== '@me' ? channelId : undefined) || undefined],
+                    ['min_id', minId ? toSnowflake(minId) : undefined],
+                    ['max_id', maxId ? toSnowflake(maxId) : undefined],
+                    ['sort_by', 'timestamp'],
+                    ['sort_order', 'desc'],
+                    ['offset', offset],
+                    ['has', hasLink ? 'link' : undefined],
+                    ['has', hasFile ? 'file' : undefined],
+                    ['content', content || undefined],
+                    ['include_nsfw', includeNsfw ? true : undefined],
+                ]), { headers });
+                lastPing = (Date.now() - s);
+                avgPing = avgPing > 0 ? (avgPing * 0.9) + (lastPing * 0.1) : lastPing;
+            } catch (err) {
+                log.error('Search request threw an error:', err);
+                await wait(retryDelay);
+            }
+        }while(typeof resp === 'undefined');
         // not indexed yet
         if (resp.status === 202) {
             const w = (await resp.json()).retry_after;
@@ -164,38 +166,48 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                 if (onProgress) onProgress(delCount + 1, grandTotal);
 
                 let resp;
-                try {
-                    const s = Date.now();
-                    const API_DELETE_URL = `https://discord.com/api/v6/channels/${message.channel_id}/messages/${message.id}`;
-                    resp = await fetch(API_DELETE_URL, {
-                        headers,
-                        method: 'DELETE'
-                    });
-                    lastPing = (Date.now() - s);
-                    avgPing = (avgPing * 0.9) + (lastPing * 0.1);
-                    delCount++;
-                } catch (err) {
-                    log.error('Delete request throwed an error:', err);
-                    log.verb('Related object:', redact(JSON.stringify(message)));
-                    failCount++;
-                }
-
-                if (!resp.ok) {
-                    // deleting messages too fast
-                    if (resp.status === 429) {
-                        const w = (await resp.json()).retry_after;
-                        throttledCount++;
-                        throttledTotalTime += w;
-                        deleteDelay = w; // increase delay
-                        log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${deleteDelay}ms.`);
-                        printDelayStats();
-                        log.verb(`Cooling down for ${w * 2}ms before retrying...`);
-                        await wait(w * 2);
-                        i--; // retry
-                    } else {
-                        log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
+                let delErrCount = 0;
+                let delErr = false;
+                do{
+                    try {
+                        delErr = false;
+                        const s = Date.now();
+                        const API_DELETE_URL = `https://discord.com/api/v6/channels/${message.channel_id}/messages/${message.id}`;
+                        resp = await fetch(API_DELETE_URL, {
+                            headers,
+                            method: 'DELETE'
+                        });
+                        lastPing = (Date.now() - s);
+                        avgPing = (avgPing*0.9) + (lastPing*0.1);
+                        delCount++;
+                    } catch (err) {
+                        log.error('Delete request throwed an error:', err);
                         log.verb('Related object:', redact(JSON.stringify(message)));
+                        delErrCount++;
                         failCount++;
+                        delErr = true;
+                        await wait(retryDelay);
+                    }
+                }while(delErr && delErrCount < 5); // retry deleting a message up to five times if there's an error
+
+                if (typeof resp != "undefined"){
+                    if (!resp.ok) {
+                        // deleting messages too fast
+                        if (resp.status === 429) {
+                            const w = (await resp.json()).retry_after;
+                            throttledCount++;
+                            throttledTotalTime += w;
+                            deleteDelay = w; // increase delay
+                            log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${deleteDelay}ms.`);
+                            printDelayStats();
+                            log.verb(`Cooling down for ${w * 2}ms before retrying...`);
+                            await wait(w * 2);
+                            i--; // retry
+                        } else {
+                            log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
+                            log.verb('Related object:', redact(JSON.stringify(message)));
+                            failCount++;
+                        }
                     }
                 }
 
@@ -314,6 +326,12 @@ function initUI() {
                 target="_blank">?</a><br>
                     <input id="deleteDelay" type="number" value="1000" step="100">
                 </span>
+                </span>
+                <span>Retry Delay <a
+                href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/delay.md" title="Help"
+                target="_blank">?</a><br>
+                    <input id="retryDelay" type="number" value="5000" step="1000">
+                </span>
             </div>
             <hr>
             <button id="start" style="background:#43b581;width:80px;">Start</button>
@@ -387,6 +405,7 @@ function initUI() {
         const includePinned = $('input#includePinned').checked;
         const searchDelay = parseInt($('input#searchDelay').value.trim());
         const deleteDelay = parseInt($('input#deleteDelay').value.trim());
+        const retryDelay = parseInt($('input#retryDelay').value.trim());
         const progress = $('#progress');
         const progress2 = btn.querySelector('progress');
         const percent = $('.percent');
@@ -421,7 +440,7 @@ function initUI() {
 
         stop = stopBtn.disabled = !(startBtn.disabled = true);
         for (let i = 0; i < channelIds.length; i++) {
-            await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, searchDelay, deleteDelay, logger, stopHndl, onProg);
+            await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, searchDelay, deleteDelay, retryDelay, logger, stopHndl, onProg);
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         }
     };
