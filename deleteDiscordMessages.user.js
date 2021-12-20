@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Undiscord - Delete all messages in a Discord channel or DM (Bulk deletion)
-// @name:de         Undiscord - Lösche alle Nachrichten in einem Discord-Kanal oder DM (Bulk-Deletion)
+// @name:de         Undiscord - Lösche alle Nachrichten in einem Discord-Kanal oder in einer Direktnachricht (Massen-Löschung)
 // @description     Extends the discord interface so you can mass delete messages from discord
 // @description.de  Erweitert die Discord-Schnittstelle, sodass Du Nachrichten in Massen von Discord löschen kannst
 // @namespace       https://github.com/victornpb/deleteDiscordMessages
