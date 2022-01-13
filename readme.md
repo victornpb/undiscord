@@ -1,7 +1,7 @@
 # Undiscord - Delete all messages in a Discord channel or DM
 
 > :warning: **Any tool for deleting messages, including this one, could result in the termination of your account** (see [self-bots](https://support.discordapp.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-)).
-> Discord appears to have recently started terminating accounts using self-bots ([thread](https://github.com/victornpb/deleteDiscordMessages/issues/193)). Use at your own risk.
+> Discord appears to have recently started terminating accounts using self-bots ([thread](https://github.com/victornpb/deleteDiscordMessages/discussions/273)). Use at your own risk.
 
 1. Install a **browser extension** for managing **user scripts** (skip if you already have one):
     
