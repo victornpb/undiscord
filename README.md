@@ -28,7 +28,7 @@ This project is a fork of [victornpb's deleteDiscordMessages project](https://gi
 
 If you have issues or just need help feel free to [open an issue here](https://github.com/abbydiode/UndiscordPlus/issues).
 
-# DISCLAIMER
+# Disclaimer
 
 **DO NOT SHARE YOUR AUTHORIZATION TOKEN!**
 
