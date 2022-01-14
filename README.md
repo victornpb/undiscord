@@ -26,7 +26,7 @@
 
 ![Screenshot](https://user-images.githubusercontent.com/3372598/86538983-b60c7980-becf-11ea-8cad-1a33950e77fc.gif)
 
-## Help and Information
+## Information
 
 If you find an issue please [open an issue here](https://github.com/abbydiode/UndiscordPlus/issues).
 
