@@ -16,7 +16,7 @@
 4. Click the <kbd>🗑️</kbd> button that was added in the top right corner.
 
 5. Click on the <kbd>Get</kbd> buttons near **Authorization**, **Author** and **Channel**.  
-   *(Optional: getting [authToken](./help/authToken.md), [authorId](./help/authorId.md), [channelId](./help/channelId.md) and [messageId](./help/messageId.md)  manually)*
+   *Optionally you can get [Authorization Tokens](../../wiki/Authorization-Tokens), [User IDs](../../wiki/User-IDs), [Guild and Channel IDs](../../wiki/Guild-and-Channel-IDs), and [Message IDs](../../wiki/Message-IDs) manually*
 
 6. Click the <kbd>Start</kbd> button.
 
