@@ -1,4 +1,4 @@
-# Undiscord Plus - Wipe your messages in a Discord channel or private conversation fast and easy
+# Undiscord+ - Wipe your messages in a Discord channel or private conversation fast and easy
 
 > :warning: **Any tool for deleting messages, including this one, could result in the termination of your account** (see [self-bots](https://support.discordapp.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-)). Use at your own risk!
 
