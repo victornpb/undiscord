@@ -3,7 +3,7 @@
 // @description   Wipe your messages in a Discord channel or private conversation fast and easy
 // @author        https://github.com/abbydiode
 // @namespace     https://github.com/abbydiode/deleteDiscordMessages
-// @version       5.0.3
+// @version       5.0.4
 // @match         https://discord.com/*
 // @downloadURL   https://github.com/abbydiode/UndiscordPlus/raw/master/deleteDiscordMessages.user.js
 // @homepageURL   https://github.com/abbydiode/UndiscordPlus
@@ -286,7 +286,7 @@ function initUI() {
                     <button id="getGuildAndChannel">Get</button><br>
                     <input id="guildId" type="text" placeholder="Guild ID" priv><br>
                     <input id="channelId" type="text" placeholder="Channel ID" priv><br>
-                    <label><input id="includeNsfw" type="checkbox">NSFW Channel</label><br><br>
+                    <label><input id="includeNsfw" type="checkbox" checked>NSFW Channel</label><br><br>
                     <label for="file" title="Import list of channels from messages/index.json file"> Import: <span
                             class="btn">...</span> <input id="file" type="file" accept="application/json,.json"></label>
                 </span><br>
