@@ -273,23 +273,23 @@ function initUI() {
         <div class="form">
             <div style="display:flex;flex-wrap:wrap;">
                 <span>Authorization <a
-                        href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authToken.md" title="Help"
-                        target="_blank">?</a> <button id="getToken">get</button><br>
+                        href="https://github.com/abbydiode/UndiscordPlus/wiki/Authorization-Tokens" title="Help"
+                        target="_blank">?</a> <button id="getToken">Get</button><br>
                     <input type="password" id="authToken" placeholder="Auth Token" autofocus>*<br>
-                    <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md"
-                            title="Help" target="_blank">?</a> <button id="getAuthor">get</button></span>
+                    <span>Author <a href="https://github.com/abbydiode/UndiscordPlus/wiki/User-IDs"
+                            title="Help" target="_blank">?</a> <button id="getAuthor">Get</button></span>
                     <br><input id="authorId" type="text" placeholder="Author ID" priv></span>
                 <span>Guild/Channel <a
-                        href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help"
+                        href="https://github.com/abbydiode/UndiscordPlus/wiki/Guild-and-Channel-IDs" title="Help"
                         target="_blank">?</a>
-                    <button id="getGuildAndChannel">get</button><br>
+                    <button id="getGuildAndChannel">Get</button><br>
                     <input id="guildId" type="text" placeholder="Guild ID" priv><br>
                     <input id="channelId" type="text" placeholder="Channel ID" priv><br>
                     <label><input id="includeNsfw" type="checkbox">NSFW Channel</label><br><br>
                     <label for="file" title="Import list of channels from messages/index.json file"> Import: <span
                             class="btn">...</span> <input id="file" type="file" accept="application/json,.json"></label>
                 </span><br>
-                <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md"
+                <span>Range <a href="https://github.com/abbydiode/UndiscordPlus/wiki/Message-IDs"
                         title="Help" target="_blank">?</a><br>
                     <input id="minDate" type="datetime-local" title="After" style="width:auto;"><br>
                     <input id="maxDate" type="datetime-local" title="Before" style="width:auto;"><br>
@@ -297,7 +297,7 @@ function initUI() {
                     <input id="maxId" type="text" placeholder="Before message with Id" priv><br>
                 </span>
                 <span>Search messages <a
-                        href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/filters.md" title="Help"
+                        href="https://github.com/abbydiode/UndiscordPlus/wiki/Filtering-Messages" title="Help"
                         target="_blank">?</a><br>
                     <input id="content" type="text" placeholder="Containing text" priv><br>
                     <label><input id="hasLink" type="checkbox">has: link</label><br>
@@ -306,12 +306,12 @@ function initUI() {
                     <label><input id="ascendingOrder" type="checkbox">Date ascending</label>
                 </span><br>
                 <span>Search Delay <a
-                href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/delay.md" title="Help"
+                href="https://github.com/abbydiode/UndiscordPlus/wiki/About-Delays" title="Help"
                 target="_blank">?</a><br>
                     <input id="searchDelay" type="number" value="100" step="100"><br>
                 </span>
                 <span>Delete Delay <a
-                href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/delay.md" title="Help"
+                href="https://github.com/abbydiode/UndiscordPlus/wiki/About-Delays" title="Help"
                 target="_blank">?</a><br>
                     <input id="deleteDelay" type="number" value="1000" step="100">
                 </span>
