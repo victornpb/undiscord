@@ -268,7 +268,7 @@ function initUI() {
     popover = createElm(`
     <div id="undiscord" style="display:none;">
         <div class="header">
-            Undiscord Plus
+            Undiscord+
         </div>
         <div class="form">
             <div style="display:flex;flex-wrap:wrap;">
