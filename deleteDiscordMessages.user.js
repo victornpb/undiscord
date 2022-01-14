@@ -1,15 +1,14 @@
 // ==UserScript==
-// @name          Undiscord - Delete all messages in a Discord channel or DM (Bulk deletion)
+// @name          Undiscord Plus - Wipe your messages in a Discord channel or private conversation
 // @description   Extends the discord interface so you can mass delete messages from discord
-// @namespace     https://github.com/victornpb/deleteDiscordMessages
-// @version       4.2
+// @namespace     https://github.com/abbydiode/deleteDiscordMessages
+// @version       5.0.0
 // @match         https://discord.com/*
-// @downloadURL   https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
-// @homepageURL   https://github.com/victornpb/deleteDiscordMessages
-// @supportURL    https://github.com/victornpb/deleteDiscordMessages/issues
-// @contributionURL https://www.buymeacoffee.com/vitim
-// @grant         none
-// @license       MIT
+// @downloadURL   https://github.com/abbydiode/UndiscordPlus/raw/master/deleteDiscordMessages.user.js
+// @homepageURL   https://github.com/abbydiode/UndiscordPlus
+// @supportURL    https://github.com/abbydiode/UndiscordPlusissues
+// @contributionURL https://ko-fi.com/abbydiode
+// @license       GPLv3
 // ==/UserScript==
 
 /**
@@ -27,8 +26,8 @@
  * @param {boolean} ascendingOrder Search in ascending order
  * @param {function(string, Array)} extLogger Function for logging
  * @param {function} stopHndl stopHndl used for stopping
- * @author Victornpb <https://www.github.com/victornpb>
- * @see https://github.com/victornpb/deleteDiscordMessages
+ * @author abbydiode <https://www.github.com/abbydiode>
+ * @see https://github.com/abbydiode/UndiscordPlus
  */
  async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, ascendingOrder, includePinned, searchDelay, deleteDelay, extLogger, stopHndl, onProgress) {
     const start = new Date();
@@ -269,7 +268,7 @@ function initUI() {
     popover = createElm(`
     <div id="undiscord" style="display:none;">
         <div class="header">
-            Undiscord - Bulk delete messages
+            Undiscord Plus
         </div>
         <div class="form">
             <div style="display:flex;flex-wrap:wrap;">
