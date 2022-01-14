@@ -24,12 +24,13 @@
  * @param {boolean} hasLink Filter messages that contains link
  * @param {boolean} hasFile Filter messages that contains file
  * @param {boolean} includeNsfw Search in NSFW channels
+ * @param {boolean} ascendingOrder Search in ascending order
  * @param {function(string, Array)} extLogger Function for logging
  * @param {function} stopHndl stopHndl used for stopping
  * @author Victornpb <https://www.github.com/victornpb>
  * @see https://github.com/victornpb/deleteDiscordMessages
  */
-async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, includePinned, searchDelay, deleteDelay, extLogger, stopHndl, onProgress) {
+ async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, ascendingOrder, includePinned, searchDelay, deleteDelay, extLogger, stopHndl, onProgress) {
     const start = new Date();
     let delCount = 0;
     let failCount = 0;
@@ -81,7 +82,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                 ['min_id', minId ? toSnowflake(minId) : undefined],
                 ['max_id', maxId ? toSnowflake(maxId) : undefined],
                 ['sort_by', 'timestamp'],
-                ['sort_order', 'desc'],
+                ['sort_order', ascendingOrder ? 'asc' : 'desc'],
                 ['offset', offset],
                 ['has', hasLink ? 'link' : undefined],
                 ['has', hasFile ? 'file' : undefined],
@@ -302,7 +303,8 @@ function initUI() {
                     <input id="content" type="text" placeholder="Containing text" priv><br>
                     <label><input id="hasLink" type="checkbox">has: link</label><br>
                     <label><input id="hasFile" type="checkbox">has: file</label><br>
-                    <label><input id="includePinned" type="checkbox">Include pinned</label>
+                    <label><input id="includePinned" type="checkbox">Include pinned</label><br>
+                    <label><input id="ascendingOrder" type="checkbox">Date ascending</label>
                 </span><br>
                 <span>Search Delay <a
                 href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/delay.md" title="Help"
@@ -385,6 +387,7 @@ function initUI() {
         const hasFile = $('input#hasFile').checked;
         const includeNsfw = $('input#includeNsfw').checked;
         const includePinned = $('input#includePinned').checked;
+        const ascendingOrder = $('input#ascendingOrder').checked;
         const searchDelay = parseInt($('input#searchDelay').value.trim());
         const deleteDelay = parseInt($('input#deleteDelay').value.trim());
         const progress = $('#progress');
@@ -421,7 +424,7 @@ function initUI() {
 
         stop = stopBtn.disabled = !(startBtn.disabled = true);
         for (let i = 0; i < channelIds.length; i++) {
-            await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, searchDelay, deleteDelay, logger, stopHndl, onProg);
+            await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, ascendingOrder, includePinned, searchDelay, deleteDelay, logger, stopHndl, onProg);
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         }
     };
