@@ -22,8 +22,6 @@
 6. Click the <kbd>Start</kbd> button.
 
 ![Screenshot](https://user-images.githubusercontent.com/3372598/86538983-b60c7980-becf-11ea-8cad-1a33950e77fc.gif)
-   
-If you have issues or just need help feel free to [open an issue here](https://github.com/abbydiode/UndiscordPlus/issues).
 
 # DO NOT SHARE YOUR AUTHORIZATION TOKEN!
 
@@ -36,3 +34,5 @@ If you are unsure do not share screenshots, or copy paste logs on the internet.
 ---
 
 This project is a fork of [victornpb's deleteDiscordMessages project](https://github.com/victornpb/deleteDiscordMessages).
+
+If you have issues or just need help feel free to [open an issue here](https://github.com/abbydiode/UndiscordPlus/issues).
