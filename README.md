@@ -4,6 +4,8 @@
 
 > :warning: **Any tool for deleting messages, including this one, could result in the termination of your account** (see [self-bots](https://support.discordapp.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-)). Use at your own risk!
 
+## Instructions
+
 1. Install a browser extension for managing user scripts.
 
     - Chrome: [Violentmonkey](https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag) or [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)     
@@ -24,7 +26,7 @@
 
 ![Screenshot](https://user-images.githubusercontent.com/3372598/86538983-b60c7980-becf-11ea-8cad-1a33950e77fc.gif)
 
-# Help and Information
+## Help and Information
 
 If you find an issue please [open an issue here](https://github.com/abbydiode/UndiscordPlus/issues).
 
@@ -32,7 +34,7 @@ If you need help feel free to [start a discussion here](https://github.com/abbyd
 
 This project is a fork of [victornpb's deleteDiscordMessages](https://github.com/victornpb/deleteDiscordMessages).
 
-# Disclaimer
+## Disclaimer
 
 **DO NOT SHARE YOUR AUTHORIZATION TOKEN!**
 
