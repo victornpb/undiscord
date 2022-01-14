@@ -9,7 +9,7 @@
     - Microsoft Edge: [Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd) or [Violentmonkey](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao)  
     - Opera: [Tampermonkey](https://addons.opera.com/extensions/details/tampermonkey-beta/) or [Violentmonkey](https://addons.opera.com/extensions/details/violent-monkey/)  
 
-2. Install [Undiscord Plus](https://github.com/abbydiode/UndiscordPlus/raw/master/deleteDiscordMessages.user.js) from this repository.
+2. Install [Undiscord Plus](https://github.com/abbydiode/UndiscordPlus/raw/main/UndiscordPlus.user.js) from this repository.
 
 3. Open [Discord](https://discord.com/channels/@me) in your __browser__ and go to the channel or private conversation that you would like to be wiped.
 
