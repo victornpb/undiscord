@@ -23,15 +23,17 @@
 
 ![Screenshot](https://user-images.githubusercontent.com/3372598/86538983-b60c7980-becf-11ea-8cad-1a33950e77fc.gif)
 
-# DO NOT SHARE YOUR AUTHORIZATION TOKEN!
+# DISCLAIMER
 
-Sharing your authToken on the internet will give full access to your account! [There are bots gathering credentials all over the internet](https://github.com/rndinfosecguy/Scavenger).
-If you post your token by accident, LOGOUT from discord on that **same browser** you got that token imediately.
-Changing your password will make sure that you get logged out of every device. I advice that you turn on [2FA](https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
+**DO NOT SHARE YOUR AUTHORIZATION TOKEN!**
 
-If you are unsure do not share screenshots, or copy paste logs on the internet.
+Sharing your authorization token on the internet will give full access to your Discord account! [There are bots gathering credentials all over the internet](https://github.com/rndinfosecguy/Scavenger).
+If you post your token by accident, log out from Discord on that **same browser** you got that token immediately.
+Changing your password will make sure that you get logged out of every device. It is advised that you turn on [2FA](https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
 
----
+If you are unsure, do not share screenshots or logs on the internet.
+
+# Help and information
 
 This project is a fork of [victornpb's deleteDiscordMessages project](https://github.com/victornpb/deleteDiscordMessages).
 
