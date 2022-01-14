@@ -2,7 +2,7 @@
 // @name          Undiscord Plus - Wipe your messages in a Discord channel or private conversation
 // @description   Extends the discord interface so you can mass delete messages from discord
 // @namespace     https://github.com/abbydiode/deleteDiscordMessages
-// @version       5.0.0
+// @version       5.0.1
 // @match         https://discord.com/*
 // @downloadURL   https://github.com/abbydiode/UndiscordPlus/raw/master/deleteDiscordMessages.user.js
 // @homepageURL   https://github.com/abbydiode/UndiscordPlus
