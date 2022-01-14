@@ -24,9 +24,11 @@
 
 # Help and Information
 
-This project is a fork of [victornpb's deleteDiscordMessages project](https://github.com/victornpb/deleteDiscordMessages).
+If you find an issue please [open an issue here](https://github.com/abbydiode/UndiscordPlus/issues).
 
-If you have issues or just need help feel free to [open an issue here](https://github.com/abbydiode/UndiscordPlus/issues).
+IF you need help feel free to [start a discussion here](https://github.com/abbydiode/UndiscordPlus/discussions).
+
+This project is a fork of [victornpb's deleteDiscordMessages project](https://github.com/victornpb/deleteDiscordMessages).
 
 # Disclaimer
 
