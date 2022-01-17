@@ -30,7 +30,7 @@
 
 If you find an issue please [open an issue here](https://github.com/abbydiode/UndiscordPlus/issues).
 
-If you need help feel free to [start a discussion here](https://github.com/abbydiode/UndiscordPlus/discussions).
+If you need help check out the [wiki](https://github.com/abbydiode/UndiscordPlus/wiki) for helpful articles, or feel free to [start a discussion here](https://github.com/abbydiode/UndiscordPlus/discussions).
 
 This project is a fork of [victornpb's deleteDiscordMessages](https://github.com/victornpb/deleteDiscordMessages).
 
