@@ -2,7 +2,7 @@
 
 ## Wipe your messages in a Discord channel or private conversation fast and easy
 
-> :warning: **Any tool for deleting messages, including this one, could result in the termination of your account** (see [self-bots](https://support.discordapp.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-)). Use at your own risk!
+> ⚠️ **Any tool that automates actions on user accounts, including this one, could result account termination.** [Use at your own risk!](https://support.discordapp.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-)
 
 ## Instructions
 
