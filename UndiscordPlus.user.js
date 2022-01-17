@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          Undiscord+
-// @description   Wipe your messages in a Discord channel or private conversation fast and easy
+// @description   Wipe your Discord messages fast and easy
 // @author        https://github.com/abbydiode
 // @namespace     https://github.com/abbydiode/UndiscordPlus
 // @version       5.1.0
