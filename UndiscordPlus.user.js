@@ -3,7 +3,7 @@
 // @description   Wipe your messages in a Discord channel or private conversation fast and easy
 // @author        https://github.com/abbydiode
 // @namespace     https://github.com/abbydiode/UndiscordPlus
-// @version       5.0.7
+// @version       5.1.0
 // @match         https://*.discord.com/*
 // @downloadURL   https://raw.githubusercontent.com/abbydiode/undiscordPlus/main/UndiscordPlus.user.js
 // @homepageURL   https://github.com/abbydiode/UndiscordPlus
