@@ -1,4 +1,4 @@
-# Undiscord+
+![Undiscord+ Logo](https://user-images.githubusercontent.com/16174954/149841992-9ef12b98-a758-401a-97c0-eaf451a458af.png)
 
 ## Wipe your messages in a Discord channel or private conversation fast and easy
 
