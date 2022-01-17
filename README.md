@@ -1,6 +1,6 @@
 ![Undiscord+ Logo](https://user-images.githubusercontent.com/16174954/149841992-9ef12b98-a758-401a-97c0-eaf451a458af.png)
 
-## Wipe your Discord  messages fast and easy
+# Wipe your Discord messages fast and easy
 
 > ⚠️ **Any tool that automates actions on user accounts, including this one, could result in account termination.** [Use at your own risk!](https://support.discordapp.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-)
 
