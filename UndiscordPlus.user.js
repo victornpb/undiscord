@@ -4,7 +4,7 @@
 // @author        https://github.com/abbydiode
 // @namespace     https://github.com/abbydiode/UndiscordPlus
 // @version       5.0.7
-// @match         https://discord.com/*
+// @match         https://*.discord.com/*
 // @downloadURL   https://raw.githubusercontent.com/abbydiode/undiscordPlus/main/UndiscordPlus.user.js
 // @homepageURL   https://github.com/abbydiode/UndiscordPlus
 // @supportURL    https://github.com/abbydiode/UndiscordPlus/issues
