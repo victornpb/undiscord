@@ -1,6 +1,6 @@
 ![Undiscord+ Logo](https://user-images.githubusercontent.com/16174954/149841992-9ef12b98-a758-401a-97c0-eaf451a458af.png)
 
-## Wipe your messages in a Discord channel or private conversation fast and easy
+# Wipe your Discord messages fast and easy
 
 > ⚠️ **Any tool that automates actions on user accounts, including this one, could result in account termination.** [Use at your own risk!](https://support.discordapp.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-)
 
@@ -20,7 +20,8 @@
 4. Click the <kbd>🗑️</kbd> button that was added in the top right corner.
 
 5. Click on the <kbd>Get</kbd> buttons near **Authorization**, **Author** and **Channel**.  
-    1. *Optionally you can get [Authorization Tokens](../../wiki/Authorization-Tokens), [User IDs](../../wiki/User-IDs), [Guild and Channel IDs](../../wiki/Guild-and-Channel-IDs), and [Message IDs](../../wiki/Message-IDs) manually.*
+
+    - *Optionally you can get [Authorization Tokens](../../wiki/Authorization-Tokens), [User IDs](../../wiki/User-IDs), [Guild and Channel IDs](../../wiki/Guild-and-Channel-IDs), and [Message IDs](../../wiki/Message-IDs) manually.*
 
 6. Click the <kbd>Start</kbd> button.
 
@@ -39,7 +40,7 @@ This project is a fork of [victornpb's deleteDiscordMessages](https://github.com
 **DO NOT SHARE YOUR AUTHORIZATION TOKEN!**
 
 Sharing your authorization token on the internet will give full access to your Discord account! [There are bots gathering credentials all over the internet](https://github.com/rndinfosecguy/Scavenger).
-If you post your token by accident, log out from Discord on that **same browser** you got that token immediately.
+If you post your token by accident, log out from Discord on the **same browser** where you got the token immediately.
 Changing your password will make sure that you get logged out of every device. It is advised that you turn on [2FA](https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
 
 If you are unsure, do not share screenshots or logs on the internet.
