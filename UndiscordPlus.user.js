@@ -8,7 +8,7 @@
 // @downloadURL   https://raw.githubusercontent.com/abbydiode/undiscordPlus/main/UndiscordPlus.user.js
 // @homepageURL   https://github.com/abbydiode/UndiscordPlus
 // @supportURL    https://github.com/abbydiode/UndiscordPlus/issues
-// @license       GPLv3
+// @license       MIT
 // ==/UserScript==
 
 /**
