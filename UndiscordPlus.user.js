@@ -96,7 +96,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
 
         // Not indexed yet
         if (response.status === 202) {
-            const w = (await response.json()).retry_after;
+            const w = (await response.json()).retry_after * 1000;
             throttledCount++;
             throttledTotalTime += w;
             log.warn(`This channel wasn't indexed, waiting ${w}ms for discord to index it...`);
