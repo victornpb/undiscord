@@ -107,7 +107,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
         if (!response.ok) {
             // Searching messages too fast
             if (response.status === 429) {
-                const delay = (await response.json()).retry_after;
+                const delay = (await response.json()).retry_after * 1000;
                 throttledCount++;
                 throttledTotalTime += delay;
                 searchDelay += delay;
@@ -183,7 +183,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                 if (!resp.ok) {
                     // Deleting messages too fast
                     if (resp.status === 429) {
-                        const w = (await resp.json()).retry_after;
+                        const w = (await resp.json()).retry_after * 1000;
                         throttledCount++;
                         throttledTotalTime += w;
                         deleteDelay = w;
