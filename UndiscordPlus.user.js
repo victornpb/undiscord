@@ -308,12 +308,12 @@ function initializeUI() {
                     <span>Search Delay <a
                     href="https://github.com/abbydiode/UndiscordPlus/wiki/About-Delays" title="Help"
                     target="_blank">?</a><br>
-                        <input id="searchDelay" type="number" value="100" step="100"><br>
+                        <input id="searchDelay" type="number" value="100" min="100" step="100"><br>
                     </span>
                     <span>Delete Delay <a
                     href="https://github.com/abbydiode/UndiscordPlus/wiki/About-Delays" title="Help"
                     target="_blank">?</a><br>
-                        <input id="deleteDelay" type="number" value="1000" step="100">
+                        <input id="deleteDelay" type="number" value="1000" min="100" step="100">
                     </span>
                 </div>
                 <hr>
