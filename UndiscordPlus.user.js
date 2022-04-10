@@ -59,35 +59,85 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
         success() { extLogger ? extLogger('success', arguments) : console.info.apply(console, arguments); },
     };
 
+    const headers = {
+        'Authorization': authToken
+    };
+    
+    const deleteHeaders = {
+        headers,
+        method: 'DELETE'
+    };
+
+    async function deleteReactions(messages, wait) {
+        async function deleteReaction(cid, mid, id) {
+            const API_DELETE_URL = `https://discord.com/api/v9/channels/${cid}/messages/${mid}/reactions/${encodeURI(id)}/%40me`;
+            fetch(API_DELETE_URL, deleteHeaders)
+                .catch(console.error);
+        }
+    
+        for (const msg of messages) {
+            for (const emoji of msg.reactions.filter(r => r.me).map(r => r.emoji)) {
+                const id = emoji.id ? `${emoji.name}:${emoji.id}` : emoji.name;
+                deleteReaction(msg.channel_id, msg.id, id);
+                // Delay could be improved
+                await wait(2000);
+            }
+        }
+    }
+
+    async function deletePins(messages, wait) {
+        async function deletePin(cid, mid) {
+            const API_DELETE_URL = `https://discord.com/api/v9/channels/${cid}/pins/${mid}`;
+            fetch(API_DELETE_URL, deleteHeaders)
+                .catch(console.error);
+        }
+    
+        for (const msg of messages) {
+            deletePin(msg.channel_id, msg.id);
+            // Delay could be improved
+            await wait(2000);
+        }
+    }
+
+    let fetchPoint = maxId ? toSnowflake(maxId) : undefined;
+    let useSearch = true;
+
+    // Add these to the GUI
+    const deleteFetchedPins = false;
+    const deleteFetchedReactions = false;
+    const tryFetch = false;
+
     async function recurse() {
-        let API_SEARCH_URL;
-        if (guildId === '@me') {
-            API_SEARCH_URL = `https://discord.com/api/v9/channels/${channelId}/messages/`;
-        }
-        else {
-            API_SEARCH_URL = `https://discord.com/api/v9/guilds/${guildId}/messages/`;
-        }
-
-        const headers = {
-            'Authorization': authToken
-        };
-
         let response;
         try {
+            let API_SEARCH_URL;
+            if (useSearch) {
+                if (guildId === '@me') {
+                    API_SEARCH_URL = `https://discord.com/api/v9/channels/${channelId}/messages/`;
+                }
+                else {
+                    API_SEARCH_URL = `https://discord.com/api/v9/guilds/${guildId}/messages/`;
+                }
+                API_SEARCH_URL += 'search?' + queryString([
+                    ['author_id', authorId || undefined],
+                    ['channel_id', (guildId !== '@me' ? channelId : undefined) || undefined],
+                    ['min_id', minId ? toSnowflake(minId) : undefined],
+                    ['max_id', maxId ? toSnowflake(maxId) : undefined],
+                    ['sort_by', 'timestamp'],
+                    ['sort_order', ascendingOrder ? 'asc' : 'desc'],
+                    ['offset', offset],
+                    ['has', hasLink ? 'link' : undefined],
+                    ['has', hasFile ? 'file' : undefined],
+                    ['content', content || undefined],
+                    ['include_nsfw', includeNSFW ? true : undefined],
+                ]);
+            } else {
+                // We could fetch up to 100 messages to reduce our API calls
+                // However the official client always uses limit 50
+                API_SEARCH_URL = `https://discord.com/api/v9/channels/${channelId}/messages?before=${fetchPoint}&limit=50`;
+            }
             const s = Date.now();
-            response = await fetch(API_SEARCH_URL + 'search?' + queryString([
-                ['author_id', authorId || undefined],
-                ['channel_id', (guildId !== '@me' ? channelId : undefined) || undefined],
-                ['min_id', minId ? toSnowflake(minId) : undefined],
-                ['max_id', maxId ? toSnowflake(maxId) : undefined],
-                ['sort_by', 'timestamp'],
-                ['sort_order', ascendingOrder ? 'asc' : 'desc'],
-                ['offset', offset],
-                ['has', hasLink ? 'link' : undefined],
-                ['has', hasFile ? 'file' : undefined],
-                ['content', content || undefined],
-                ['include_nsfw', includeNSFW ? true : undefined],
-            ]), { headers });
+            response = await fetch(API_SEARCH_URL, { headers });
             lastPing = (Date.now() - s);
             averagePing = averagePing > 0 ? (averagePing * 0.9) + (lastPing * 0.1) : lastPing;
         } catch (err) {
@@ -123,13 +173,8 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
         }
 
         const data = await response.json();
-        const total = data.total_results;
-        if (!grandTotal) grandTotal = total;
-        const discoveredMessages = data.messages.map(convo => convo.find(message => message.hit === true));
-        const messagesToDelete = discoveredMessages.filter(msg => {
-            return msg.type === 0 || (msg.type >= 6 && msg.type <= 21) || (msg.pinned && includePinned);
-        });
-        const skippedMessages = discoveredMessages.filter(msg => !messagesToDelete.find(m => m.id === msg.id));
+        let total;
+        let discoveredMessages;
 
         const end = () => {
             log.success(`Ended at ${new Date().toLocaleString()}! Total time: ${msToHMS(Date.now() - start.getTime())}`);
@@ -138,10 +183,50 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
             log.debug(`Deleted ${deleteCount} messages, ${failCount} failed.\n`);
         }
 
+
+        if (useSearch) {
+            total = data.total_results;
+            if (!grandTotal) grandTotal = total;
+            discoveredMessages = data.messages.map(convo => convo.find(message => message.hit===true));
+
+            if (discoveredMessages.length === 0) {
+                log.warn('Ended because API returned an empty page.');
+                return end();
+            }
+
+            // Next search will use fetch
+            fetchPoint = discoveredMessages[discoveredMessages.length - 1].id;
+        } else {
+            function skipMessages(m) {
+                if (!authorId) return false;
+                return m.author.id !== authorId;
+            }
+            if (deleteFetchedPins) await deletePins(data.filter(m => skipMessages(m) && m.pinned, wait));
+            if (deleteFetchedReactions) await deleteReactions(data.filter(m => skipMessages(m) && m.reactions && m.reactions.some(r => r.me)), wait);
+
+            discoveredMessages = data.filter(m => !skipMessages(m));
+            if (discoveredMessages.length === 0) {
+                log.info("Fetch found no deletable messages. Starting search.");
+                useSearch = true;
+                return await recurse();
+            }
+
+            // Find earliest, assume message ids are descending
+            fetchPoint = data[data.length - 1].id;
+        }
+
+        const messagesToDelete = discoveredMessages.filter(msg => {
+            return msg.type === 0 || (msg.type >= 6 && msg.type <= 21) || (msg.pinned && includePinned);
+        });
+        const skippedMessages = discoveredMessages.filter(msg=>!messagesToDelete.find(m=> m.id===msg.id));
         const estimatedTimeRemaining = msToHMS((searchDelay * Math.round(total / 25)) + ((deleteDelay + averagePing) * total));
-        log.info(`Total messages found: ${data.total_results}`, `(Messages in current page: ${data.messages.length}, To be deleted: ${messagesToDelete.length}, System: ${skippedMessages.length})`, `offset: ${offset}`);
-        printDelayStats();
-        log.verb(`Estimated time remaining: ${estimatedTimeRemaining}`)
+
+        if (useSearch) {
+            log.info(`Total messages found: ${data.total_results}`, `(Messages in current page: ${data.messages.length}, To be deleted: ${messagesToDelete.length}, System: ${skippedMessages.length})`, `offset: ${offset}`);
+            log.verb(`Estimated time remaining: ${estimatedTimeRemaining}`)
+            useSearch = tryFetch;  // Use fetch next time
+        }
+        printDelayStats();        
 
 
         if (messagesToDelete.length > 0) {
@@ -167,10 +252,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
                 try {
                     const s = Date.now();
                     const API_DELETE_URL = `https://discord.com/api/v9/channels/${message.channel_id}/messages/${message.id}`;
-                    resp = await fetch(API_DELETE_URL, {
-                        headers,
-                        method: 'DELETE'
-                    });
+                    resp = await fetch(API_DELETE_URL, deleteHeaders);
                     lastPing = (Date.now() - s);
                     averagePing = (averagePing * 0.9) + (lastPing * 0.1);
                     deleteCount++;
@@ -377,7 +459,7 @@ function initializeUI() {
         const authToken = $('input#authToken').value.trim();
         const authorId = $('input#authorId').value.trim();
         const guildId = $('input#guildId').value.trim();
-        const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
+        let channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
         const minId = $('input#minId').value.trim();
         const maxId = $('input#maxId').value.trim();
         const minDate = $('input#minDate').value.trim();
@@ -421,6 +503,23 @@ function initializeUI() {
             percent.innerHTML = value && max ? Math.round(value / max * 100) + '%' : '';
         };
 
+
+        async function listAllDMS(authToken) {
+            const headers = {
+                'Authorization': authToken
+            };        
+            try {
+                const resp = await fetch(`https://discord.com/api/v9/users/%40me/channels`, { headers });
+                const ids = (await resp.json()).map(c => c.id);
+                return ids;
+            } catch (e) {
+                return [];
+            }
+        }
+
+        if (guildId === '@me' && channelIds.filter(c => c).length == 0) {
+            channelIds = await listAllDMS(authToken);
+        }
 
         stop = stopButton.disabled = !(startButton.disabled = true);
         for (let i = 0; i < channelIds.length; i++) {
