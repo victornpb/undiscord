@@ -39,6 +39,9 @@
                 <label><input id="hasFile" type="checkbox">has: file</label><br>
                 <label><input id="includePinned" type="checkbox">Include pinned</label>
             </span>
+            <span>Pattern<br>
+                <input id="pattern" type="text" placeholder="pattern to remove" priv>
+            </span>
         </div>
         <hr>
         <button id="start" style="background:#43b581;width:80px;">Start</button>
@@ -73,6 +76,7 @@
         const hasFile = $('input#hasFile').checked;
         const includeNsfw = $('input#includeNsfw').checked;
         const includePinned = $('input#includePinned').checked;
+        const pattern = $('input#pattern').value;
         const progress = $('#progress');
 
         const fileSelection = $("input#file");
@@ -100,7 +104,7 @@
 
         stop = stopBtn.disabled = !(startBtn.disabled = true);
         for (let i = 0; i < channelIds.length; i++) {
-            await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, logger, stopHndl, onProg);
+            await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, logger, stopHndl, onProg);
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         }
     };
@@ -147,7 +151,7 @@
      * @author Victornpb <https://www.github.com/victornpb>
      * @see https://github.com/victornpb/deleteDiscordMessages
      */
-    async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content,hasLink, hasFile, includeNsfw, includePinned, extLogger, stopHndl, onProgress) {
+    async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content,hasLink, hasFile, includeNsfw, includePinned, pattern, extLogger, stopHndl, onProgress) {
         const start = new Date();
         const delayReductionGeometricFactor = 0.6; // 1/n
         const delayAdjustmentThreshold = 5; // ms
@@ -186,10 +190,10 @@
         async function recurse() {
             let API_SEARCH_URL;
             if (guildId === '@me') {
-                API_SEARCH_URL = `https://discord.com/api/v6/channels/${channelId}/messages/`; // DMs
+                API_SEARCH_URL = `https://discord.com/api/v9/channels/${channelId}/messages/`; // DMs
             }
             else {
-                API_SEARCH_URL = `https://discord.com/api/v6/guilds/${guildId}/messages/`; // Server
+                API_SEARCH_URL = `https://discord.com/api/v9/guilds/${guildId}/messages/`; // Server
             }
 
             const headers = {
@@ -252,12 +256,20 @@
                 log.verb(`Search delay lowered to ${searchDelay}ms`);
             }
     
+            let regex;
+
+            try {
+                regex = new RegExp(pattern);
+            } catch(e) {
+                log.warn('Ignoring RegExp because pattern is malformed')
+            }
+
             const data = await resp.json();
             const total = data.total_results;
             if (!grandTotal) grandTotal = total;
             const discoveredMessages = data.messages.map(convo => convo.find(message => message.hit===true));
             const messagesToDelete = discoveredMessages.filter(msg => {
-                return msg.type === 0 || msg.type === 6 || (msg.pinned && includePinned);
+                return (msg.type === 0 || (msg.type >= 6 && msg.type <= 21) || (msg.pinned && includePinned)) && (!regex || msg.content.match(regex));
             });
             const skippedMessages = discoveredMessages.filter(msg=>!messagesToDelete.find(m=> m.id===msg.id));
 
@@ -296,7 +308,7 @@
                     let resp;
                     try {
                         const s = Date.now();
-                        const API_DELETE_URL = `https://discord.com/api/v6/channels/${message.channel_id}/messages/${message.id}`;
+                        const API_DELETE_URL = `https://discord.com/api/v9/channels/${message.channel_id}/messages/${message.id}`;
                         resp = await fetch(API_DELETE_URL, {
                             headers,
                             method: 'DELETE'

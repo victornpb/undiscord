@@ -4,7 +4,7 @@
 
 1. On the DevTools, Open the "Network" tab
 3. Click on "XHR"
-4. Type `api/v6` on the filter box.
+4. Type `api/v9` on the filter box.
 5. Click on any request in the list, and then click on "Headers" tab in the side panel.
   You're looking for something like this **authorization:** `MTX5MzQ1MjAyMjU0NjA2MzM2.ROFLMAO.UvqZqBMXLpDuOY3Z456J3JRIfbk`.
 
