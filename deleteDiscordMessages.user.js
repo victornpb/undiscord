@@ -3,7 +3,15 @@
 // @description   Extends the discord interface so you can mass delete messages from discord
 // @namespace     https://github.com/victornpb/deleteDiscordMessages
 // @version       4.2
-// @match         https://*.discord.com/*
+// @match         https://discord.com/app
+// @match         https://discord.com/channels/*
+// @match         https://discord.com/login
+// @match         https://ptb.discord.com/app
+// @match         https://ptb.discord.com/channels/*
+// @match         https://ptb.discord.com/login
+// @match         https://canary.discord.com/app
+// @match         https://canary.discord.com/channels/*
+// @match         https://canary.discord.com/login
 // @downloadURL   https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
 // @homepageURL   https://github.com/victornpb/deleteDiscordMessages
 // @supportURL    https://github.com/victornpb/deleteDiscordMessages/issues
