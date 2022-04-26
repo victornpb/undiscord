@@ -153,8 +153,12 @@
      */
     async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content,hasLink, hasFile, includeNsfw, includePinned, pattern, extLogger, stopHndl, onProgress) {
         const start = new Date();
-        let deleteDelay = 100;
-        let searchDelay = 100;
+        const delayReductionGeometricFactor = 0.6; // 1/n
+        const delayAdjustmentThreshold = 5; // ms
+        let baseDeleteDelay = 100;
+        let deleteDelay = baseDeleteDelay;
+        let baseSearchDelay = 100;
+        let searchDelay = baseSearchDelay;
         let delCount = 0;
         let failCount = 0;
         let avgPing;
@@ -234,8 +238,9 @@
                     const w = (await resp.json()).retry_after;
                     throttledCount++;
                     throttledTotalTime += w;
-                    searchDelay += w; // increase delay
-                    log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
+                    baseSearchDelay = searchDelay;
+                    searchDelay = w > baseSearchDelay ? w : baseSearchDelay
+                    log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay to ${searchDelay}ms, adjusting base search delay to ${baseSearchDelay}ms`);
                     printDelayStats();
                     log.verb(`Cooling down for ${w * 2}ms before retrying...`);
                     
@@ -244,6 +249,11 @@
                 } else {
                     return log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
                 }
+            }
+            else if (searchDelay - baseSearchDelay > delayAdjustmentThreshold)
+            {
+                searchDelay = baseSearchDelay + (searchDelay - baseSearchDelay) * delayReductionGeometricFactor;
+                log.verb(`Search delay lowered to ${searchDelay}ms`);
             }
     
             let regex;
@@ -318,8 +328,9 @@
                             const w = (await resp.json()).retry_after;
                             throttledCount++;
                             throttledTotalTime += w;
-                            deleteDelay = w; // increase delay
-                            log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${deleteDelay}ms.`);
+                            baseDeleteDelay = deleteDelay;
+                            deleteDelay = w > baseDeleteDelay ? w : baseDeleteDelay;
+                            log.warn(`Being rate limited by the API for ${w}ms! Increasing delete delay to ${deleteDelay}ms, adjusting base delete delay to ${baseDeleteDelay}ms`);
                             printDelayStats();
                             log.verb(`Cooling down for ${w*2}ms before retrying...`);
                             await wait(w*2);
@@ -329,6 +340,11 @@
                             log.verb('Related object:', redact(JSON.stringify(message)));
                             failCount++;
                         }
+                    }
+                    else if (deleteDelay - baseDeleteDelay > delayAdjustmentThreshold)
+                    {
+                        deleteDelay = baseDeleteDelay + (deleteDelay - baseDeleteDelay) * delayReductionGeometricFactor;
+                        log.verb(`Delete delay lowered to ${deleteDelay}ms`);
                     }
                     
                     await wait(deleteDelay);

@@ -1,16 +1,19 @@
 # Undiscord - Delete all messages in a Discord channel or DM
 
+> :warning: **Any tool for deleting messages, including this one, could result in the termination of your account** (see [self-bots](https://support.discordapp.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-)).
+> Discord appears to have recently started terminating accounts using self-bots ([thread](https://github.com/victornpb/deleteDiscordMessages/issues/193)). Use at your own risk.
+
 1. Install a **browser extension** for managing **user scripts** (skip if you already have one):
     
     - Chrome: [Violentmonkey](https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag) or [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)     
     - Firefox: [Greasemonkey](https://addons.mozilla.org/firefox/addon/greasemonkey/), [Tampermonkey](https://addons.mozilla.org/firefox/addon/tampermonkey/), or [Violentmonkey](https://addons.mozilla.org/firefox/addon/violentmonkey/)  
     - Safari: ~[Tampermonkey](https://github.com/victornpb/deleteDiscordMessages/issues/91#issuecomment-654514364)~ 
-    - Microsoft Edge: [Tampermonkey](https://www.microsoft.com/store/p/tampermonkey/9nblggh5162s)  
+    - Microsoft Edge: [Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd) or [Violentmonkey](https://microsoftedge.microsoft.com/addons/detail/violentmonkey/eeagobfjdenkkddmbclomhiblgggliao)  
     - Opera: [Tampermonkey](https://addons.opera.com/extensions/details/tampermonkey-beta/) or [Violentmonkey](https://addons.opera.com/extensions/details/violent-monkey/)  
 
 1. Install Undiscord **<a href="https://openuserjs.org/scripts/victornpb/Undiscord_-_Delete_all_messages_in_a_Discord_channel_or_DM_(Bulk_deletion)" target="_blank">Install from OpenUserJS</a> or <a href="https://greasyfork.org/en/scripts/406540-undiscord-delete-all-messages-in-a-discord-channel-or-dm-bulk-deletion" target="_blank">Install from GreasyFork</a>**
 
-1. Open <a href="https://discordapp.com/channels/@me" target="_blank">Discord</a> in your __browser__ (Not the App) and go to the Channel/Conversation you want to delete
+1. Open <a href="https://discord.com/channels/@me" target="_blank">Discord</a> in your __browser__ (Not the App) and go to the Channel/Conversation you want to delete
 
 1. Click the *Trash icon* that was added in the *top right corner*
 
@@ -23,7 +26,7 @@
 
 I made this tool just for you ❤️ , it would be awesome if you could just click the [⭐️ Star button](https://github.com/victornpb/deleteDiscordMessages) at the top! 
    
-If you have issues or just need help [open an issue here](https://github.com/victornpb/deleteDiscordMessages/issues)
+If you have issues or just need help [open a discussion here](https://github.com/victornpb/deleteDiscordMessages/discussions)
 
 > A few extra generous people asked for this, so here you can [buy me a coffee](https://www.buymeacoffee.com/vitim). Thank you! You'll be in my special list ^_^
 
@@ -61,7 +64,7 @@ I don't recommend running code from random places you get on the internet. For t
 
 Sharing your authToken on the internet will give full access to your account! [There are bots gathering credentials all over the internet](https://github.com/rndinfosecguy/Scavenger).
 If you post your token by accident, LOGOUT from discord on that **same browser** you got that token imediately.
-Changing your password will make sure that you get logged out of every device. I advice that you turn on [2FA](https://support.discordapp.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
+Changing your password will make sure that you get logged out of every device. I advice that you turn on [2FA](https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
 
 If you are unsure do not share screenshots, or copy paste logs on the internet.
 
