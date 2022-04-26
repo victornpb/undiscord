@@ -345,7 +345,7 @@ function initUI() {
         </div>
         <pre class="logarea">
             <center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n
-                <a href="https://github.com/victornpb/deleteDiscordMessages/issues" target="_blank">Issues or help</a>
+                <a href="https://github.com/victornpb/deleteDiscordMessages/discussions" target="_blank">Issues or help</a>
             </center>
         </pre>
     </div>
