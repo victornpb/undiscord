@@ -152,7 +152,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
         log.verb(`Estimated time remaining: ${etr}`)
 
 
-        if (messagesToDelete.length > 0) {
+        if (messagesToDelete.length > 0 || skippedMessages.length > 0) {
 
             if (++iterations < 1) {
                 log.verb(`Waiting for your confirmation...`);
