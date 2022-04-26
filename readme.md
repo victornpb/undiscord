@@ -26,7 +26,7 @@
 
 I made this tool just for you ❤️ , it would be awesome if you could just click the [⭐️ Star button](https://github.com/victornpb/deleteDiscordMessages) at the top! 
    
-If you have issues or just need help [open an issue here](https://github.com/victornpb/deleteDiscordMessages/issues)
+If you have issues or just need help [open a discussion here](https://github.com/victornpb/deleteDiscordMessages/discussions)
 
 > A few extra generous people asked for this, so here you can [buy me a coffee](https://www.buymeacoffee.com/vitim). Thank you! You'll be in my special list ^_^
 
