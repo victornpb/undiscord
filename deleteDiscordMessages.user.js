@@ -2,7 +2,7 @@
 // @name          Undiscord - Delete all messages in a Discord channel or DM (Bulk deletion)
 // @description   Extends the discord interface so you can mass delete messages from discord
 // @namespace     https://github.com/victornpb/deleteDiscordMessages
-// @version       4.2
+// @version       4.3
 // @match         https://*.discord.com/app
 // @match         https://*.discord.com/channels/*
 // @match         https://*.discord.com/login
@@ -13,6 +13,7 @@
 // @grant         none
 // @license       MIT
 // ==/UserScript==
+const VERSION = '4.3';
 
 /**
  * Delete all messages in a Discord channel or DM
@@ -272,13 +273,13 @@ function initUI() {
         #undiscord hr{border-color:rgba(255,255,255,0.1)}
         #undiscord .header{padding:12px 16px;background-color:var(--background-tertiary);color:var(--text-muted)}
         #undiscord .form{padding:8px;background:var(--background-secondary);box-shadow:0 1px 0 rgba(0,0,0,.2),0 1.5px 0 rgba(0,0,0,.05),0 2px 0 rgba(0,0,0,.05)}
-        #undiscord .logarea{overflow:auto;font-size:.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;flex-grow:1;padding:10px}
+        #undiscord .logarea{overflow:auto;font-size:.75rem;font-family:Consolas,Liberation Mono,Menlo,Courier,monospace;flex-grow:1;padding:10px;user-select:text;}
     `);
 
     popover = createElm(`
     <div id="undiscord" style="display:none;">
         <div class="header">
-            Undiscord - Bulk delete messages
+            Undiscord ${VERSION} - Bulk delete messages
         </div>
         <div class="form">
             <div style="display:flex;flex-wrap:wrap;">
