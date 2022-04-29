@@ -143,6 +143,19 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
         const skippedMessages = discoveredMessages.filter(msg => !messagesToDelete.find(m => m.id === msg.id));
 
         const end = () => {
+			const $ = s => popover.querySelector(s);
+			const progress = $('#progress');
+			const progress2 = btn.querySelector('progress');
+			const percent = $('.percent');
+			
+			progress.removeAttribute('max');
+            progress.removeAttribute('value');
+            progress.style.display = 'none';
+            progress2.removeAttribute('max');
+            progress2.removeAttribute('value');
+            progress2.style.display = 'none';
+            percent.innerHTML = '';
+			
             log.success(`Ended at ${new Date().toLocaleString()}! Total time: ${msToHMS(Date.now() - start.getTime())}`);
             printDelayStats();
             log.verb(`Rate Limited: ${throttledCount} times. Total time throttled: ${msToHMS(throttledTotalTime)}.`);
