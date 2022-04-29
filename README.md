@@ -1,4 +1,4 @@
-![Undiscord+ Logo](https://user-images.githubusercontent.com/16174954/149841992-9ef12b98-a758-401a-97c0-eaf451a458af.png)
+![Undiscord Logo](https://user-images.githubusercontent.com/16174954/166003147-6014a83e-e2b8-45b4-8961-f878d4b466bf.png)
 
 # Wipe your Discord messages fast and easy
 
