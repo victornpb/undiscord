@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name          Undiscord+
+// @name          Undiscord
 // @description   Wipe your Discord messages fast and easy
 // @author        https://github.com/abbydiode
 // @namespace     https://github.com/abbydiode/UndiscordPlus
@@ -350,7 +350,7 @@ function initializeUI() {
     popup = createElement(`
         <div id="undiscord" style="display:none;">
             <div class="header">
-                Undiscord+
+                Undiscord
             </div>
             <div class="form">
                 <div style="display:flex;flex-wrap:wrap;">
