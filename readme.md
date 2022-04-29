@@ -60,13 +60,13 @@ Originally from https://gist.github.com/victornpb/135f5b346dea4decfc8f63ad7d9cc1
 I don't recommend running code from random places you get on the internet. For that same reason, I deliberately choose to make it readable (that's why it is a bit lenthy). That way people can analyze it and understand what does it does before running it, and be sure that nothing sketchy is happening under the hood.
 
 ----
-# DO NOT SHARE YOUR `authToken`!
+# ⛔️ DO NOT SHARE YOUR AUTH TOKEN! ⛔️
 
 Sharing your authToken on the internet will give full access to your account! [There are bots gathering credentials all over the internet](https://github.com/rndinfosecguy/Scavenger).
 If you post your token by accident, LOGOUT from discord on that **same browser** you got that token imediately.
 Changing your password will make sure that you get logged out of every device. I advice that you turn on [2FA](https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
 
-If you are unsure do not share screenshots, or copy paste logs on the internet.
+If you are unsure do not post screenshots, or logs on the internet.
 
 ----
 > **DISCLAIMER:**
