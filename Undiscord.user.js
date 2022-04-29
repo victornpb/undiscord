@@ -5,7 +5,7 @@
 // @namespace     https://github.com/abbydiode/UndiscordPlus
 // @version       5.2.6
 // @match         https://*.discord.com/*
-// @downloadURL   https://raw.githubusercontent.com/abbydiode/undiscordPlus/main/UndiscordPlus.user.js
+// @downloadURL   https://raw.githubusercontent.com/abbydiode/undiscordPlus/main/Undiscord.user.js
 // @homepageURL   https://github.com/abbydiode/UndiscordPlus
 // @supportURL    https://github.com/abbydiode/UndiscordPlus/issues
 // @license       MIT
