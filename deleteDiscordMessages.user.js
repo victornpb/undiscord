@@ -137,7 +137,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
         if (!grandTotal) grandTotal = total;
         const discoveredMessages = data.messages.map(convo => convo.find(message => message.hit === true));
         const messagesToDelete = discoveredMessages.filter(msg => {
-            return (msg.type === 0 || || (msg.type >= 6 && msg.type <= 21) || (msg.pinned && includePinned)) && (!regex || msg.content.match(regex));
+            return (msg.type === 0 || (msg.type >= 6 && msg.type <= 21) || (msg.pinned && includePinned)) && (!regex || msg.content.match(regex));
         });
         const skippedMessages = discoveredMessages.filter(msg => !messagesToDelete.find(m => m.id === msg.id));
 
