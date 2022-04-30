@@ -6,9 +6,12 @@ labels: ''
 assignees: ''
 
 ---
+<!--
+  WARNING: Github Issues are publicly visible, do not post sensitive information here.
+  Enable the "Screenshot mode" on Undiscord before taking screenshots or copying logs.
 
-> WARNING: Github Issues are publicly visible, do not post sensitive information here.
-> You may want to use the "Screenshot mode" before taking screenshots or copying logs.
+  This form is only for bugs, if you have general questions or ideas or feature requests use the [Discussion] tab instead.
+-->
 
 **Describe the bug**
 A clear and concise description of what the bug is.
