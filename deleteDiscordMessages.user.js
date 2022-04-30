@@ -1,19 +1,23 @@
 // ==UserScript==
-// @name          Undiscord - Delete all messages in a Discord channel or DM (Bulk deletion)
-// @description   Extends the discord interface so you can mass delete messages from discord
-// @namespace     https://github.com/victornpb/deleteDiscordMessages
-// @version       4.3
-// @match         https://*.discord.com/app
-// @match         https://*.discord.com/channels/*
-// @match         https://*.discord.com/login
-// @downloadURL   https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
-// @homepageURL   https://github.com/victornpb/deleteDiscordMessages
-// @supportURL    https://github.com/victornpb/deleteDiscordMessages/issues
+// @name            Undiscord - Delete all messages in a Discord channel or DM (Bulk deletion)
+// @description     Extends the discord interface so you can mass delete messages from discord
+// @namespace       https://github.com/victornpb/deleteDiscordMessages
+// @author          victornpb
+// @version         4.3.1
+// @match           https://*.discord.com/app
+// @match           https://*.discord.com/channels/*
+// @match           https://*.discord.com/login
+// @downloadURL     https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
+// @homepageURL     https://github.com/victornpb/undiscord
+// @supportURL      https://github.com/victornpb/undiscord/discussions
 // @contributionURL https://www.buymeacoffee.com/vitim
-// @grant         none
-// @license       MIT
+// @grant           none
+// @license         MIT
 // ==/UserScript==
-const VERSION = '4.3';
+const VERSION = '4.3.1';
+
+const HOME = 'https://github.com/victornpb/undiscord';
+const WIKI = 'https://github.com/victornpb/undiscord/wiki';
 
 /**
  * Delete all messages in a Discord channel or DM
@@ -30,7 +34,7 @@ const VERSION = '4.3';
  * @param {function(string, Array)} extLogger Function for logging
  * @param {function} stopHndl stopHndl used for stopping
  * @author Victornpb <https://www.github.com/victornpb>
- * @see https://github.com/victornpb/deleteDiscordMessages
+ * @see https://github.com/victornpb/undiscord
  */
 async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, extLogger, stopHndl, onProgress) {
     const start = new Date();
@@ -284,14 +288,14 @@ function initUI() {
         <div class="form">
             <div style="display:flex;flex-wrap:wrap;">
                 <span>Authorization <a
-                        href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authToken.md" title="Help"
+                        href="${WIKI}/authToken" title="Help"
                         target="_blank">?</a> <button id="getToken">get</button><br>
                     <input type="password" id="authToken" placeholder="Auth Token" autofocus>*<br>
-                    <span>Author <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md"
+                    <span>Author <a href="${WIKI}/authorId"
                             title="Help" target="_blank">?</a> <button id="getAuthor">get</button></span>
                     <br><input id="authorId" type="text" placeholder="Author ID" priv></span>
                 <span>Guild/Channel <a
-                        href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help"
+                        href="${WIKI}/channelId" title="Help"
                         target="_blank">?</a>
                     <button id="getGuildAndChannel">get</button><br>
                     <input id="guildId" type="text" placeholder="Guild ID" priv><br>
@@ -300,7 +304,7 @@ function initUI() {
                     <label for="file" title="Import list of channels from messages/index.json file"> Import: <span
                             class="btn">...</span> <input id="file" type="file" accept="application/json,.json"></label>
                 </span><br>
-                <span>Range <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/messageId.md"
+                <span>Range <a href="${WIKI}/messageId"
                         title="Help" target="_blank">?</a><br>
                     <input id="minDate" type="datetime-local" title="After" style="width:auto;"><br>
                     <input id="maxDate" type="datetime-local" title="Before" style="width:auto;"><br>
@@ -308,7 +312,7 @@ function initUI() {
                     <input id="maxId" type="text" placeholder="Before message with Id" priv><br>
                 </span>
                 <span>Search messages <a
-                        href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/filters.md" title="Help"
+                        href="${WIKI}/filters" title="Help"
                         target="_blank">?</a><br>
                     <input id="content" type="text" placeholder="Containing text" priv><br>
                     <label><input id="hasLink" type="checkbox">has: link</label><br>
@@ -319,12 +323,12 @@ function initUI() {
                     <input id="pattern" type="text" placeholder="pattern to remove" priv>
                 </span>
                 <span>Search Delay <a
-                href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/delay.md" title="Help"
+                href="${WIKI}/delay" title="Help"
                 target="_blank">?</a><br>
                     <input id="searchDelay" type="number" value="100" step="100"><br>
                 </span>
                 <span>Delete Delay <a
-                href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/delay.md" title="Help"
+                href="${WIKI}/delay" title="Help"
                 target="_blank">?</a><br>
                     <input id="deleteDelay" type="number" value="1000" step="100">
                 </span>
@@ -339,8 +343,8 @@ function initUI() {
             <progress id="progress" style="display:none;"></progress> <span class="percent"></span>
         </div>
         <pre class="logarea">
-            <center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n
-                <a href="https://github.com/victornpb/deleteDiscordMessages/discussions" target="_blank">Issues or help</a>
+            <center>Star this project on <a href="${HOME}" target="_blank">github.com/victornpb/undiscord</a>!\n\n
+                <a href="${HOME}/discussions" target="_blank">Issues or help</a>
             </center>
         </pre>
     </div>
