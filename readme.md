@@ -1,14 +1,16 @@
 # Undiscord - Delete all messages in a Discord channel or DM
 <!-- shields -->
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/victornpb/undiscord?color=%235865f2&display_name=tag&label=Undiscord&style=flat-square)
-![GitHub License](https://img.shields.io/github/license/victornpb/undiscord?style=flat-square)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/victornpb/undiscord?color=%235865f2&display_name=tag&label=Undiscord&style=flat-square)](https://greasyfork.org/en/scripts/406540-undiscord-delete-all-messages-in-a-discord-channel-or-dm-bulk-deletion)
+[![GitHub Release Date](https://img.shields.io/github/release-date/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/releases)
+[![GitHub License](https://img.shields.io/github/license/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/blob/master/LICENSE)
 [![CodeFactor](https://www.codefactor.io/repository/github/victornpb/undiscord/badge?style=flat-square)](https://www.codefactor.io/repository/github/victornpb/undiscord?style=flat-square)
-![GitHub Stars](https://img.shields.io/github/stars/victornpb/undiscord?style=flat-square)
-![GitHub Forks](https://img.shields.io/github/forks/victornpb/undiscord?style=flat-square)
-![GitHub open issues](https://img.shields.io/github/issues/victornpb/undiscord?style=flat-square)
-![GitHub closed issues](https://img.shields.io/github/issues-closed/victornpb/undiscord?style=flat-square)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/victornpb/undiscord?style=flat-square)
-![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/victornpb/undiscord?style=flat-square)
+[![GitHub Stars](https://img.shields.io/github/stars/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/network/members)
+[![GitHub Discussions](https://img.shields.io/github/discussions/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/discussions)
+[![GitHub open issues](https://img.shields.io/github/issues/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/issues?q=is%3Aopen+is%3Aissue)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/issues?q=is%3Aissue+is%3Aclosed)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/pulls)
+[![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/pulls?q=is%3Apr+is%3Aclosed)
 <!-- end shields -->
 
 > :warning: **Any tool for deleting messages, including this one, could result in the termination of your account** (see [self-bots](https://support.discordapp.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-)).
