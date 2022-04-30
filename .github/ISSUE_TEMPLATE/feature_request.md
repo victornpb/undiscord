@@ -1,12 +1,13 @@
 ---
-name: Feature request
+name: Feature request and ideas
 about: Post here instead 👉 https://github.com/victornpb/undiscord/discussions/categories/2-ideas
-title: ''
+title: '🛑 DO NOT USE THIS FORM FOR REQUESTS / IDEAS! 🛑'
 labels: ''
 assignees: ''
 
 ---
 
-⛔️ DO NOT POST IDEAS OR REQUESTS HERE! IT WILL BE REMOVED!
+👇 PLEASE POST YOUR IDEA OR REQUEST HERE INSTEAD 👇
+https://github.com/victornpb/undiscord/discussions/categories/2-ideas
 
-GO TO 👉 https://github.com/victornpb/undiscord/discussions/categories/2-ideas
+🙏 Please also check if your idea/request hasn't been posted before opening a new discussion.
