@@ -1,4 +1,15 @@
 # Undiscord - Delete all messages in a Discord channel or DM
+<!-- shields -->
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/victornpb/undiscord?color=%235865f2&display_name=tag&label=Undiscord&style=flat-square)
+![GitHub License](https://img.shields.io/github/license/victornpb/undiscord?style=flat-square)
+[![CodeFactor](https://www.codefactor.io/repository/github/victornpb/undiscord/badge?style=flat-square)](https://www.codefactor.io/repository/github/victornpb/undiscord?style=flat-square)
+![GitHub Stars](https://img.shields.io/github/stars/victornpb/undiscord?style=flat-square)
+![GitHub Forks](https://img.shields.io/github/forks/victornpb/undiscord?style=flat-square)
+![GitHub open issues](https://img.shields.io/github/issues/victornpb/undiscord?style=flat-square)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/victornpb/undiscord?style=flat-square)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/victornpb/undiscord?style=flat-square)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/victornpb/undiscord?style=flat-square)
+<!-- end shields -->
 
 > :warning: **Any tool for deleting messages, including this one, could result in the termination of your account** (see [self-bots](https://support.discordapp.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-)).
 > Discord appears to have recently started terminating accounts using self-bots ([thread](https://github.com/victornpb/deleteDiscordMessages/issues/193)). Use at your own risk.
