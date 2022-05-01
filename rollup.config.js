@@ -6,9 +6,9 @@ import banner from 'rollup-plugin-banner2';
 import json from '@rollup/plugin-json';
 import packageJson from './package.json';
 // import { string } from "rollup-plugin-string";
-import { string } from "./strings-plugin";
+import { string } from "./build/strings-plugin";
 
-import userScriptMetadataBlock from './src/metadata.js';
+import userScriptMetadataBlock from './build/metadata.js';
 
 const production = !process.env.ROLLUP_WATCH;
 const sourcemap = production ? true : 'inline';
@@ -35,9 +35,9 @@ const config = [
     input: entry,
     output: [
       {
-        file: packageJson.module.replace('.js', '.mjs'),
+        file: packageJson.main,
         format: 'iife',
-        sourcemap,
+        sourcemap: false,
         // exports: 'default',
       },
     ],

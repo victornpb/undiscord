@@ -7,7 +7,7 @@ import pkg from '../package.json';
 //
 
 function generateComment(manifest) {
-    const largestKey = Object.keys(manifest).reduce((a, b) => a.length > b.length ? a : b).length + 1;
+    const largestKey = Object.keys(manifest).reduce((a, b) => a.length > b.length ? a : b).length;
     const generateLine = (key, value) => `// @${key.padEnd(largestKey, ' ')} ${value}`;
     const lines = Object.entries(manifest).map(([key, value]) => {
         if (Array.isArray(value))
