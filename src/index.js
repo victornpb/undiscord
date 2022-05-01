@@ -3,12 +3,13 @@ import { version as VERSION } from '../package.json';
 import discordStyles from './ui/discord-styles.css';
 import undiscordStyles from './ui/main.css';
 import buttonHtml from './ui/undiscord-button.html';
-import undiscordUI from './ui/undiscord.html';
+import undiscordTemplate from './ui/undiscord.html';
 
 import deleteMessages from './deleteMessages';
 import Drag from './utils/drag';
 import createElm from './utils/createElm';
 import insertCss from './utils/insertCss';
+import messagePicker from './utils/messagePicker';
 import { getToken, getAuthorId, getGuildId, getChannelId } from './utils/getIds';
 
 // ------------------------- User interface ------------------------------ //
@@ -30,17 +31,19 @@ function initUI() {
     return str.replace(/\{\{([\w_]+)\}\}/g, (m, key) => obj[key] || (removeMissing ? '' : m));
   }
 
-  // create undiscord window
-  const template = replaceInterpolations(undiscordUI, {
+  const templateVariables = {
     VERSION,
     HOME,
     WIKI,
-  });
-  undiscordWindow = createElm(template);
+  };
+
+  // create undiscord window
+  const undiscordUI = replaceInterpolations(undiscordTemplate, templateVariables);
+  undiscordWindow = createElm(undiscordUI);
   document.body.appendChild(undiscordWindow);
 
   const drag = new Drag(undiscordWindow, $('.header'), { mode: 'move' });
-  const resize = new Drag(undiscordWindow, undiscordWindow, { mode: 'resize' });
+  const resize = new Drag(undiscordWindow, $('.footer'), { mode: 'resize' });
 
   // create undiscord button
   undiscordBtn = createElm(buttonHtml);
@@ -74,8 +77,9 @@ function initUI() {
     }
   }
 
-  // register event listeners
+  messagePicker.init();
 
+  // register event listeners
   $('#hide').onclick = toggleWindow;
   $('button#start').onclick = start;
   $('button#stop').onclick = stop;
@@ -92,6 +96,17 @@ function initUI() {
   $('#redact').onchange = () => {
     const b = undiscordWindow.classList.toggle('redact');
     if (b) alert('This mode will attempt to hide personal information, so you can screen share / take screenshots.\nAlways double check you are not sharing sensitive information!');
+  };
+
+  $('#pickMessageAfter').onclick = async () => {
+    // alert('Select a message on the chat.\nThe message below it will be deleted.');
+    const id = await messagePicker.grab('after');
+    if (id) $('input#minId').value = id;
+  };
+  $('#pickMessageBefore').onclick = async () => {
+    // alert('Select a message on the chat.\nThe message above it will be deleted.');
+    const id = await messagePicker.grab('before');
+    if (id) $('input#maxId').value = id;
   };
 
   // const fileSelection = $('input#importJson');
@@ -166,7 +181,7 @@ async function start() {
   logArea.innerHTML = '';
 
   // validate input
-  if (authToken) return logger('error', ['Could not detect the authorization token!']) || logger('info', ['Please make sure Undiscord is up to date']);
+  if (!authToken) return logger('error', ['Could not detect the authorization token!']) || logger('info', ['Please make sure Undiscord is up to date']);
   else if (!authorId) return logger('error', ['You must provide an Author ID!']);
   else if (!guildId) return logger('error', ['You must provide a Server ID!']);
 
@@ -174,8 +189,7 @@ async function start() {
     $('#start').style.display = 'none';
     $('#stop').style.display = 'block';
     await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
-    $('#start').style.display = 'block';
-    $('#stop').style.display = 'none';
+    stop(); // clear the running state
   }
 
 }

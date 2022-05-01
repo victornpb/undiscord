@@ -10,7 +10,13 @@
     cursor: pointer;
     color: var(--interactive-normal);
 }
-
+#undicord-btn progress{
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 7px;
+    left: 5px;
+}
 /* Undiscord Interface */
 #undiscord {
     position: fixed;
@@ -73,12 +79,12 @@
     flex-grow: 1;
 }
 
-#undiscord .toolbar {
+#undiscord .tbar {
     background-color: var(--background-secondary-alt);
     padding: 8px;
 }
 
-#undiscord .toolbar button {
+#undiscord .tbar button {
     margin-right: 4px;
     margin-bottom: 4px;
 }

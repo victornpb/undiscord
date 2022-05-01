@@ -1,4 +1,4 @@
-<div id="undiscord" class="browser container" style="display:block;">
+<div id="undiscord" class="browser container" style="display:none;">
     <div class="header">
         <svg class="icon" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
             <path fill="currentColor" d="M15 3.999V2H9V3.999H3V5.999H21V3.999H15Z"></path>
@@ -148,16 +148,16 @@
 
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input id="minId" type="text" placeholder="After message with Id" priv>
+                            <input id="minId" type="text" placeholder="After this Message" priv>
                         </div>
-                        <button id="getAuthor">select</button>
+                        <button id="pickMessageAfter">select</button>
                     </div>
 
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input id="maxId" type="text" placeholder="Before message with Id" priv>
+                            <input id="maxId" type="text" placeholder="Before this Message" priv>
                         </div>
-                        <button id="getAuthor">select</button>
+                        <button id="pickMessageBefore">select</button>
                     </div>
 
                     <div class="sectionDescription">
@@ -230,7 +230,7 @@
         </div>
 
         <div class="main col">
-            <div class="toolbar col">
+            <div class="tbar col">
                 <div class="row">
                     <button id="start" class="sizeMedium positive">Start</button>
                     <button id="stop" class="sizeMedium danger" disabled>Stop</button>
@@ -251,11 +251,11 @@
                     <div><a href="{{HOME}}/discussions" target="_blank">Issues or help</a></div>
                 </center>
             </pre>
-            <div class="toolbar footer row">
+            <div class="tbar footer row">
                 <label>
                     <input id="autoScroll" type="checkbox" checked> Auto scroll
                 </label>
-                <span id="progressPercent">50%</span>
+                <span id="progressPercent"></span>
             </div>
         </div>
     </div>
