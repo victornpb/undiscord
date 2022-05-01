@@ -45,17 +45,23 @@ function initUI() {
   // create undiscord button
   undiscordBtn = createElm(buttonHtml);
   undiscordBtn.onclick = toggleWindow;
-  mountBtn();
-
-  // watch for changes and re-mount button
   function mountBtn() {
-    const toolbar = document.querySelector('[class^=toolbar]');
+    const toolbar = document.querySelector('#app-mount [class^=toolbar]');
     if (toolbar) toolbar.appendChild(undiscordBtn);
   }
+  mountBtn();
+
+  // watch for changes and re-mount button if necessary
+  const discordElm = document.querySelector('#app-mount');
+  let observerThrottle = null;
   const observer = new MutationObserver((_mutationsList, _observer) => {
-    if (!document.body.contains(undiscordBtn)) mountBtn(); // re-mount the button to the toolbar
+    if (observerThrottle) return;
+    observerThrottle = setTimeout(() => {
+      observerThrottle = null;
+      if (!discordElm.contains(undiscordBtn)) mountBtn(); // re-mount the button to the toolbar
+    }, 3000);
   });
-  observer.observe(document.body, { attributes: false, childList: true, subtree: true });
+  observer.observe(discordElm, { attributes: false, childList: true, subtree: true });
 
   function toggleWindow() {
     if (undiscordWindow.style.display !== 'none') {
