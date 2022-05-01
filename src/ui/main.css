@@ -74,7 +74,7 @@
     padding-left: 8px;
 }
 
-#undiscord main {
+#undiscord .main {
     background-color: var(--background-primary);
     display: flex;
     flex-grow: 1;

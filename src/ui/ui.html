@@ -1,0 +1,263 @@
+<div id="undiscord" class="browser container" style="display:block;">
+    <div class="header">
+        <svg class="icon" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M15 3.999V2H9V3.999H3V5.999H21V3.999H15Z"></path>
+            <path fill="currentColor"
+                d="M5 6.99902V18.999C5 20.101 5.897 20.999 7 20.999H17C18.103 20.999 19 20.101 19 18.999V6.99902H5ZM11 17H9V11H11V17ZM15 17H13V11H15V17Z">
+            </path>
+        </svg>
+        <h3>Undiscord</h3>
+        <div class="vert-divider"></div>
+        <span> Bulk delete messages</span>
+        <div class="spacer"></div>
+        <div class="icon" aria-label="Close" role="button" tabindex="0">
+            <svg aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                    d="M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z">
+                </path>
+            </svg>
+        </div>
+    </div>
+    <div class="window-body" style="display: flex; flex-direction: row;">
+
+        <div class="sidebar scroll">
+
+            <details open>
+                <summary>General</summary>
+
+                <fieldset>
+                    <legend>
+                        Author ID
+                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/authorId.md"
+                            title="Help" target="_blank">help</a>
+                    </legend>
+                    <div class="multiInput">
+                        <div class="input-wrapper">
+                            <input class="input" id="authorId" type="text" priv>
+                        </div>
+                        <button id="getAuthor">me</button>
+                    </div>
+                </fieldset>
+
+                <hr>
+
+                <fieldset>
+                    <legend>
+                        Server ID
+                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/serverId.md"
+                            title="Help" target="_blank">help</a>
+                    </legend>
+                    <div class="multiInput">
+                        <div class="input-wrapper">
+                            <input class="input" id="serverId" type="text" priv>
+                        </div>
+                        <button id="getServer">current</button>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>
+                        Channel ID
+                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md"
+                            title="Help" target="_blank">help</a>
+                    </legend>
+                    <div class="multiInput">
+                        <div class="input-wrapper">
+                            <input class="input" id="channelId" type="text" priv>
+                        </div>
+                        <button id="getChannel">current</button>
+                    </div>
+                    <div class="sectionDescription">
+                        <label><input id="includeNsfw" type="checkbox">This is a NSFW channel</label>
+                    </div>
+                </fieldset>
+            </details>
+
+            <details>
+                <summary>Import</summary>
+
+                <fieldset>
+                    <legend>
+                        Import JSON
+                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md"
+                            title="Help" target="_blank">help</a>
+                    </legend>
+                    <div class="sectionDescription">
+                        Paste the JSON here and it will be imported.
+                    </div>
+                    <div class="">
+                        <button id="getChannel">Import</button>
+                    </div>
+                </fieldset>
+            </details>
+            <hr>
+            <details>
+                <summary>Filter</summary>
+
+                <fieldset>
+                    <legend>
+                        Search
+                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/filters.md"
+                            title="Help" target="_blank">help</a>
+                    </legend>
+
+                    <div class="input-wrapper">
+                        <input id="content" type="text" placeholder="Containing text" priv>
+                    </div>
+                    <div class="sectionDescription">
+                        Only delete messages that contain the text
+                    </div>
+
+                    <div class="sectionDescription">
+                        <label><input id="hasLink" type="checkbox">has: link</label>
+                    </div>
+                    <div class="sectionDescription">
+                        <label><input id="hasFile" type="checkbox">has: file</label>
+                    </div>
+                    <div class="sectionDescription">
+                        <label><input id="includePinned" type="checkbox">Include pinned</label>
+                    </div>
+                </fieldset>
+
+                <hr>
+
+                <fieldset>
+                    <legend>
+                        Pattern
+                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md"
+                            title="Help" target="_blank">help</a>
+                    </legend>
+                    <div class="sectionDescription">
+                        Delete messages that match the regular expression
+                    </div>
+                    <div class="input-wrapper">
+                        / <input id="pattern" type="text" placeholder="regular expression" priv> /
+                    </div>
+                </fieldset>
+            </details>
+
+            <details>
+                <summary>Messages interval</summary>
+
+                <fieldset>
+                    <legend>
+                        Interval of messages
+                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md"
+                            title="Help" target="_blank">help</a>
+                    </legend>
+
+                    <div class="multiInput">
+                        <div class="input-wrapper">
+                            <input id="minId" type="text" placeholder="After message with Id" priv>
+                        </div>
+                        <button id="getAuthor">select</button>
+                    </div>
+
+                    <div class="multiInput">
+                        <div class="input-wrapper">
+                            <input id="maxId" type="text" placeholder="Before message with Id" priv>
+                        </div>
+                        <button id="getAuthor">select</button>
+                    </div>
+
+                    <div class="sectionDescription">
+                        Specify an interval to delete messages.
+                    </div>
+                </fieldset>
+            </details>
+
+            <details>
+                <summary>Date</summary>
+
+                <fieldset>
+                    <legend>
+                        Date range
+                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md"
+                            title="Help" target="_blank">help</a>
+                    </legend>
+
+                    <div class="input-wrapper">
+                        <input id="minDate" type="datetime-local" title="After">
+                    </div>
+                    <div class="input-wrapper">
+                        <input id="minDate" type="datetime-local" title="After">
+                    </div>
+                    <div class="sectionDescription">
+                        Delete messages that were posted between the two dates.
+                    </div>
+
+                </fieldset>
+            </details>
+
+            <hr>
+
+            <details>
+                <summary>Advanced settings</summary>
+                <fieldset>
+                    <legend>
+                        Search Delay
+                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md"
+                            title="Help" target="_blank">help</a>
+                    </legend>
+
+                    <div class="input-wrapper">
+                        <input id="searchDelay" type="number" value="100" step="100">
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        Search Delay
+                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md"
+                            title="Help" target="_blank">help</a>
+                    </legend>
+                    <div class="input-wrapper">
+                        <input id="deleteDelay" type="number" value="1000" step="100">
+                    </div>
+                    <br>
+
+                    <div class="sectionDescription">
+                        This will affect the speed in which the messages are deleted
+                    </div>
+                </fieldset>
+
+            </details>
+            <hr>
+            <div></div>
+            <div class="info">
+                Undiscord v5.0.0
+                <br> victornpb
+            </div>
+        </div>
+
+        <div class="main col">
+            <div class="toolbar col">
+                <div class="row">
+                    <button id="start" class="sizeMedium positive">Start</button>
+                    <button id="stop" class="sizeMedium danger" disabled>Stop</button>
+                    <button id="clear" class="sizeMedium">Clear log</button>
+
+                    <label title="Hide sensitive information for taking screenshots">
+                        <input id="redact" type="checkbox"> Screenshot mode
+                    </label>
+
+                </div>
+                <div class="row">
+                    <progress id="progress" value="0.75"></progress>
+
+                </div>
+            </div>
+            <pre class="logarea scroll">
+                        <center>
+                            <div>Star this project on <a href="https://github.com/victornpb/undiscord" target="_blank">github.com/victornpb/undiscord</a></div>
+                            <div><a href="https://github.com/victornpb/undiscord/discussions" target="_blank">Issues or help</a></div>
+                        </center>
+                    </pre>
+            <div class="toolbar row">
+                <label>
+                    <input id="autoScroll" type="checkbox" checked> Auto scroll
+                </label>
+                <span class="percent">50%</span>
+            </div>
+        </div>
+    </div>
+</div>
