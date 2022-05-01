@@ -23,7 +23,7 @@
         "args": "none"
       }
     ],
-    "no-console": "warn",
+    "no-console": "off",
     "no-debugger": "warn",
     "no-unused-expressions": "error",
     "no-trailing-spaces": "error",
