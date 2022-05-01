@@ -1,5 +1,17 @@
-#undicord-btn{position: relative; height: 24px;width: auto;-webkit-box-flex: 0;-ms-flex: 0 0 auto;flex: 0 0 auto;margin: 0 8px;cursor:pointer; color: var(--interactive-normal);}
+/* Undiscord Button */
+#undicord-btn {
+    position: relative;
+    height: 24px;
+    width: auto;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    margin: 0 8px;
+    cursor: pointer;
+    color: var(--interactive-normal);
+}
 
+/* Undiscord Interface */
 #undiscord {
     position: fixed;
     top: 44px;
@@ -9,7 +21,7 @@
     min-width: 610px;
     max-width: 100%;
     max-height: 100%;
-    
+
     height: 448px;
     width: 610px;
 
@@ -19,26 +31,46 @@
     box-shadow: var(--elevation-stroke), var(--elevation-high);
     border-radius: 4px;
     display: flex;
-    flex-direction: column
+    flex-direction: column;
+
+    will-change: top, left, width, height;
 }
 
-#undiscord .logarea {
+#undiscord .header .icon{
+    cursor: pointer;
+}
+
+#undiscord .window-body {
+    height: calc(100% - 48px);
+}
+
+#undiscord .sidebar {
+    min-width: 250px;
+    width: 270px;
+    overflow-y: auto;
+    height: 100%;
+    max-height: 100%;
+    padding: 8px;
+    overflow: hidden scroll;
+    background: var(--background-secondary);
+}
+
+#undiscord .main {
+    background-color: var(--background-primary);
+    display: flex;
+    flex-grow: 1;
+    max-width: calc(100% - 250px);
+}
+
+#undiscord #logArea {
     overflow: auto;
     font-size: .75rem;
     font-family: Consolas, Liberation Mono, Menlo, Courier, monospace;
     flex-grow: 1;
     padding: 10px;
     user-select: text;
-}
 
-/*----- misc -----*/
-#undiscord,
-#undiscord * {
-    box-sizing: border-box;
-}
-
-#undiscord .window-body {
-    height: calc(100% - 48px);
+    flex-grow: 1;
 }
 
 #undiscord .toolbar {
@@ -51,17 +83,11 @@
     margin-bottom: 4px;
 }
 
-
-#undiscord .sidebar {
-    min-width: 250px;
-    width: 270px;
-    overflow-y: auto;
-    height: 100%;
-    max-height: 100%;
-    padding: 8px;
-    overflow: hidden scroll;
-    background: var(--background-secondary);
+#undiscord .footer {
+    cursor: se-resize;
 }
+
+/* Elements */
 
 #undiscord summary {
     padding-top: 6px;
@@ -86,22 +112,17 @@
     padding-left: 8px;
 }
 
-#undiscord .main {
-    background-color: var(--background-primary);
-    display: flex;
-    flex-grow: 1;
-    max-width: calc(100% - 250px);
-}
-
-#undiscord .logarea {
-    flex-grow: 1;
+/* help link */
+#undiscord legend a {
+    float: right;
+    text-transform: initial;
 }
 
 #undiscord progress {
     height: 8px;
     flex-grow: 1;
     margin-top: 4px;
-    
+
     /* background-color: var(--background-primary);
     border-radius: 3px; */
 }
@@ -110,26 +131,7 @@
     background-color: var(--brand-experiment);
 } */
 
-
-/* help link */
-#undiscord legend a {
-    float: right;
-    text-transform: initial;
-}
-
-#undiscord .col {
-    display: flex;
-    flex-direction: column;
-}
-
-#undiscord .row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-/*----- functional -----*/
-
+/*----- functional classes -----*/
 
 #undiscord.redact .priv {
     display: none !important
@@ -145,4 +147,22 @@
 
 #undiscord :disabled {
     display: none;
+}
+
+/*----- layout misc -----*/
+
+#undiscord,
+#undiscord * {
+    box-sizing: border-box;
+}
+
+#undiscord .col {
+    display: flex;
+    flex-direction: column;
+}
+
+#undiscord .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }

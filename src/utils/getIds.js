@@ -5,7 +5,7 @@ export function getToken() {
 }
 
 export function getAuthorId() {
-  const LS  = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
+  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
   return JSON.parse(LS.user_id_cache);
 }
 

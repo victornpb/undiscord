@@ -1,20 +1,20 @@
-import { version } from '../package.json';
+import { version as VERSION } from '../package.json';
+
+import discordStyles from './ui/discord-styles.css';
+import undiscordStyles from './ui/main.css';
+import buttonHtml from './ui/undiscord-button.html';
+import undiscordUI from './ui/undiscord.html';
+
 import deleteMessages from './deleteMessages';
-
-const VERSION = version;
-const HOME = 'https://github.com/victornpb/undiscord';
-const WIKI = 'https://github.com/victornpb/undiscord/wiki';
-
-//------------------------- User interface ------------------------------//
-
-import themeCSS from './ui/discord-theme.css';
-import undiscordCSS from './ui/main.css';
-import undiscordUI from './ui/ui.html';
-import buttonHtml from './ui/button.html';
-
+import Drag from './utils/drag';
 import createElm from './utils/createElm';
 import insertCss from './utils/insertCss';
 import { getToken, getAuthorId, getGuildId, getChannelId } from './utils/getIds';
+
+// ------------------------- User interface ------------------------------ //
+
+const HOME = 'https://github.com/victornpb/undiscord';
+const WIKI = 'https://github.com/victornpb/undiscord/wiki';
 
 const $ = s => undiscordWindow.querySelector(s);
 
@@ -23,8 +23,8 @@ let undiscordBtn;
 
 function initUI() {
 
-  insertCss(themeCSS);
-  insertCss(undiscordCSS);
+  insertCss(discordStyles);
+  insertCss(undiscordStyles);
 
   function replaceInterpolations(str, obj, removeMissing = false) {
     return str.replace(/\{\{([\w_]+)\}\}/g, (m, key) => obj[key] || (removeMissing ? '' : m));
@@ -38,6 +38,9 @@ function initUI() {
   });
   undiscordWindow = createElm(template);
   document.body.appendChild(undiscordWindow);
+
+  const drag = new Drag(undiscordWindow, $('.header'), { mode: 'move' });
+  const resize = new Drag(undiscordWindow, undiscordWindow, { mode: 'resize' });
 
   // create undiscord button
   undiscordBtn = createElm(buttonHtml);
@@ -68,24 +71,18 @@ function initUI() {
   // register event listeners
 
   $('#hide').onclick = toggleWindow;
-
   $('button#start').onclick = start;
   $('button#stop').onclick = stop;
-
   $('button#clear').onclick = () => $('#logArea').innerHTML = '';
-
   $('button#getAuthor').onclick = () => $('input#authorId').value = getAuthorId();
-
   $('button#getGuild').onclick = () => {
     const guildId = $('input#guildId').value = getGuildId();
     if (guildId === '@me') $('input#channelId').value = getChannelId();
   };
-
   $('button#getChannel').onclick = () => {
     $('input#channelId').value = getChannelId();
     $('input#guildId').value = getGuildId();
   };
-
   $('#redact').onchange = () => {
     const b = undiscordWindow.classList.toggle('redact');
     if (b) alert('This mode will attempt to hide personal information, so you can screen share / take screenshots.\nAlways double check you are not sharing sensitive information!');
@@ -189,4 +186,4 @@ function stop() {
 initUI();
 
 
-//END.
+// ---- END Undiscord ----
