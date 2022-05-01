@@ -1,0 +1,90 @@
+{
+  "name": "undiscord",
+  "nameFull": "Undiscord",
+  "userScript": {
+    "namespace": "https://github.com/victornpb/deleteDiscordMessages",
+    "match": [
+      "https://*.discord.com/app",
+      "https://*.discord.com/channels/*",
+      "https://*.discord.com/login"
+    ],
+    "downloadURL": "https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js",
+    "contributionURL": "https://www.buymeacoffee.com/vitim",
+    "grant": "none"
+  },
+  "version": "5.0.0",
+  "description": "Delete all messages in a Discord channel or DM (Bulk deletion)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/username/foo-bar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/foo-bar/issues"
+  },
+  "homepage": "https://github.com/username/foo-bar",
+  "author": "username",
+  "main": "dist/foo-bar.cjs.js",
+  "module": "dist/foo-bar.esm.js",
+  "unpkg": "dist/foo-bar.js",
+  "globalVar": "FooBar",
+  "scripts": {
+    "start": "npm run watch",
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "prebuild": "rimraf dist",
+    "test": "npm run lint && npm run build",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "release": "np --any-branch"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "foo",
+    "bar"
+  ],
+  "sideEffects": false,
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/plugin-proposal-private-methods": "^7.16.11",
+    "@babel/plugin-syntax-optional-chaining": "^7.8.3",
+    "@babel/plugin-transform-object-assign": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.16.11",
+    "@rollup/plugin-json": "^4.1.0",
+    "asciitable.js": "^1.0.3",
+    "eslint": "^8.13.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.4.0",
+    "np": "^7.6.1",
+    "postcss": "^8.4.12",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.70.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-banner2": "^1.2.2",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-string": "^3.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "tiny-dedent": "^1.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "npm run lint:fix",
+      "git add"
+    ]
+  }
+}
