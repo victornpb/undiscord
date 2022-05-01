@@ -19,7 +19,7 @@
                     <path fill="currentColor" d="M15 3.999V2H9V3.999H3V5.999H21V3.999H15Z"></path>
                     <path fill="currentColor" d="M5 6.99902V18.999C5 20.101 5.897 20.999 7 20.999H17C18.103 20.999 19 20.101 19 18.999V6.99902H5ZM11 17H9V11H11V17ZM15 17H13V11H15V17Z"></path>
                 </svg>
-                <h3>Undiscord ${VERSION}</h3>
+                <h3>Undiscord</h3>
                 <div class="vert-divider"></div>
                 <span> Bulk delete messages</span>
                 <div class="spacer"></div>
@@ -140,7 +140,7 @@
                         </div>
                         </fieldset>
                     </details>
-                    
+
                     <details>
                         <summary>Messages interval</summary>
 
@@ -179,7 +179,6 @@
                                 <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/channelId.md" title="Help" target="_blank">help</a>
                             </legend>
 
-
                             <div class="input-wrapper">
                                 <input id="minDate" type="datetime-local" title="After">
                             </div>
@@ -192,7 +191,6 @@
 
                         </fieldset>
                     </details>
-
 
                     <hr>
 
@@ -225,29 +223,42 @@
 
                     </details>
                     <hr>
+                    <div></div>
                     <div class="info">
-                        Stable 126462 (1f5f36e)<br>
-                        OS X 10.15.7 64-Bit
+                        Undiscord v5.0.0
+                        <br> victornpb
                     </div>
                 </div>
 
-                <main>
-                    <div class="toolbar">
-                        <button id="start" class="sizeMedium positive">Start</button>
-                        <button id="stop" class="sizeMedium danger" disabled>Stop</button>
-                        <button id="clear" class="sizeMedium">Clear log</button>
-                        <label><input id="autoScroll" type="checkbox" checked>Auto scroll</label>
-                        <label title="Hide sensitive information for taking screenshots"><input id="redact"
-                        type="checkbox">Screenshot
-                    mode</label>
-                        <progress id="progress" style="display:none;"></progress>
-                        <span class="percent"></span>
+                <main class="col">
+                    <div class="toolbar col">
+                        <div class="row">
+                            <button id="start" class="sizeMedium positive">Start</button>
+                            <button id="stop" class="sizeMedium danger" disabled>Stop</button>
+                            <button id="clear" class="sizeMedium">Clear log</button>
+
+                            <label title="Hide sensitive information for taking screenshots">
+                                <input id="redact" type="checkbox"> Screenshot mode
+                            </label>
+
+                        </div>
+                        <div class="row">
+                            <progress id="progress" value="0.75"></progress>
+
+                        </div>
                     </div>
-                    <pre class="logarea">
-                        <center>Star this project on <a href="https://github.com/victornpb/deleteDiscordMessages" target="_blank">github.com/victornpb/deleteDiscordMessages</a>!\n\n
-                            <a href="https://github.com/victornpb/deleteDiscordMessages/discussions" target="_blank">Issues or help</a>
+                    <pre class="logarea scroll">
+                        <center>
+                            <div>Star this project on <a href="https://github.com/victornpb/undiscord" target="_blank">github.com/victornpb/undiscord</a></div>
+                            <div><a href="https://github.com/victornpb/undiscord/discussions" target="_blank">Issues or help</a></div>
                         </center>
                     </pre>
+                    <div class="toolbar row">
+                        <label>
+                            <input id="autoScroll" type="checkbox" checked> Auto scroll
+                            </label>
+                        <span class="percent">50%</span>
+                    </div>
                 </main>
             </div>
 
