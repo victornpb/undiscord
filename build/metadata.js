@@ -4,6 +4,7 @@ import pkg from '../package.json';
 //
 // Generate metadata block with information from package.json
 // https://sourceforge.net/p/greasemonkey/wiki/Metadata_Block/
+// @author victornpb
 //
 
 const production = !process.env.ROLLUP_WATCH;
@@ -42,7 +43,7 @@ export default () => {
     delete metadata.updateURL;
     delete metadata.homepageURL;
     metadata.version = new Date().toISOString();
-    metadata.namespace = 'foobar';
+    // metadata.namespace = 'foobar';
   }
 
   return generateComment(metadata);

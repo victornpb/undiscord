@@ -79,14 +79,14 @@
                 <fieldset>
                     <legend>
                         Import JSON
-                        <a href="{{WIKI}}/channelId.md"
+                        <a href="{{WIKI}}/importJson.md"
                             title="Help" target="_blank">help</a>
                     </legend>
                     <div class="sectionDescription">
-                        Paste the JSON here and it will be imported.
+                        The import feature will be available in the future.
                     </div>
                     <div class="">
-                        <button id="importJson">Import</button>
+                        <button id="importJson" disabled>Import</button>
                     </div>
                 </fieldset>
             </details>
@@ -102,7 +102,7 @@
                     </legend>
 
                     <div class="input-wrapper">
-                        <input id="content" type="text" placeholder="Containing text" priv>
+                        <input id="search" type="text" placeholder="Containing text" priv>
                     </div>
                     <div class="sectionDescription">
                         Only delete messages that contain the text
@@ -180,7 +180,7 @@
                         <input id="minDate" type="datetime-local" title="After">
                     </div>
                     <div class="input-wrapper">
-                        <input id="minDate" type="datetime-local" title="After">
+                        <input id="maxDate" type="datetime-local" title="After">
                     </div>
                     <div class="sectionDescription">
                         Delete messages that were posted between the two dates.
@@ -242,21 +242,20 @@
 
                 </div>
                 <div class="row">
-                    <progress id="progress" value="0.75"></progress>
-
+                    <progress id="progressBar" value="-1"></progress>
                 </div>
             </div>
-            <pre class="logarea scroll">
-                        <center>
-                            <div>Star this project on <a href="{{HOME}}" target="_blank">github.com/victornpb/undiscord</a></div>
-                            <div><a href="{{HOME}}/discussions" target="_blank">Issues or help</a></div>
-                        </center>
-                    </pre>
+            <pre id="logArea" class="logarea scroll">
+                <center>
+                    <div>Star this project on <a href="{{HOME}}" target="_blank">github.com/victornpb/undiscord</a></div>
+                    <div><a href="{{HOME}}/discussions" target="_blank">Issues or help</a></div>
+                </center>
+            </pre>
             <div class="toolbar row">
                 <label>
                     <input id="autoScroll" type="checkbox" checked> Auto scroll
                 </label>
-                <span class="percent">50%</span>
+                <span id="progressPercent">50%</span>
             </div>
         </div>
     </div>

@@ -1,13 +1,11 @@
 import { version } from '../package.json';
+import deleteMessages from './deleteMessages';
 
 const VERSION = version;
 const HOME = 'https://github.com/victornpb/undiscord';
 const WIKI = 'https://github.com/victornpb/undiscord/wiki';
 
-import deleteMessages from './deleteMessages';
-
-
-//---- User interface ----//
+//------------------------- User interface ------------------------------//
 
 import themeCSS from './ui/discord-theme.css';
 import undiscordCSS from './ui/main.css';
@@ -16,10 +14,12 @@ import buttonHtml from './ui/button.html';
 
 import createElm from './utils/createElm';
 import insertCss from './utils/insertCss';
+import { getToken, getAuthorId, getGuildId, getChannelId } from './utils/getIds';
+
+const $ = s => undiscordWindow.querySelector(s);
 
 let undiscordWindow;
 let undiscordBtn;
-let stop;
 
 function initUI() {
 
@@ -38,11 +38,10 @@ function initUI() {
   });
   undiscordWindow = createElm(template);
   document.body.appendChild(undiscordWindow);
-  const $ = s => undiscordWindow.querySelector(s);
 
   // create undiscord button
   undiscordBtn = createElm(buttonHtml);
-  undiscordBtn.onclick = togglePopover;
+  undiscordBtn.onclick = toggleWindow;
   mountBtn();
 
   // watch for changes and re-mount button
@@ -55,7 +54,7 @@ function initUI() {
   });
   observer.observe(document.body, { attributes: false, childList: true, subtree: true });
 
-  function togglePopover() {
+  function toggleWindow() {
     if (undiscordWindow.style.display !== 'none') {
       undiscordWindow.style.display = 'none';
       undiscordBtn.style.color = 'var(--interactive-normal)';
@@ -66,92 +65,18 @@ function initUI() {
     }
   }
 
-  $('#hide').onclick = togglePopover;
+  // register event listeners
 
-  // startBtn.onclick = async e => {
-  //   const authToken = $('input#authToken').value.trim();
-  //   const authorId = $('input#authorId').value.trim();
-  //   const guildId = $('input#guildId').value.trim();
-  //   const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
-  //   const minId = $('input#minId').value.trim();
-  //   const maxId = $('input#maxId').value.trim();
-  //   const minDate = $('input#minDate').value.trim();
-  //   const maxDate = $('input#maxDate').value.trim();
-  //   const content = $('input#content').value.trim();
-  //   const hasLink = $('input#hasLink').checked;
-  //   const hasFile = $('input#hasFile').checked;
-  //   const includeNsfw = $('input#includeNsfw').checked;
-  //   const includePinned = $('input#includePinned').checked;
-  //   const pattern = $('input#pattern').value;
-  //   const searchDelay = parseInt($('input#searchDelay').value.trim());
-  //   const deleteDelay = parseInt($('input#deleteDelay').value.trim());
-  //   const progress = $('#progress');
-  //   const progress2 = btn.querySelector('progress');
-  //   const percent = $('.percent');
+  $('#hide').onclick = toggleWindow;
 
-  //   const fileSelection = $('input#file');
-  //   fileSelection.addEventListener('change', () => {
-  //     const files = fileSelection.files;
-  //     const channelIdField = $('input#channelId');
-  //     if (files.length > 0) {
-  //       const file = files[0];
-  //       file.text().then(text => {
-  //         let json = JSON.parse(text);
-  //         let channels = Object.keys(json);
-  //         channelIdField.value = channels.join(',');
-  //       });
-  //     }
-  //   }, false);
+  $('button#start').onclick = start;
+  $('button#stop').onclick = stop;
 
-  //   const stopHndl = () => !(stop === true);
+  $('button#clear').onclick = () => $('#logArea').innerHTML = '';
 
-  //   const onProg = (value, max) => {
-  //     if (value && max && value > max) max = value;
-  //     progress.setAttribute('max', max);
-  //     progress.value = value;
-  //     progress.style.display = max ? '' : 'none';
-  //     progress2.setAttribute('max', max);
-  //     progress2.value = value;
-  //     progress2.style.display = max ? '' : 'none';
-  //     percent.innerHTML = value && max ? Math.round(value / max * 100) + '%' : '';
-  //   };
+  $('button#getAuthor').onclick = () => $('input#authorId').value = getAuthorId();
 
-
-  //   stop = stopBtn.disabled = !(startBtn.disabled = true);
-  //   for (let i = 0; i < channelIds.length; i++) {
-  //     await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
-  //     stop = stopBtn.disabled = !(startBtn.disabled = false);
-  //   }
-  // };
-  // stopBtn.onclick = e => stop = stopBtn.disabled = !(startBtn.disabled = false);
-  // $('button#clear').onclick = e => { logArea.innerHTML = ''; };
-
-  function getToken() {
-    window.dispatchEvent(new Event('beforeunload'));
-    const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-    return JSON.parse(LS.token);
-  }
-
-  function getAuthorId() {
-    const LS  = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-    return JSON.parse(LS.user_id_cache);
-  }
-
-  function getGuildId() {
-    const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
-    if (m) return m[1];
-    else alert('Could not the Guild ID!\nPlease make sure you are on a Server or DM.');
-  }
-
-  function getChannelId() {
-    const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
-    if (m) return m[2];
-    else alert('Could not the Channel ID!\nPlease make sure you are on a Channel or DM.');
-  }
-
-  $('button#getAuthor').onclick = e => $('input#authorId').value = getAuthorId();
-
-  $('button#getGuild').onclick = e => {
+  $('button#getGuild').onclick = () => {
     const guildId = $('input#guildId').value = getGuildId();
     if (guildId === '@me') $('input#channelId').value = getChannelId();
   };
@@ -161,17 +86,104 @@ function initUI() {
     $('input#guildId').value = getGuildId();
   };
 
-  $('#redact').onchange = e => {
+  $('#redact').onchange = () => {
     const b = undiscordWindow.classList.toggle('redact');
-    if (b) alert('This will attempt to hide personal information, but make sure to double check before sharing screenshots.');
+    if (b) alert('This mode will attempt to hide personal information, so you can screen share / take screenshots.\nAlways double check you are not sharing sensitive information!');
   };
 
+  // const fileSelection = $('input#importJson');
+  // fileSelection.onchange = () => {
+  //   const files = fileSelection.files;
+  //   const channelIdField = $('input#channelId');
+  //   if (files.length > 0) {
+  //     const file = files[0];
+  //     file.text().then(text => {
+  //       let json = JSON.parse(text);
+  //       let channels = Object.keys(json);
+  //       channelIdField.value = channels.join(',');
+  //     });
+  //   }
+  // };
+
+}
+
+let _stopFlag;
+const stopHndl = () => !(_stopFlag === true);
+
+async function start() {
+  console.log('start');
+
+  // general
+  const authToken = getToken();
+  const authorId = $('input#authorId').value.trim();
+  const guildId = $('input#guildId').value.trim();
+  const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
+  const includeNsfw = $('input#includeNsfw').checked;
+  // filter
+  const content = $('input#search').value.trim();
+  const hasLink = $('input#hasLink').checked;
+  const hasFile = $('input#hasFile').checked;
+  const includePinned = $('input#includePinned').checked;
+  const pattern = $('input#pattern').value;
+  // message interval
+  const minId = $('input#minId').value.trim();
+  const maxId = $('input#maxId').value.trim();
+  // date range
+  const minDate = $('input#minDate').value.trim();
+  const maxDate = $('input#maxDate').value.trim();
+  //advanced
+  const searchDelay = parseInt($('input#searchDelay').value.trim());
+  const deleteDelay = parseInt($('input#deleteDelay').value.trim());
+
+  // progress handler
+  const progress = $('#progressBar');
+  const progress2 = undiscordBtn.querySelector('progress');
+  const percent = $('#progressPercent');
+  const onProg = (value, max) => {
+    if (value && max && value > max) max = value;
+    progress.setAttribute('max', max);
+    progress.value = value;
+    progress.style.display = max ? '' : 'none';
+    progress2.setAttribute('max', max);
+    progress2.value = value;
+    progress2.style.display = max ? '' : 'none';
+    percent.innerHTML = value && max ? Math.round(value / max * 100) + '%' : '';
+    if (value === -1) progress.removeAttribute('value');
+    if (value === -1) progress2.removeAttribute('value');
+  };
+
+  let logArea = $('#logArea');
+  let autoScroll = $('#autoScroll');
   const logger = (type = '', args) => {
     const style = { '': '', info: 'color:#00b0f4;', verb: 'color:#72767d;', warn: 'color:#faa61a;', error: 'color:#f04747;', success: 'color:#43b581;' }[type];
     logArea.insertAdjacentHTML('beforeend', `<div style="${style}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
     if (autoScroll.checked) logArea.querySelector('div:last-child').scrollIntoView(false);
   };
 
+  logArea.innerHTML = '';
+
+  // validate input
+  if (authToken) return logger('error', ['Could not detect the authorization token!']) || logger('info', ['Please check for an updated version of Undiscord.']);
+  else if (!authorId) return logger('error', ['You must provide an Author ID!']);
+  else if (!guildId) return logger('error', ['You must provide a Server ID!']);
+
+  for (let i = 0; i < channelIds.length; i++) {
+    $('#start').style.display = 'none';
+    $('#stop').style.display = 'block';
+    await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
+    $('#start').style.display = 'block';
+    $('#stop').style.display = 'none';
+  }
+
+}
+
+function stop() {
+  _stopFlag = true;
+  $('#start').style.display = 'block';
+  $('#stop').style.display = 'none';
+
+  $('#progressBar').style.display = 'none';
+  undiscordBtn.querySelector('progress').style.display = 'none';
 }
 
 initUI();

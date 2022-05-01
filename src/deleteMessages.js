@@ -58,6 +58,8 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
       'Authorization': authToken
     };
 
+    if (onProgress) onProgress(-1, 1);
+
     let resp;
     try {
       const s = Date.now();
