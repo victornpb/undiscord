@@ -163,7 +163,7 @@ async function start() {
   logArea.innerHTML = '';
 
   // validate input
-  if (authToken) return logger('error', ['Could not detect the authorization token!']) || logger('info', ['Please check for an updated version of Undiscord.']);
+  if (authToken) return logger('error', ['Could not detect the authorization token!']) || logger('info', ['Please make sure Undiscord is up to date']);
   else if (!authorId) return logger('error', ['You must provide an Author ID!']);
   else if (!guildId) return logger('error', ['You must provide a Server ID!']);
 
