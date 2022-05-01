@@ -1,0 +1,323 @@
+
+#undiscord {
+    position: fixed;
+    top: 100px;
+    right: 10px;
+    bottom: 10px;
+    min-width: 780px;
+    z-index: 99;
+    color: var(--text-normal);
+    background-color: var(--background-secondary);
+    box-shadow: var(--elevation-stroke), var(--elevation-high);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column
+}
+
+#undiscord a {
+    color: #00b0f4
+}
+
+#undiscord.redact .priv {
+    display: none !important
+}
+
+#undiscord:not(.redact) .mask {
+    display: none !important
+}
+
+#undiscord.redact [priv] {
+    -webkit-text-security: disc !important
+}
+
+#undiscord .toolbar span {
+    margin-right: 8px
+}
+
+#undiscord button,
+#undiscord .btn {
+    color: #fff;
+    background: #7289da;
+    border: 0;
+    border-radius: 4px;
+    font-size: 14px
+}
+
+#undiscord button:disabled {
+    display: none
+}
+
+
+#undiscord input#file {
+    display: none
+}
+
+#undiscord hr {
+    border-color: rgba(255, 255, 255, 0.1)
+}
+
+#undiscord .header {
+    background-color: var(--background-tertiary);
+    height: 48px;
+    -webkit-box-align: center;
+    align-items: center;
+    min-height: 48px;
+    padding: 0px 16px;
+}
+
+#undiscord .form {
+    padding: 8px;
+    background: var(--background-secondary);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .2), 0 1.5px 0 rgba(0, 0, 0, .05), 0 2px 0 rgba(0, 0, 0, .05)
+}
+
+#undiscord .logarea {
+    overflow: auto;
+    font-size: .75rem;
+    font-family: Consolas, Liberation Mono, Menlo, Courier, monospace;
+    flex-grow: 1;
+    padding: 10px;
+    user-select: text;
+}
+
+
+/* ---------- */
+
+/* undiscord window */
+.browser {
+    box-shadow: var(--elevation-stroke),var(--elevation-high);
+    min-height: 400px;
+    max-height: 80vh;
+    max-width: 600px;
+    min-width: 480px;
+    width: 35vw;
+    overflow: hidden;
+}
+.container {
+    background-color: var(--background-secondary);
+    border-radius: 8px;
+    box-sizing: border-box;
+    cursor: default;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+}
+.header {
+    background-color: var(--background-tertiary);
+    height: 48px;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 16px;
+
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+
+    color: var(--header-secondary);
+}
+.header .icon{
+    color: var(--interactive-normal);
+    margin-right: 8px;
+    flex-shrink: 0;
+    width: 24;
+    height: 24;
+}
+.header h3{
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 500;
+    font-family: var(--font-display);
+    color: var(--header-primary);
+    flex-shrink: 0;
+    margin-right: 16px;
+}
+.header .spacer{
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;-webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+}
+.header .vert-divider{
+    width: 1px;
+    height: 24px;
+    background-color: var(--background-modifier-accent);
+    margin-right: 16px;
+    flex-shrink: 0;
+}
+
+#undiscord legend {
+    display: block;
+    width: 100%;
+    color: var(--header-secondary);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: default;
+    font-family: var(--font-display);
+    margin-bottom: 8px;
+}
+
+#undiscord legend a {
+    float: right;
+    text-transform: initial;
+}
+
+#undiscord .multiInput {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    font-size: 16px;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 3px;
+    color: var(--text-normal);
+    background-color: var(--input-background);
+    border: none;
+    transition: border-color 0.2s ease-in-out 0s;
+}
+#undiscord .multiInput :first-child{
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+}
+#undiscord .multiInput button:last-child{
+    margin-right: 4px;
+}
+
+
+#undiscord .input{
+    font-size: 16px;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 3px;
+    color: var(--text-normal);
+    background-color: var(--input-background);
+    border: none;
+    transition: border-color 0.2s ease-in-out 0s;
+
+    padding: 10px;
+    height: 40px;
+}
+
+#undiscord fieldset{
+    margin-top: 16px;
+}
+
+#undiscord .input-wrapper {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    font-size: 16px;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 3px;
+    color: var(--text-normal);
+    background-color: var(--input-background);
+    border: none;
+    transition: border-color 0.2s ease-in-out 0s;
+}
+
+#undiscord input[type="text"],
+#undiscord input[type="search"],
+#undiscord input[type="password"],
+#undiscord input[type="datetime-local"],
+#undiscord input[type="number"] {
+    font-size: 16px;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 3px;
+    color: var(--text-normal);
+    background-color: var(--input-background);
+    border: none;
+    transition: border-color 0.2s ease-in-out 0s;
+    padding: 10px;
+    height: 40px;
+}
+
+#undiscord .divider,
+#undiscord hr{
+    border: none;
+    margin-bottom: 24px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--background-modifier-accent);
+}
+
+#undiscord .sectionDescription{
+    margin-bottom: 16px;
+    color: var(--header-secondary);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+}
+
+#undiscord a {
+    color: var(--text-link);
+    text-decoration: none;
+}
+
+#undiscord .btn,
+#undiscord button {
+    position: relative;
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    box-sizing: border-box;
+    background: none;
+    border: none;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
+    padding: 2px 16px;
+    user-select: none;
+
+    /* sizeSmall */
+    width: 60px;
+    height: 32px;
+    min-width: 60px;
+    min-height: 32px;
+
+    /* lookFilled colorPrimary */
+    color:rgb(255, 255, 255);
+    background-color: var(--button-secondary-background);
+}
+/* lookFilled colorPrimary */
+#undiscord .accent {
+    /* lookFilled */
+    color: rgb(255, 255, 255);
+    background-color: var(--brand-experiment);
+}
+
+/*----- misc -----*/
+#undiscord,
+#undiscord * {
+    box-sizing: border-box;
+}
+
+#undiscord .window-body{
+    height: calc(100% - 48px);
+}
+.col{
+    padding: 4px;
+}
+
+.sidebar{
+    width: 250;
+    overflow-y: auto;
+    height: 100%;
+    max-height: 100%;
+    padding: 8px;
+    overflow: hidden scroll;
+    background: var(--background-secondary);
+    padding: 20px;
+}
+
+main{
+    background-color: var(--background-primary);
+}
+

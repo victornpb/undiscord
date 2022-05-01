@@ -1,0 +1,29 @@
+/* Scrollbar */
+#undiscord .scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+#undiscord .scroll::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+#undiscord .scroll::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background-color: var(--scrollbar-thin-thumb);
+    min-height: 40px;
+}
+#undiscord .scroll::-webkit-scrollbar-track {
+    border-color: var(--scrollbar-thin-track);
+    background-color: var(--scrollbar-thin-track);
+    border: 2px solid var(--scrollbar-thin-track);
+}
+/* fade scrollbar */
+#undiscord .scroll::-webkit-scrollbar-thumb,
+#undiscord .scroll::-webkit-scrollbar-track {
+    visibility: hidden;
+}
+#undiscord .scroll:hover::-webkit-scrollbar-thumb,
+#undiscord .scroll:hover::-webkit-scrollbar-track {
+    visibility: visible;
+}
