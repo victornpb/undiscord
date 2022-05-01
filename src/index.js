@@ -17,8 +17,8 @@ import buttonHtml from './ui/button.html';
 import createElm from './utils/createElm';
 import insertCss from './utils/insertCss';
 
-let popover;
-let btn;
+let undiscordWindow;
+let undiscordBtn;
 let stop;
 
 function initUI() {
@@ -26,40 +26,47 @@ function initUI() {
   insertCss(themeCSS);
   insertCss(undiscordCSS);
 
-  popover = createElm(undiscordUI);
-  document.body.appendChild(popover);
-  const $ = s => popover.querySelector(s);
-  const logArea = $('pre');
-  const startBtn = $('button#start');
-  const stopBtn = $('button#stop');
-  const autoScroll = $('#autoScroll');
-
-  btn = createElm(buttonHtml);
-  btn.onclick = togglePopover;
-
-  function mountBtn() {
-    const toolbar = document.querySelector('[class^=toolbar]');
-    if (toolbar) toolbar.appendChild(btn);
+  function replaceInterpolations(str, obj, removeMissing = false) {
+    return str.replace(/\{\{([\w_]+)\}\}/g, (m, key) => obj[key] || (removeMissing ? '' : m));
   }
 
-  const observer = new MutationObserver((_mutationsList, _observer) =>{
-    if (!document.body.contains(btn)) mountBtn(); // re-mount the button to the toolbar
+  // create undiscord window
+  const template = replaceInterpolations(undiscordUI, {
+    VERSION,
+    HOME,
+    WIKI,
+  });
+  undiscordWindow = createElm(template);
+  document.body.appendChild(undiscordWindow);
+  const $ = s => undiscordWindow.querySelector(s);
+
+  // create undiscord button
+  undiscordBtn = createElm(buttonHtml);
+  undiscordBtn.onclick = togglePopover;
+  mountBtn();
+
+  // watch for changes and re-mount button
+  function mountBtn() {
+    const toolbar = document.querySelector('[class^=toolbar]');
+    if (toolbar) toolbar.appendChild(undiscordBtn);
+  }
+  const observer = new MutationObserver((_mutationsList, _observer) => {
+    if (!document.body.contains(undiscordBtn)) mountBtn(); // re-mount the button to the toolbar
   });
   observer.observe(document.body, { attributes: false, childList: true, subtree: true });
 
-  mountBtn();
-
-
   function togglePopover() {
-    if (popover.style.display !== 'none') {
-      popover.style.display = 'none';
-      btn.style.color = 'var(--interactive-normal)';
+    if (undiscordWindow.style.display !== 'none') {
+      undiscordWindow.style.display = 'none';
+      undiscordBtn.style.color = 'var(--interactive-normal)';
     }
     else {
-      popover.style.display = '';
-      btn.style.color = '#f04747';
+      undiscordWindow.style.display = '';
+      undiscordBtn.style.color = 'var(--interactive-active)';
     }
   }
+
+  $('#hide').onclick = togglePopover;
 
   // startBtn.onclick = async e => {
   //   const authToken = $('input#authToken').value.trim();
@@ -121,26 +128,26 @@ function initUI() {
 
   function getToken() {
     window.dispatchEvent(new Event('beforeunload'));
-    const ls = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-    return JSON.parse(localStorage.token);
+    const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
+    return JSON.parse(LS.token);
   }
 
   function getAuthorId() {
-    const ls = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-    return JSON.parse(ls.user_id_cache);
+    const LS  = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
+    return JSON.parse(LS.user_id_cache);
   }
 
   function getGuildId() {
     const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
-    return m[1];
+    if (m) return m[1];
+    else alert('Could not the Guild ID!\nPlease make sure you are on a Server or DM.');
   }
 
   function getChannelId() {
     const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
-    return m[2];
+    if (m) return m[2];
+    else alert('Could not the Channel ID!\nPlease make sure you are on a Channel or DM.');
   }
-
-  $('#hide').onclick = togglePopover;
 
   $('button#getAuthor').onclick = e => $('input#authorId').value = getAuthorId();
 
@@ -154,29 +161,16 @@ function initUI() {
     $('input#guildId').value = getGuildId();
   };
 
-
-
-
-
-
-  // $('button#getGuildAndChannel').onclick = e => {
-  //   const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
-  //   $('input#guildId').value = m[1];
-  //   $('input#channelId').value = m[2];
-  // };
-  // $('#redact').onchange = e => {
-  //   popover.classList.toggle('redact') &&
-  //           window.alert('This will attempt to hide personal information, but make sure to double check before sharing screenshots.');
-  // };
+  $('#redact').onchange = e => {
+    const b = undiscordWindow.classList.toggle('redact');
+    if (b) alert('This will attempt to hide personal information, but make sure to double check before sharing screenshots.');
+  };
 
   const logger = (type = '', args) => {
     const style = { '': '', info: 'color:#00b0f4;', verb: 'color:#72767d;', warn: 'color:#faa61a;', error: 'color:#f04747;', success: 'color:#43b581;' }[type];
     logArea.insertAdjacentHTML('beforeend', `<div style="${style}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
     if (autoScroll.checked) logArea.querySelector('div:last-child').scrollIntoView(false);
   };
-
-  // fixLocalStorage
-  window.localStorage = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
 
 }
 
