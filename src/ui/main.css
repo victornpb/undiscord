@@ -1,6 +1,8 @@
+#undicord-btn{position: relative; height: 24px;width: auto;-webkit-box-flex: 0;-ms-flex: 0 0 auto;flex: 0 0 auto;margin: 0 8px;cursor:pointer; color: var(--interactive-normal);}
+
 #undiscord {
     position: fixed;
-    top: 100px;
+    top: 44px;
     right: 10px;
     bottom: 10px;
     min-width: 780px;
@@ -36,6 +38,7 @@
     background-color: var(--background-secondary-alt);
     padding: 8px;
 }
+
 #undiscord .toolbar button {
     margin-right: 4px;
     margin-bottom: 4px;
@@ -70,7 +73,8 @@
     flex-shrink: 0;
     font-weight: 500;
 }
-#undiscord fieldset{
+
+#undiscord fieldset {
     padding-left: 8px;
 }
 
@@ -79,9 +83,11 @@
     display: flex;
     flex-grow: 1;
 }
-#undiscord .logarea{
+
+#undiscord .logarea {
     flex-grow: 1;
 }
+
 #progress {
     height: 8px;
     flex-grow: 1;
@@ -89,10 +95,11 @@
     background-color: var(--background-primary);
     margin-top: 4px;
 }
+
 #progress::-webkit-progress-value {
     background-color: var(--brand-experiment);
 }
-    
+
 
 /* help link */
 #undiscord legend a {
@@ -100,15 +107,17 @@
     text-transform: initial;
 }
 
-#undiscord .col{
+#undiscord .col {
     display: flex;
     flex-direction: column;
 }
-#undiscord .row{
+
+#undiscord .row {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
+
 /*----- functional -----*/
 
 
@@ -123,6 +132,7 @@
 #undiscord.redact [priv] {
     -webkit-text-security: disc !important
 }
-#undiscord :disabled{
+
+#undiscord :disabled {
     display: none;
 }

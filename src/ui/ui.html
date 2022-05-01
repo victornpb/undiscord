@@ -10,7 +10,7 @@
         <div class="vert-divider"></div>
         <span> Bulk delete messages</span>
         <div class="spacer"></div>
-        <div class="icon" aria-label="Close" role="button" tabindex="0">
+        <div id="hide" class="icon" aria-label="Close" role="button" tabindex="0">
             <svg aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor"
                     d="M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z">
@@ -44,14 +44,14 @@
                 <fieldset>
                     <legend>
                         Server ID
-                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/serverId.md"
+                        <a href="https://github.com/victornpb/deleteDiscordMessages/blob/master/help/guildId.md"
                             title="Help" target="_blank">help</a>
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input class="input" id="serverId" type="text" priv>
+                            <input class="input" id="guildId" type="text" priv>
                         </div>
-                        <button id="getServer">current</button>
+                        <button id="getGuild">current</button>
                     </div>
                 </fieldset>
 
@@ -86,7 +86,7 @@
                         Paste the JSON here and it will be imported.
                     </div>
                     <div class="">
-                        <button id="getChannel">Import</button>
+                        <button id="importJson">Import</button>
                     </div>
                 </fieldset>
             </details>
