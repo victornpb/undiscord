@@ -20,14 +20,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/username/foo-bar.git"
+    "url": "git+https://github.com/victornpb/undiscord.git"
   },
   "bugs": {
-    "url": "https://github.com/username/foo-bar/issues"
+    "url": "https://github.com/victornpb/undiscord/issues"
   },
-  "homepage": "https://github.com/username/foo-bar",
-  "author": "username",
-  "main": "dist/foo-bar.cjs.js",
+  "homepage": "https://github.com/victornpb/undiscord",
+  "author": "victornpb",
+  "main": "deleteDiscordMessages.user.js",
   "module": "dist/foo-bar.esm.js",
   "unpkg": "dist/foo-bar.js",
   "globalVar": "FooBar",
