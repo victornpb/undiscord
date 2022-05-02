@@ -42,8 +42,8 @@ function initUI() {
   undiscordWindow = createElm(undiscordUI);
   document.body.appendChild(undiscordWindow);
 
-  const drag = new Drag(undiscordWindow, $('.header'), { mode: 'move' });
-  const resize = new Drag(undiscordWindow, $('.footer'), { mode: 'resize' });
+  new Drag(undiscordWindow, $('.header'), { mode: 'move' });
+  new Drag(undiscordWindow, $('.footer'), { mode: 'resize' });
 
   // create undiscord button
   undiscordBtn = createElm(buttonHtml);

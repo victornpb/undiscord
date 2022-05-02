@@ -37,12 +37,12 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
   const toSnowflake = (date) => /:/.test(date) ? ((new Date(date).getTime() - 1420070400000) * Math.pow(2, 22)) : date;
 
   const log = {
-    debug() { extLogger ? extLogger('debug', arguments) : console.debug.apply(console, arguments); },
-    info() { extLogger ? extLogger('info', arguments) : console.info.apply(console, arguments); },
-    verb() { extLogger ? extLogger('verb', arguments) : console.log.apply(console, arguments); },
-    warn() { extLogger ? extLogger('warn', arguments) : console.warn.apply(console, arguments); },
-    error() { extLogger ? extLogger('error', arguments) : console.error.apply(console, arguments); },
-    success() { extLogger ? extLogger('success', arguments) : console.info.apply(console, arguments); },
+    debug() { return extLogger ? extLogger('debug', arguments) : console.debug.apply(console, arguments); },
+    info() { return extLogger ? extLogger('info', arguments) : console.info.apply(console, arguments); },
+    verb() { return extLogger ? extLogger('verb', arguments) : console.log.apply(console, arguments); },
+    warn() { return extLogger ? extLogger('warn', arguments) : console.warn.apply(console, arguments); },
+    error() { return extLogger ? extLogger('error', arguments) : console.error.apply(console, arguments); },
+    success() { return extLogger ? extLogger('success', arguments) : console.info.apply(console, arguments); },
   };
 
   async function recurse() {

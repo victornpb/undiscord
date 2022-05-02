@@ -169,20 +169,19 @@ export default class Drag {
   }
 
   /**
-     * Turn on the drag and drop of the instancea
-     * @memberOf Drag
-     */
+   * Turn on the drag and drop of the instancea
+   * @memberOf Drag
+   */
   enable() {
     // this.destroy(); // prevent events from getting binded twice
     if (this.options.useMouseEvents) this._handleElm.addEventListener('mousedown', this._dragStartHandler);
     if (this.options.useTouchEvents) this._handleElm.addEventListener('touchstart', this._dragStartHandler, { passive: false });
   }
-
   /**
-     * Teardown all events bound to the document and elements
-     * You can resurrect this instance by calling enable()
-     * @memberOf Drag
-     */
+   * Teardown all events bound to the document and elements
+   * You can resurrect this instance by calling enable()
+   * @memberOf Drag
+   */
   destroy() {
     this._targetElm.classList.remove(this.draggingClass);
 

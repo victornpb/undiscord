@@ -19,17 +19,13 @@
         </div>
     </div>
     <div class="window-body" style="display: flex; flex-direction: row;">
-
         <div class="sidebar scroll">
-
             <details open>
                 <summary>General</summary>
-
                 <fieldset>
                     <legend>
                         Author ID
-                        <a href="{{WIKI}}/authorId"
-                            title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/authorId" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
@@ -38,14 +34,11 @@
                         <button id="getAuthor">me</button>
                     </div>
                 </fieldset>
-
                 <hr>
-
                 <fieldset>
                     <legend>
                         Server ID
-                        <a href="{{WIKI}}/guildId"
-                            title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/guildId" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
@@ -54,33 +47,28 @@
                         <button id="getGuild">current</button>
                     </div>
                 </fieldset>
-
                 <fieldset>
                     <legend>
                         Channel ID
-                        <a href="{{WIKI}}/channelId"
-                            title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/channelId" title="Help" target="_blank">help</a>
                     </legend>
-                    <div class="multiInput">
+                    <div class="multiInput mb1">
                         <div class="input-wrapper">
                             <input class="input" id="channelId" type="text" priv>
                         </div>
                         <button id="getChannel">current</button>
                     </div>
                     <div class="sectionDescription">
-                        <label><input id="includeNsfw" type="checkbox">This is a NSFW channel</label>
+                        <label class="row"><input id="includeNsfw" type="checkbox">This is a NSFW channel</label>
                     </div>
                 </fieldset>
             </details>
-
             <details>
                 <summary>Import</summary>
-
                 <fieldset>
                     <legend>
                         Import JSON
-                        <a href="{{WIKI}}/importJson"
-                            title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/importJson" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="sectionDescription">
                         The import feature will be added back in the future.
@@ -93,21 +81,17 @@
             <hr>
             <details>
                 <summary>Filter</summary>
-
                 <fieldset>
                     <legend>
                         Search
-                        <a href="{{WIKI}}/filters"
-                            title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/filters" title="Help" target="_blank">help</a>
                     </legend>
-
                     <div class="input-wrapper">
                         <input id="search" type="text" placeholder="Containing text" priv>
                     </div>
                     <div class="sectionDescription">
                         Only delete messages that contain the text
                     </div>
-
                     <div class="sectionDescription">
                         <label><input id="hasLink" type="checkbox">has: link</label>
                     </div>
@@ -118,65 +102,54 @@
                         <label><input id="includePinned" type="checkbox">Include pinned</label>
                     </div>
                 </fieldset>
-
                 <hr>
-
                 <fieldset>
                     <legend>
                         Pattern
-                        <a href="{{WIKI}}/pattern"
-                            title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/pattern" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="sectionDescription">
                         Delete messages that match the regular expression
                     </div>
                     <div class="input-wrapper">
-                        / <input id="pattern" type="text" placeholder="regular expression" priv> /
+                        <span class="info">/</span>
+                        <input id="pattern" type="text" placeholder="regular expression" priv>
+                        <span class="info">/</span>
                     </div>
                 </fieldset>
             </details>
-
             <details>
                 <summary>Messages interval</summary>
-
                 <fieldset>
                     <legend>
                         Interval of messages
-                        <a href="{{WIKI}}/messageId"
-                            title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/messageId" title="Help" target="_blank">help</a>
                     </legend>
-
-                    <div class="multiInput">
+                    <div class="multiInput mb1">
                         <div class="input-wrapper">
-                            <input id="minId" type="text" placeholder="After this Message" priv>
+                            <input id="minId" type="text" placeholder="After a message" priv>
                         </div>
                         <button id="pickMessageAfter">select</button>
                     </div>
-
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input id="maxId" type="text" placeholder="Before this Message" priv>
+                            <input id="maxId" type="text" placeholder="Before a message" priv>
                         </div>
                         <button id="pickMessageBefore">select</button>
                     </div>
-
                     <div class="sectionDescription">
                         Specify an interval to delete messages.
                     </div>
                 </fieldset>
             </details>
-
             <details>
                 <summary>Date</summary>
-
                 <fieldset>
                     <legend>
                         Date range
-                        <a href="{{WIKI}}/dateRange"
-                            title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank">help</a>
                     </legend>
-
-                    <div class="input-wrapper">
+                    <div class="input-wrapper mb1">
                         <input id="minDate" type="datetime-local" title="After">
                     </div>
                     <div class="input-wrapper">
@@ -185,21 +158,16 @@
                     <div class="sectionDescription">
                         Delete messages that were posted between the two dates.
                     </div>
-
                 </fieldset>
             </details>
-
             <hr>
-
             <details>
                 <summary>Advanced settings</summary>
                 <fieldset>
                     <legend>
                         Search Delay
-                        <a href="{{WIKI}}/delay"
-                            title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
                     </legend>
-
                     <div class="input-wrapper">
                         <input id="searchDelay" type="number" value="100" step="100">
                     </div>
@@ -207,19 +175,16 @@
                 <fieldset>
                     <legend>
                         Search Delay
-                        <a href="{{WIKI}}/delay"
-                            title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="input-wrapper">
                         <input id="deleteDelay" type="number" value="1000" step="100">
                     </div>
                     <br>
-
                     <div class="sectionDescription">
                         This will affect the speed in which the messages are deleted
                     </div>
                 </fieldset>
-
             </details>
             <hr>
             <div></div>
@@ -228,18 +193,15 @@
                 <br> victornpb
             </div>
         </div>
-
         <div class="main col">
             <div class="tbar col">
                 <div class="row">
-                    <button id="start" class="sizeMedium positive">Start</button>
+                    <button id="start" class="sizeMedium accent">Start</button>
                     <button id="stop" class="sizeMedium danger" disabled>Stop</button>
                     <button id="clear" class="sizeMedium">Clear log</button>
-
-                    <label title="Hide sensitive information on your screen for taking screenshots">
+                    <label class="row" title="Hide sensitive information on your screen for taking screenshots">
                         <input id="redact" type="checkbox"> Streamer mode
                     </label>
-
                 </div>
                 <div class="row">
                     <progress id="progressBar" value="-1"></progress>
@@ -247,7 +209,8 @@
             </div>
             <pre id="logArea" class="logarea scroll">
                 <center>
-                    <div>Star this project on <a href="{{HOME}}" target="_blank">github.com/victornpb/undiscord</a></div>
+                    <div><a href="https://github.com/victornpb/undiscord/discussions/350" target="_blank" style="color: var(--text-brand);">Tell me what you think about this update</a></div>
+                    <div>Star <a href="{{HOME}}" target="_blank">this project</a> on GitHub!</div>
                     <div><a href="{{HOME}}/discussions" target="_blank">Issues or help</a></div>
                 </center>
             </pre>
