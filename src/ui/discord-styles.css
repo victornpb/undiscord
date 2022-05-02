@@ -206,10 +206,6 @@
     background-color: var(--button-danger-background);
 }
 
-#undiscord .danger {
-    background-color: var(--button-danger-background);
-}
-
 #undiscord .positive {
     background-color: var(--button-positive-background);
 }
