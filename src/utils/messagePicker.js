@@ -2,29 +2,38 @@ import insertCss from './insertCss';
 
 const messagePickerCss = `
 body.undiscord-pick-message [data-list-id="chat-messages"] {
-    background-color: var(--background-secondary-alt);
-    box-shadow: inset 0 0 0px 2px var(--button-outline-brand-border);
+  background-color: var(--background-secondary-alt);
+  box-shadow: inset 0 0 0px 2px var(--button-outline-brand-border);
 }
 
 body.undiscord-pick-message [id^="message-content-"]:hover {
-    cursor: pointer;
-    cursor: cell;
-    background: var(--background-message-automod-hover);
+  cursor: pointer;
+  cursor: cell;
+  background: var(--background-message-automod-hover);
 }
 body.undiscord-pick-message [id^="message-content-"]:hover::after {
-    position: absolute;
-    top: 50%;
-    right: 0px;
-    color: var(--text-normal);
-    content: '👈 Pick this message';
+  position: absolute;
+  top: calc(50% - 11px);
+  left: 4px;
+  z-index: 1;
+  width: 65px;
+  height: 22px;
+  line-height: 22px;
+  font-family: var(--font-display);
+  background-color: var(--button-secondary-background);
+  color: var(--header-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-align: center;
+  border-radius: 3px;
+  content: 'This 👉';
 }
 body.undiscord-pick-message.before [id^="message-content-"]:hover::after {
-    top: 0px;
-    content: 'Before this 👆';
+  content: 'Before 👆';
 }
 body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
-    bottom: 0px;
-    content: 'After this 👇';
+  content: 'After 👇';
 }
 `;
 
