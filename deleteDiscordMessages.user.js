@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.0.0
+// @version         5.0.1
 // @author          victornpb
 // @homepageURL     https://github.com/victornpb/undiscord
 // @supportURL      https://github.com/victornpb/undiscord/issues
@@ -17,7 +17,7 @@
 (function () {
   'use strict';
 
-  var version = "5.0.0";
+  var version = "5.0.1";
 
   var discordStyles = (`
 /* undiscord window */
@@ -867,7 +867,7 @@
           if (!resp.ok) {
             // deleting messages too fast
             if (resp.status === 429) {
-              const w = (await resp.json()).retry_after  *  1000;
+              const w = (await resp.json()).retry_after * 1000;
               throttledCount++;
               throttledTotalTime += w;
               deleteDelay = w; // increase delay
