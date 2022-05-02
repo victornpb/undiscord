@@ -3,20 +3,20 @@
     position: relative;
     height: 24px;
     width: auto;
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 auto;
     flex: 0 0 auto;
     margin: 0 8px;
     cursor: pointer;
     color: var(--interactive-normal);
 }
-#undicord-btn progress{
+
+#undicord-btn progress {
     position: absolute;
     width: 14px;
     height: 14px;
     top: 7px;
     left: 5px;
 }
+
 /**** Undiscord Interface ****/
 #undiscord {
     position: fixed;
@@ -38,7 +38,7 @@
     will-change: top, left, width, height;
 }
 
-#undiscord .header .icon{
+#undiscord .header .icon {
     cursor: pointer;
 }
 
@@ -104,7 +104,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    -ms-flex-negative: 0;
     flex-shrink: 0;
     font-weight: 500;
 }
@@ -167,6 +166,7 @@
     flex-direction: row;
     align-items: center;
 }
+
 #undiscord .mb1 {
     margin-bottom: 8px;
 }

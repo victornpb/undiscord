@@ -10,24 +10,16 @@
     border-radius: 8px;
     box-sizing: border-box;
     cursor: default;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
     flex-direction: column;
 }
 
 #undiscord .header {
     background-color: var(--background-tertiary);
     height: 48px;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
     min-height: 48px;
     padding: 0 16px;
-
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-
     color: var(--header-secondary);
 }
 
@@ -38,6 +30,7 @@
     width: 24;
     height: 24;
 }
+
 #undiscord .header .icon:hover {
     color: var(--interactive-hover);
 }
@@ -53,11 +46,6 @@
 }
 
 #undiscord .header .spacer {
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
     flex-grow: 1;
 }
 
@@ -83,10 +71,8 @@
     margin-bottom: 8px;
 }
 
-
 #undiscord .multiInput {
     display: flex;
-    -webkit-box-align: center;
     align-items: center;
     font-size: 16px;
     box-sizing: border-box;
@@ -99,7 +85,6 @@
 }
 
 #undiscord .multiInput :first-child {
-    -webkit-box-flex: 1;
     flex-grow: 1;
 }
 
@@ -127,7 +112,6 @@
 
 #undiscord .input-wrapper {
     display: flex;
-    -webkit-box-align: center;
     align-items: center;
     font-size: 16px;
     box-sizing: border-box;
