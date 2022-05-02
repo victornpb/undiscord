@@ -84,7 +84,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
 
     // not indexed yet
     if (resp.status === 202) {
-      const w = (await resp.json()).retry_after;
+      const w = (await resp.json()).retry_after * 1000;
       throttledCount++;
       throttledTotalTime += w;
       log.warn(`This channel wasn't indexed, waiting ${w}ms for discord to index it...`);
@@ -95,7 +95,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
     if (!resp.ok) {
       // searching messages too fast
       if (resp.status === 429) {
-        const w = (await resp.json()).retry_after;
+        const w = (await resp.json()).retry_after * 1000;
         throttledCount++;
         throttledTotalTime += w;
         searchDelay += w; // increase delay
@@ -179,7 +179,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
         if (!resp.ok) {
           // deleting messages too fast
           if (resp.status === 429) {
-            const w = (await resp.json()).retry_after;
+            const w = (await resp.json()).retry_after * 1000;
             throttledCount++;
             throttledTotalTime += w;
             deleteDelay = w; // increase delay

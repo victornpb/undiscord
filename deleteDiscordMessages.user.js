@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.0.0
+// @version         5.0.1
 // @author          victornpb
 // @homepageURL     https://github.com/victornpb/undiscord
 // @supportURL      https://github.com/victornpb/undiscord/issues
@@ -17,7 +17,7 @@
 (function () {
   'use strict';
 
-  var version = "5.0.0";
+  var version = "5.0.1";
 
   var discordStyles = (`
 /* undiscord window */
@@ -772,7 +772,7 @@
 
       // not indexed yet
       if (resp.status === 202) {
-        const w = (await resp.json()).retry_after;
+        const w = (await resp.json()).retry_after * 1000;
         throttledCount++;
         throttledTotalTime += w;
         log.warn(`This channel wasn't indexed, waiting ${w}ms for discord to index it...`);
@@ -783,7 +783,7 @@
       if (!resp.ok) {
         // searching messages too fast
         if (resp.status === 429) {
-          const w = (await resp.json()).retry_after;
+          const w = (await resp.json()).retry_after * 1000;
           throttledCount++;
           throttledTotalTime += w;
           searchDelay += w; // increase delay
@@ -867,7 +867,7 @@
           if (!resp.ok) {
             // deleting messages too fast
             if (resp.status === 429) {
-              const w = (await resp.json()).retry_after;
+              const w = (await resp.json()).retry_after * 1000;
               throttledCount++;
               throttledTotalTime += w;
               deleteDelay = w; // increase delay
