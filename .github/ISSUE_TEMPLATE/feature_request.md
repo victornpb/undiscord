@@ -4,7 +4,6 @@ about: Post here instead 👉 https://github.com/victornpb/undiscord/discussions
 title: '🛑 DO NOT USE THIS FORM FOR REQUESTS / IDEAS! 🛑'
 labels: ''
 assignees: ''
-
 ---
 
 👇 PLEASE POST YOUR IDEA OR REQUEST HERE INSTEAD 👇
