@@ -3,16 +3,21 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import banner from 'rollup-plugin-banner2';
+import bakedEnv from 'rollup-plugin-baked-env';
+
 import json from '@rollup/plugin-json';
 import packageJson from './package.json';
 // import { string } from "rollup-plugin-string";
-import { string } from "./build/strings-plugin";
+import { string } from './build/strings-plugin';
 
 import userScriptMetadataBlock from './build/metadata.js';
+import betterDiscordMetadataBlock from './build/metadata-bd.js';
 
 const production = !process.env.ROLLUP_WATCH;
 const sourcemap = production ? true : 'inline';
 const entry = 'src/index.js';
+
+process.env.production = production;
 
 // const assumptions = {
 //   constantSuper: true,
@@ -30,7 +35,7 @@ const entry = 'src/index.js';
 
 const config = [
 
-  // Modern Module (No babel preset)
+  // Generate a user script
   {
     input: entry,
     output: [
@@ -45,10 +50,35 @@ const config = [
       json(),
       resolve(),
       commonjs(),
+      bakedEnv(),
       banner(userScriptMetadataBlock),
       string({
         // Required to be specified
-        include: ["**/*.html", '**/*.css'],
+        include: ['**/*.html', '**/*.css'],
+      })
+    ]
+  },
+
+  // BetterDiscord Plugin
+  {
+    input: 'src/index-bd.js',
+    output: [
+      {
+        file: packageJson.betterDiscord._dist,
+        format: 'cjs',
+        sourcemap: false,
+        exports: 'default',
+      },
+    ],
+    plugins: [
+      json(),
+      resolve(),
+      commonjs(),
+      bakedEnv(),
+      banner(betterDiscordMetadataBlock),
+      string({
+        // Required to be specified
+        include: ['**/*.html', '**/*.css'],
       })
     ]
   },
