@@ -19,10 +19,13 @@ const WIKI = 'https://github.com/victornpb/undiscord/wiki';
 
 const $ = s => undiscordWindow.querySelector(s);
 
+let _observer;
+let _drag;
+let _resize;
 let undiscordWindow;
 let undiscordBtn;
 
-function initUI() {
+export function initUI() {
 
   insertCss(discordStyles);
   insertCss(undiscordStyles);
@@ -42,8 +45,8 @@ function initUI() {
   undiscordWindow = createElm(undiscordUI);
   document.body.appendChild(undiscordWindow);
 
-  new Drag(undiscordWindow, $('.header'), { mode: 'move' });
-  new Drag(undiscordWindow, $('.footer'), { mode: 'resize' });
+  _drag = new Drag(undiscordWindow, $('.header'), { mode: 'move' });
+  _resize = new Drag(undiscordWindow, $('.footer'), { mode: 'resize' });
 
   // create undiscord button
   undiscordBtn = createElm(buttonHtml);
@@ -57,14 +60,14 @@ function initUI() {
   // watch for changes and re-mount button if necessary
   const discordElm = document.querySelector('#app-mount');
   let observerThrottle = null;
-  const observer = new MutationObserver((_mutationsList, _observer) => {
+  _observer = new MutationObserver((_mutationsList, _observer) => {
     if (observerThrottle) return;
     observerThrottle = setTimeout(() => {
       observerThrottle = null;
       if (!discordElm.contains(undiscordBtn)) mountBtn(); // re-mount the button to the toolbar
     }, 3000);
   });
-  observer.observe(discordElm, { attributes: false, childList: true, subtree: true });
+  _observer.observe(discordElm, { attributes: false, childList: true, subtree: true });
 
   function toggleWindow() {
     if (undiscordWindow.style.display !== 'none') {
@@ -203,7 +206,20 @@ function stop() {
   undiscordBtn.querySelector('progress').style.display = 'none';
 }
 
-initUI();
+export function destroy() {
+  stop();
 
+  // dispose stuff
+  _observer.disconnect();
+  _drag.destroy();
+  _resize.destroy();
+
+  // remove ui
+  undiscordWindow.parentNode.removeChild(undiscordWindow);
+  undiscordBtn.parentNode.removeChild(undiscordBtn);
+
+  // remove styles
+  document.querySelectorAll('style[data-undiscord]').forEach(s => s.parentNode.removeChild(s));
+}
 
 // ---- END Undiscord ----
