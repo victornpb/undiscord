@@ -2,7 +2,7 @@
 import pkg from '../package.json';
 
 //
-// Generate metadata block with information from package.json
+// Generate userscript metadata block with information from package.json
 // https://sourceforge.net/p/greasemonkey/wiki/Metadata_Block/
 // @author victornpb
 //
@@ -25,6 +25,11 @@ function generateComment(manifest) {
   ].join('\n');
 }
 
+function publicKeys(obj) {
+  const keys = Object.keys(obj).filter(key => !key.startsWith('_'));
+  return Object.fromEntries(keys.map(key => [key, obj[key]]));
+}
+
 export default () => {
   const metadata = {
     name: pkg.nameFull,
@@ -35,7 +40,7 @@ export default () => {
     supportURL: pkg.bugs.url,
     match: pkg.userScript.match,
     license: pkg.license,
-    ...pkg.userScript,
+    ...publicKeys(pkg.userScript),
   };
 
   if (!production) {
