@@ -7,10 +7,10 @@ assignees: ''
 
 ---
 <!--
-  WARNING: Github Issues are publicly visible, do not post sensitive information here.
-  Enable the "Screenshot mode" on Undiscord before taking screenshots or copying logs.
+  ✋ This form is only for bugs, if you have general questions or ideas or feature requests use the [Discussion] tab instead.
 
-  This form is only for bugs, if you have general questions or ideas or feature requests use the [Discussion] tab instead.
+  WARNING: Github Issues are publicly visible, do not post sensitive information here.
+  Enable the "Screenshot mode" on Undiscord before taking screenshots or copying logs.  
 -->
 
 **Describe the bug**
