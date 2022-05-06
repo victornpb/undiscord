@@ -50,7 +50,7 @@ export function initUI() {
 
   // create undiscord button
   undiscordBtn = createElm(buttonHtml);
-  undiscordBtn.onclick = toggleWindow;
+  undiscordBtn.onclick = () => toggleWindow();
   function mountBtn() {
     const toolbar = document.querySelector('#app-mount [class^=toolbar]');
     if (toolbar) toolbar.appendChild(undiscordBtn);
@@ -69,21 +69,11 @@ export function initUI() {
   });
   _observer.observe(discordElm, { attributes: false, childList: true, subtree: true });
 
-  function toggleWindow() {
-    if (undiscordWindow.style.display !== 'none') {
-      undiscordWindow.style.display = 'none';
-      undiscordBtn.style.color = 'var(--interactive-normal)';
-    }
-    else {
-      undiscordWindow.style.display = '';
-      undiscordBtn.style.color = 'var(--interactive-active)';
-    }
-  }
 
   messagePicker.init();
 
   // register event listeners
-  $('#hide').onclick = toggleWindow;
+  $('#hide').onclick = () => toggleWindow(false);
   $('button#start').onclick = start;
   $('button#stop').onclick = stop;
   $('button#clear').onclick = () => $('#logArea').innerHTML = '';
@@ -126,6 +116,17 @@ export function initUI() {
   //   }
   // };
 
+}
+
+export function toggleWindow(bool) {
+  if (bool || undiscordWindow.style.display === 'none') {
+    undiscordWindow.style.display = '';
+    undiscordBtn.style.color = 'var(--interactive-active)';
+  }
+  else {
+    undiscordWindow.style.display = 'none';
+    undiscordBtn.style.color = 'var(--interactive-normal)';
+  }
 }
 
 let _stopFlag;
