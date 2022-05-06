@@ -3,7 +3,7 @@
 
 **TLDR:** Watch this [40s video instructions](https://imgur.com/a/vYmDNSZ)
 
-1. Select and Copy this script: [deleteDiscordMessages.js](https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.js)
+1. Select and Copy this script: [deleteDiscordMessages.js](https://raw.githubusercontent.com/victornpb/undiscord/master/deleteDiscordMessages.user.js)
 
 2. Open [Discord](https://discord.com/channels/@me) in a __browser__ (like Chrome, Safari or Firefox)  
 and go to a #Channel or a DM conversation
