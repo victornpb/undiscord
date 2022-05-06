@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.0.1
+// @version         5.0.2
 // @author          victornpb
 // @homepageURL     https://github.com/victornpb/undiscord
 // @supportURL      https://github.com/victornpb/undiscord/issues
@@ -17,7 +17,7 @@
 (function () {
   'use strict';
 
-  var version = "5.0.1";
+  var version = "5.0.2";
 
   var discordStyles = (`
 /* undiscord window */
@@ -459,7 +459,7 @@
 `);
 
   var undiscordTemplate = (`
-<div id="undiscord" class="browser container" style="display:none;">
+<div id="undiscord" class="browser container redact" style="display:none;">
     <div class="header">
         <svg class="icon" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
             <path fill="currentColor" d="M15 3.999V2H9V3.999H3V5.999H21V3.999H15Z"></path>
@@ -607,17 +607,24 @@
                 <summary>Date</summary>
                 <fieldset>
                     <legend>
-                        Date range
+                        After date
                         <a href="{{WIKI}}/dateRange" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="input-wrapper mb1">
-                        <input id="minDate" type="datetime-local" title="After">
+                        <input id="minDate" type="datetime-local" title="Messages posted AFTER this date">
                     </div>
+                    <legend>
+                        Before date
+                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank">help</a>
+                    </legend>
                     <div class="input-wrapper">
-                        <input id="maxDate" type="datetime-local" title="After">
+                        <input id="maxDate" type="datetime-local" title="Messages posted BEFORE this date">
                     </div>
                     <div class="sectionDescription">
                         Delete messages that were posted between the two dates.
+                    </div>
+                    <div class="sectionDescription">
+                        * Filtering by date doesn't work if you use the "Messages interval".
                     </div>
                 </fieldset>
             </details>
@@ -626,7 +633,7 @@
                 <summary>Advanced settings</summary>
                 <fieldset>
                     <legend>
-                        Search Delay
+                        Search delay
                         <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="input-wrapper">
@@ -635,7 +642,7 @@
                 </fieldset>
                 <fieldset>
                     <legend>
-                        Search Delay
+                        Delete delay
                         <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="input-wrapper">
@@ -643,7 +650,8 @@
                     </div>
                     <br>
                     <div class="sectionDescription">
-                        This will affect the speed in which the messages are deleted
+                        This will affect the speed in which the messages are deleted.
+                        Use the help link for more information.
                     </div>
                 </fieldset>
             </details>
@@ -661,7 +669,7 @@
                     <button id="stop" class="sizeMedium danger" disabled>Stop</button>
                     <button id="clear" class="sizeMedium">Clear log</button>
                     <label class="row" title="Hide sensitive information on your screen for taking screenshots">
-                        <input id="redact" type="checkbox"> Streamer mode
+                        <input id="redact" type="checkbox" checked> Streamer mode
                     </label>
                 </div>
                 <div class="row">
@@ -840,7 +848,7 @@
 
         for (let i = 0; i < messagesToDelete.length; i++) {
           const message = messagesToDelete[i];
-          if (stopHndl && stopHndl() === false) return end(log.error('Stopped by you!'));
+          if (stopHndl && stopHndl()) return end(log.error('Stopped by you!'));
 
           log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal})`,
             `Deleting ID:${redact(message.id)} <b>${redact(message.author.username + '#' + message.author.discriminator)} <small>(${redact(new Date(message.timestamp).toLocaleString())})</small>:</b> <i>${redact(message.content).replace(/\n/g, '↵')}</i>`,
@@ -895,7 +903,7 @@
         log.verb(`Searching next messages in ${searchDelay}ms...`, (offset ? `(offset: ${offset})` : ''));
         await wait(searchDelay);
 
-        if (stopHndl && stopHndl() === false) return end(log.error('Stopped by you!'));
+        if (stopHndl && stopHndl()) return end(log.error('Stopped by you!'));
 
         return await recurse();
       } else {
@@ -1328,11 +1336,12 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 
   }
 
-  let _stopFlag;
-  const stopHndl = () => !(_stopFlag === true);
+  let _stopFlag = false;
+  const stopHndl = () => _stopFlag;
 
   async function start() {
     console.log('start');
+    _stopFlag = false;
 
     // general
     const authToken = getToken();
@@ -1363,14 +1372,19 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
     const onProg = (value, max) => {
       if (value && max && value > max) max = value;
       progress.setAttribute('max', max);
-      progress.value = value;
-      progress.style.display = max ? '' : 'none';
       progress2.setAttribute('max', max);
+      progress.value = value;
       progress2.value = value;
+      progress.style.display = max ? '' : 'none';
       progress2.style.display = max ? '' : 'none';
-      percent.innerHTML = value && max ? Math.round(value / max * 100) + '%' : '';
-      if (value === -1) progress.removeAttribute('value');
-      if (value === -1) progress2.removeAttribute('value');
+      percent.style.display = value && max ? '' : 'none';
+      percent.innerHTML = value >= 0 && max ? Math.round(value / max * 100) + '%' : '';
+      // indeterminate progress bar
+      if (value === -1) {
+        progress.removeAttribute('value');
+        progress2.removeAttribute('value');
+        percent.innerHTML = '...';
+      }
     };
 
     let logArea = $('#logArea');
@@ -1389,8 +1403,8 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
     else if (!guildId) return logger('error', ['You must provide a Server ID!']);
 
     for (let i = 0; i < channelIds.length; i++) {
-      $('#start').style.display = 'none';
-      $('#stop').style.display = 'block';
+      $('#start').disabled = true;
+      $('#stop').disabled = false;
       await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
       stop(); // clear the running state
     }
@@ -1399,10 +1413,11 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 
   function stop() {
     _stopFlag = true;
-    $('#start').style.display = 'block';
-    $('#stop').style.display = 'none';
+    $('#start').disabled = false;
+    $('#stop').disabled = true;
 
     $('#progressBar').style.display = 'none';
+    $('#progressPercent').style.display = 'none';
     undiscordBtn.querySelector('progress').style.display = 'none';
   }
 
