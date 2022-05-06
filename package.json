@@ -12,6 +12,12 @@
     "contributionURL": "https://www.buymeacoffee.com/vitim",
     "grant": "none"
   },
+  "betterDiscord": {
+    "source": "https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js",
+    "updateUrl": "https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js",
+    "donate": "https://www.buymeacoffee.com/vitim",
+    "_dist": "undiscord.plugin.js"
+  },
   "version": "5.0.1",
   "description": "Delete all messages in a Discord channel or DM (Bulk deletion)",
   "license": "MIT",
@@ -28,9 +34,6 @@
   "homepage": "https://github.com/victornpb/undiscord",
   "author": "victornpb",
   "main": "deleteDiscordMessages.user.js",
-  "module": "dist/foo-bar.esm.js",
-  "unpkg": "dist/foo-bar.js",
-  "globalVar": "FooBar",
   "scripts": {
     "start": "npm run watch",
     "build": "rollup -c",
@@ -61,6 +64,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "asciitable.js": "^1.0.3",
     "eslint": "^8.13.0",
+    "http-serve": "^1.0.1",
     "husky": "^7.0.4",
     "lint-staged": "^12.4.0",
     "np": "^7.6.1",
@@ -68,14 +72,15 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.70.2",
     "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-baked-env": "^0.1.0",
     "rollup-plugin-banner2": "^1.2.2",
     "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-inject-process-env": "^1.3.1",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-string": "^3.0.0",
     "rollup-plugin-terser": "^7.0.2",
-    "tiny-dedent": "^1.0.2",
-    "http-serve": "^1.0.1"
+    "tiny-dedent": "^1.0.2"
   },
   "husky": {
     "hooks": {
