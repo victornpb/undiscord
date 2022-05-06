@@ -125,11 +125,12 @@ function initUI() {
 
 }
 
-let _stopFlag;
-const stopHndl = () => !(_stopFlag === true);
+let _stopFlag = false;
+const stopHndl = () => _stopFlag;
 
 async function start() {
   console.log('start');
+  _stopFlag = false;
 
   // general
   const authToken = getToken();
@@ -160,14 +161,19 @@ async function start() {
   const onProg = (value, max) => {
     if (value && max && value > max) max = value;
     progress.setAttribute('max', max);
-    progress.value = value;
-    progress.style.display = max ? '' : 'none';
     progress2.setAttribute('max', max);
+    progress.value = value;
     progress2.value = value;
+    progress.style.display = max ? '' : 'none';
     progress2.style.display = max ? '' : 'none';
-    percent.innerHTML = value && max ? Math.round(value / max * 100) + '%' : '';
-    if (value === -1) progress.removeAttribute('value');
-    if (value === -1) progress2.removeAttribute('value');
+    percent.style.display = value && max ? '' : 'none';
+    percent.innerHTML = value >= 0 && max ? Math.round(value / max * 100) + '%' : '';
+    // indeterminate progress bar
+    if (value === -1) {
+      progress.removeAttribute('value');
+      progress2.removeAttribute('value');
+      percent.innerHTML = '...';
+    }
   };
 
   let logArea = $('#logArea');
@@ -186,8 +192,8 @@ async function start() {
   else if (!guildId) return logger('error', ['You must provide a Server ID!']);
 
   for (let i = 0; i < channelIds.length; i++) {
-    $('#start').style.display = 'none';
-    $('#stop').style.display = 'block';
+    $('#start').disabled = true;
+    $('#stop').disabled = false;
     await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
     stop(); // clear the running state
   }
@@ -196,10 +202,11 @@ async function start() {
 
 function stop() {
   _stopFlag = true;
-  $('#start').style.display = 'block';
-  $('#stop').style.display = 'none';
+  $('#start').disabled = false;
+  $('#stop').disabled = true;
 
   $('#progressBar').style.display = 'none';
+  $('#progressPercent').style.display = 'none';
   undiscordBtn.querySelector('progress').style.display = 'none';
 }
 

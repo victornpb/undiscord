@@ -152,7 +152,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
 
       for (let i = 0; i < messagesToDelete.length; i++) {
         const message = messagesToDelete[i];
-        if (stopHndl && stopHndl() === false) return end(log.error('Stopped by you!'));
+        if (stopHndl && stopHndl()) return end(log.error('Stopped by you!'));
 
         log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal})`,
           `Deleting ID:${redact(message.id)} <b>${redact(message.author.username + '#' + message.author.discriminator)} <small>(${redact(new Date(message.timestamp).toLocaleString())})</small>:</b> <i>${redact(message.content).replace(/\n/g, '↵')}</i>`,
@@ -207,7 +207,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
       log.verb(`Searching next messages in ${searchDelay}ms...`, (offset ? `(offset: ${offset})` : ''));
       await wait(searchDelay);
 
-      if (stopHndl && stopHndl() === false) return end(log.error('Stopped by you!'));
+      if (stopHndl && stopHndl()) return end(log.error('Stopped by you!'));
 
       return await recurse();
     } else {
