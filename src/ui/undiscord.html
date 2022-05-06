@@ -146,17 +146,24 @@
                 <summary>Date</summary>
                 <fieldset>
                     <legend>
-                        Date range
+                        After date
                         <a href="{{WIKI}}/dateRange" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="input-wrapper mb1">
-                        <input id="minDate" type="datetime-local" title="After">
+                        <input id="minDate" type="datetime-local" title="Messages posted AFTER this date">
                     </div>
+                    <legend>
+                        Before date
+                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank">help</a>
+                    </legend>
                     <div class="input-wrapper">
-                        <input id="maxDate" type="datetime-local" title="After">
+                        <input id="maxDate" type="datetime-local" title="Messages posted BEFORE this date">
                     </div>
                     <div class="sectionDescription">
                         Delete messages that were posted between the two dates.
+                    </div>
+                    <div class="sectionDescription">
+                        * Filtering by date doesn't work if you use the "Messages interval".
                     </div>
                 </fieldset>
             </details>
@@ -165,7 +172,7 @@
                 <summary>Advanced settings</summary>
                 <fieldset>
                     <legend>
-                        Search Delay
+                        Search delay
                         <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="input-wrapper">
@@ -174,7 +181,7 @@
                 </fieldset>
                 <fieldset>
                     <legend>
-                        Search Delay
+                        Delete delay
                         <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="input-wrapper">
@@ -182,7 +189,8 @@
                     </div>
                     <br>
                     <div class="sectionDescription">
-                        This will affect the speed in which the messages are deleted
+                        This will affect the speed in which the messages are deleted.
+                        Use the help link for more information.
                     </div>
                 </fieldset>
             </details>
