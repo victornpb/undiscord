@@ -12,7 +12,7 @@
     "contributionURL": "https://www.buymeacoffee.com/vitim",
     "grant": "none"
   },
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Delete all messages in a Discord channel or DM (Bulk deletion)",
   "license": "MIT",
   "engines": {
