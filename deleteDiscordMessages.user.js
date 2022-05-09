@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.0.2
+// @version         5.0.3
 // @author          victornpb
 // @homepageURL     https://github.com/victornpb/undiscord
 // @supportURL      https://github.com/victornpb/undiscord/issues
@@ -17,7 +17,7 @@
 (function () {
   'use strict';
 
-  var version = "5.0.2";
+  var version = "5.0.3";
 
   var discordStyles = (`
 /* undiscord window */
@@ -304,12 +304,12 @@
     right: 10px;
     display: flex;
     flex-direction: column;
-    width: 610px;
+    width:800px;
+    height: 80vh;
     min-width: 610px;
-    max-width: 100%;
-    height: 448px;
+    max-width: 100vw;
     min-height: 448px;
-    max-height: 100%;
+    max-height: 100vh;
     color: var(--text-normal);
     border-radius: 4px;
     background-color: var(--background-secondary);
@@ -678,7 +678,6 @@
             </div>
             <pre id="logArea" class="logarea scroll">
                 <center>
-                    <div><a href="https://github.com/victornpb/undiscord/discussions/350" target="_blank" style="color: var(--text-brand);">Tell me what you think about this update</a></div>
                     <div>Star <a href="{{HOME}}" target="_blank">this project</a> on GitHub!</div>
                     <div><a href="{{HOME}}/discussions" target="_blank">Issues or help</a></div>
                 </center>
@@ -692,6 +691,7 @@
         </div>
     </div>
 </div>
+
 `);
 
   /**
@@ -1399,7 +1399,6 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 
     // validate input
     if (!authToken) return logger('error', ['Could not detect the authorization token!']) || logger('info', ['Please make sure Undiscord is up to date']);
-    else if (!authorId) return logger('error', ['You must provide an Author ID!']);
     else if (!guildId) return logger('error', ['You must provide a Server ID!']);
 
     for (let i = 0; i < channelIds.length; i++) {
