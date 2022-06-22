@@ -26,6 +26,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
   let throttledTotalTime = 0;
   let offset = 0;
   let iterations = -1;
+  let archivedMessages = new Set();
 
   const wait = async ms => new Promise(done => setTimeout(done, ms));
   const msToHMS = s => `${s / 3.6e6 | 0}h ${(s % 3.6e6) / 6e4 | 0}m ${(s % 6e4) / 1000 | 0}s`;
@@ -153,6 +154,10 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
       for (let i = 0; i < messagesToDelete.length; i++) {
         const message = messagesToDelete[i];
         if (stopHndl && stopHndl()) return end(log.error('Stopped by you!'));
+        
+        if (archivedMessages.has(message.id)) {
+          continue;
+        }
 
         log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal})`,
           `Deleting ID:${redact(message.id)} <b>${redact(message.author.username + '#' + message.author.discriminator)} <small>(${redact(new Date(message.timestamp).toLocaleString())})</small>:</b> <i>${redact(message.content).replace(/\n/g, '↵')}</i>`,
@@ -188,6 +193,10 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
             log.verb(`Cooling down for ${w * 2}ms before retrying...`);
             await wait(w * 2);
             i--; // retry
+          } else if ((await resp.json()).message.toLowerCase().includes('archived')) {
+            log.error(`Message is archived. Skipping.`);
+            archivedMessages.add(message.id);
+            failCount++;
           } else {
             log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
             log.verb('Related object:', redact(JSON.stringify(message)));
