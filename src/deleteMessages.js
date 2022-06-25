@@ -205,14 +205,21 @@ async function deleteMessages(
     const discoveredMessages = data.messages.map((convo) =>
       convo.find((message) => message.hit === true)
     );
-    threadIds = data?.threads
-      ? data.threads.map((thread) => thread.id)
-      : threadIds;
+    if (data?.threads) {
+      const newThreadIds = data.threads.reduce((result, thread) => {
+        if (thread.thread_metadata.archived || thread.thread_metadata.locked) {
+          result.push(thread.id);
+        }
+        return result;
+      }, []);
+
+      threadIds = new Set([...newThreadIds, ...threadIds]);
+    }
     log.info(
-      `Total Threads found ${threadIds.length}.\nMessages belonging to the threads will be skipped.`
+      `Total Archived Threads found ${threadIds.size}.\nMessages belonging to these threads will be skipped.`
     );
     const messagesToDelete = discoveredMessages.filter((msg) => {
-      if (threadIds.includes(msg.channel_id)) return false;
+      if (threadIds.has(msg.channel_id)) return false;
       return (
         (msg.type === 0 ||
           (msg.type >= 6 && msg.type <= 21) ||
