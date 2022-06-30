@@ -1,3 +1,5 @@
+![Undiscord Logo](https://user-images.githubusercontent.com/16174954/176795473-b765abae-3343-443d-b294-816831418cae.png)
+
 # Undiscord - Delete all messages in a Discord channel or DM
 <!-- shields -->
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/victornpb/undiscord?color=%235865f2&display_name=tag&label=Undiscord&style=flat-square)][greasyfork_url]
