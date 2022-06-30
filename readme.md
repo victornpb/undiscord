@@ -1,4 +1,5 @@
-![Undiscord Logo](https://user-images.githubusercontent.com/16174954/176795473-b765abae-3343-443d-b294-816831418cae.png)
+![Undiscord Logo](https://user-images.githubusercontent.com/16174954/176795746-b269e08c-5eab-4a89-853f-a7e9e3ac5d6b.png)
+
 
 # Undiscord - Delete all messages in a Discord channel or DM
 <!-- shields -->
