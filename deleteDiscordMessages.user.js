@@ -1,6 +1,8 @@
 // ==UserScript==
 // @name            Undiscord
+// @name:nl         Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
+// @description:nl  Verwijder alle berichten in een Discord-kanaal of PB (Bulkverwijdering)
 // @version         5.0.3
 // @author          victornpb
 // @homepageURL     https://github.com/victornpb/undiscord
