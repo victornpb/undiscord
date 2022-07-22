@@ -646,7 +646,7 @@
                         <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="deleteDelay" type="number" value="1000" step="100">
+                        <input id="deleteDelay" type="number" value="2500" step="100">
                     </div>
                     <br>
                     <div class="sectionDescription">
