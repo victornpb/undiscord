@@ -13,10 +13,10 @@
 [![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/pulls?q=is%3Apr+is%3Aclosed)
 <!-- end shields -->
 
-> ⚠️ **Any tool that automates actions on user accounts, including this one, could result in account termination.** (see [self-bots][self-bots]).  
-> Use at your own risk! ([discussion](https://github.com/victornpb/undiscord/discussions/273)).
+> ⚠️ **Any tool that automates actions on user accounts, including this one, could result in account termination.** (see [self-bots][self-bots])<br>
+> Use at your own risk! ([discussion](https://github.com/victornpb/undiscord/discussions/273))
 
-1. First you need a Browser Extension for managing UserScripts[[1]][userscrips_faq] (skip if you already have one):  
+1. First you need a Browser Extension for managing UserScripts<sup>[[1]][userscrips_faq]</sup> (skip if you already have one):  
    * Chrome: [Violentmonkey][chrome_violentmonkey] or [Tampermonkey][chrome_tampermonkey]
    * Firefox: [Greasemonkey][firefox_greasemonkey], [Tampermonkey][firefox_tampermonkey], or [Violentmonkey][firefox_violentmonkey]  
    * Opera: [Tampermonkey][opera_tampermonkey] or [Violentmonkey][opera_violentmonkey]
@@ -26,33 +26,33 @@
     
 1. Install Undiscord:  
   [![][greasyfork_icon]][greasyfork_url] or [![][openuserjs_icon]][openuserjs_url]  
-  (NOTE: GreasyFork is recommended for now, OpenUserJS is not receiving updates)
+  (Note: GreasyFork is recommended for now, OpenUserJS is not receiving updates)
 
-1. Open <a href="https://discord.com/channels/@me" target="_blank">Discord</a> in your __browser__ (Not the App) and go to the channel or direct message you would like to be wiped.
+1. Open <a href="https://discord.com/channels/@me" target="_blank">Discord</a> in your __browser__ (not the app) and go to the channel or direct message you would like to be wiped.
 
-1. Click the <kbd>🗑️</kbd> button that was added in the top right corner.
+1. Click the <kbd>🗑️</kbd> button that was added at the top-right corner.
 
 1. Click on the <kbd>get</kbd> buttons near **Authorization**, **Author** and **Guild/Channel**.  
 
-1. Click the <kbd>Start</kbd> button to begin wipping!
+1. Click the <kbd>Start</kbd> button to begin wiping!
 
 ![Screenshot](https://user-images.githubusercontent.com/3372598/86538983-b60c7980-becf-11ea-8cad-1a33950e77fc.gif)
 
-I made this tool just for you ❤️ , it would be awesome if you could just click the [⭐️ Star button](https://github.com/victornpb/undiscord) at the top!
+I made this tool just for you ❤️, it would be awesome if you clicked the [⭐️ Star button](https://github.com/victornpb/undiscord) at the top!
 
-> A few extra generous people asked for this, so here you can [buy me a coffee](https://www.buymeacoffee.com/vitim). Thank you! You'll be in my special list ^_^
+> A few extra generous people asked me for this, so here you can [buy me a coffee](https://www.buymeacoffee.com/vitim). Thank you! You will be in my special list ^_^
 
 ----
 ### Need help?
 Check out the [wiki](https://github.com/victornpb/undiscord/wiki) for helpful articles, or read existing [questions](https://github.com/victornpb/undiscord/discussions), or post a new one.
 
 ### Have an Idea or Feature request?
-Check out the [Ideas][ideas] section, if your idea _hasn't been posted before_, please post a new one.
+Check out the [Ideas][ideas] section, if your idea _has not been posted before_, please consider posting a new one.
 
 ### Found a bug?
-Is prefered that _issues_ follow a certain format. If you're not familiar with bug reports, please use the [discussions][discussions] tab instead.
+It is preferred that _issues_ follow a certain format. If you are not familiar with bug reports, please use the [discussions][discussions] tab instead.
 
-If you believe you found a bug please file an [issue](https://github.com/victornpb/undiscord/issues), but please fill the issue template.
+If you believe you have found a bug, please file an [issue](https://github.com/victornpb/undiscord/issues), but please follow the issue template.
 
 ### Copy paste version
 Looking for the old Copy/Paste version? [here](https://github.com/victornpb/undiscord/wiki/Copy-paste-method)
@@ -66,7 +66,7 @@ Originally from https://gist.github.com/victornpb/135f5b346dea4decfc8f63ad7d9cc1
 ## ⛔️ DO NOT SHARE YOUR AUTH TOKEN! ⛔️ ##
 
 Sharing your authToken on the internet will give full access to your account! [There are bots gathering credentials all over the internet](https://github.com/rndinfosecguy/Scavenger).
-If you post your token by accident, LOGOUT from discord on that **same browser** you got that token imediately.
+If you post your token by accident, LOGOUT from discord on that **same browser** you got that token immediately.
 Changing your password will make sure that you get logged out of every device. I advice that you turn on [2FA](https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
 
 If you are unsure do not post screenshots, or logs on the internet.
@@ -74,9 +74,9 @@ If you are unsure do not post screenshots, or logs on the internet.
 ----
 ## Security Concerns
 
-Using third-party scripts means you trust that the script’s developer hasn’t inserted malicious functionality into the code and has secured it against attackers trying to do the same. You should never run code you don't trust.
+Using third-party scripts means you trust the script’s developer has not inserted malicious functionality into the code and has secured it against attackers trying to do the same thing. You should never run the code you do not trust.
 
-Please read: [what I'm doing to ensure this is safe for users][security_policy].
+Please read: [what I have been trying to do to ensure this is safe for users][security_policy].
 
 ----
 #### DISCLAIMER
