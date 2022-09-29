@@ -171,7 +171,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
           avgPing = (avgPing * 0.9) + (lastPing * 0.1);
           delCount++;
         } catch (err) {
-          log.error('Delete request throwed an error:', err);
+          log.error('Delete request threw an error:', err);
           log.verb('Related object:', redact(JSON.stringify(message)));
           failCount++;
         }
