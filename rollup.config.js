@@ -95,7 +95,7 @@ function updateReadmeOutputTable() {
     return (startIndex !== -1 && endIndex !== -1) ? str.slice(0, startIndex + startString.length) + substitute + str.slice(endIndex) : str;
   }
   const fs = require('fs');
-  const readme = fs.readFileSync('README.md', 'utf8');
+  const readme = fs.readFileSync('readme.md', 'utf8');
   const outputDescription = generateOutputDescription(config);
   const newReadme = replaceBetween(readme, '<!-- Output table (auto generated do not modify) -->', '<!-- END -->', `\n\n${outputDescription}\n\n`);
   fs.writeFileSync('README.md', newReadme);
