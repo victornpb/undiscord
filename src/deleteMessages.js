@@ -98,8 +98,8 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
         const w = (await resp.json()).retry_after * 1000;
         throttledCount++;
         throttledTotalTime += w;
-        searchDelay += w; // increase delay
-        log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
+        searchDelay += 50; // increase delay
+        log.warn(`Being rate limited by the API for ${w}ms! Adjusted search delay to ${searchDelay}ms.`);
         printDelayStats();
         log.verb(`Cooling down for ${w * 2}ms before retrying...`);
 
@@ -182,7 +182,7 @@ async function deleteMessages(authToken, authorId, guildId, channelId, minId, ma
             const w = (await resp.json()).retry_after * 1000;
             throttledCount++;
             throttledTotalTime += w;
-            deleteDelay = w; // increase delay
+            deleteDelay += 50; // increase delay
             log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${deleteDelay}ms.`);
             printDelayStats();
             log.verb(`Cooling down for ${w * 2}ms before retrying...`);
