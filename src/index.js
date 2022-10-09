@@ -109,24 +109,40 @@ function initUI() {
     if (id) $('input#maxId').value = id;
   };
 
-  // const fileSelection = $('input#importJson');
-  // fileSelection.onchange = () => {
-  //   const files = fileSelection.files;
-  //   const channelIdField = $('input#channelId');
-  //   if (files.length > 0) {
-  //     const file = files[0];
-  //     file.text().then(text => {
-  //       let json = JSON.parse(text);
-  //       let channels = Object.keys(json);
-  //       channelIdField.value = channels.join(',');
-  //     });
-  //   }
-  // };
+  const fileSelection = $('input#importJson');
 
+   $('button#importJson').onclick = () => {
+    fileSelection.click();
+  };
+
+  fileSelection.onchange = () => {
+    const files = fileSelection.files;
+
+    // No files added
+    if (files.length === 0) return;
+
+    // Get channel id field to set it later
+    const channelIdField = $('input#channelId');
+
+    // Force the guild id to be ourself (@me)
+    const guildIdField = $("input#guildId");
+    guildIdField.value = '@me';
+
+    // Set author id in case its not set already
+    $('input#authorId').value = getAuthorId()
+
+    const file = files[0];
+    file.text().then(text => {
+      let json = JSON.parse(text);
+      channelIdField.value =  Object.keys(json).join(',');
+    });
+  }
 }
 
 let _stopFlag = false;
 const stopHndl = () => _stopFlag;
+
+const wait = async ms => new Promise(done => setTimeout(done, ms));
 
 async function start() {
   console.log('start');
@@ -190,13 +206,19 @@ async function start() {
   if (!authToken) return logger('error', ['Could not detect the authorization token!']) || logger('info', ['Please make sure Undiscord is up to date']);
   else if (!guildId) return logger('error', ['You must provide a Server ID!']);
 
-  for (let i = 0; i < channelIds.length; i++) {
+  for (const channelId of channelIds) {
+    if (stopHndl && stopHndl()) return end(log.error('Stopped by you!')); // Premature check if we hit the stop button
     $('#start').disabled = true;
     $('#stop').disabled = false;
-    await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
-    stop(); // clear the running state
+
+    await deleteMessages(authToken, authorId, guildId, channelId, minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
+    await wait(searchDelay); // try to prevent discord rate limiting
+
+    // Remove the channel id in which we already deleted all messages
+    $('input#channelId').value = $('input#channelId').value.replace(`${channelId},`, '');
   }
 
+  stop(); // clear the running state
 }
 
 function stop() {
