@@ -129,14 +129,14 @@ function initUI() {
     guildIdField.value = '@me';
 
     // Set author id in case its not set already
-    $('input#authorId').value = getAuthorId()
+    $('input#authorId').value = getAuthorId();
 
     const file = files[0];
     file.text().then(text => {
       let json = JSON.parse(text);
       channelIdField.value =  Object.keys(json).join(',');
     });
-  }
+  };
 }
 
 let _stopFlag = false;
@@ -207,7 +207,7 @@ async function start() {
   else if (!guildId) return logger('error', ['You must provide a Server ID!']);
 
   for (const channelId of channelIds) {
-    if (stopHndl && stopHndl()) return end(log.error('Stopped by you!')); // Premature check if we hit the stop button
+    if (stopHndl && stopHndl()) return logger('error', ['Stopped by you']); // Premature check if we hit the stop button
     $('#start').disabled = true;
     $('#stop').disabled = false;
 
