@@ -111,7 +111,7 @@ function initUI() {
 
   const fileSelection = $('input#importJson');
 
-   $('button#importJson').onclick = () => {
+  $('button#importJson').onclick = () => {
     fileSelection.click();
   };
 
@@ -125,7 +125,7 @@ function initUI() {
     const channelIdField = $('input#channelId');
 
     // Force the guild id to be ourself (@me)
-    const guildIdField = $("input#guildId");
+    const guildIdField = $('input#guildId');
     guildIdField.value = '@me';
 
     // Set author id in case its not set already

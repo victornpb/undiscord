@@ -6,7 +6,7 @@ import banner from 'rollup-plugin-banner2';
 import json from '@rollup/plugin-json';
 import packageJson from './package.json';
 // import { string } from "rollup-plugin-string";
-import { string } from "./build/strings-plugin";
+import { string } from './build/strings-plugin';
 
 import userScriptMetadataBlock from './build/metadata.js';
 
@@ -48,7 +48,7 @@ const config = [
       banner(userScriptMetadataBlock),
       string({
         // Required to be specified
-        include: ["**/*.html", '**/*.css'],
+        include: ['**/*.html', '**/*.css'],
       })
     ]
   },
@@ -95,10 +95,10 @@ function updateReadmeOutputTable() {
     return (startIndex !== -1 && endIndex !== -1) ? str.slice(0, startIndex + startString.length) + substitute + str.slice(endIndex) : str;
   }
   const fs = require('fs');
-  const readme = fs.readFileSync('README.md', 'utf8');
+  const readme = fs.readFileSync('readme.md', 'utf8');
   const outputDescription = generateOutputDescription(config);
   const newReadme = replaceBetween(readme, '<!-- Output table (auto generated do not modify) -->', '<!-- END -->', `\n\n${outputDescription}\n\n`);
-  fs.writeFileSync('README.md', newReadme);
+  fs.writeFileSync('readme.md', newReadme);
 }
 
 updateReadmeOutputTable();
