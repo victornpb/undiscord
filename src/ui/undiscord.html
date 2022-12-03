@@ -70,9 +70,10 @@
                         Import JSON
                         <a href="{{WIKI}}/importJson" title="Help" target="_blank">help</a>
                     </legend>
-                    <div class="">
+                    <div class="importJson">
                         <button id="importJson">Import</button>
                         <input type="file" id="importJson" hidden>
+                        <button id="loadLastImport">Load last import</button>
                     </div>
                 </fieldset>
             </details>
@@ -222,6 +223,9 @@
             <div class="tbar footer row">
                 <label>
                     <input id="autoScroll" type="checkbox" checked> Auto scroll
+                </label>
+                <label>
+                    <input id="autoConfirm" type="checkbox" unchecked> Auto confirm
                 </label>
                 <span id="progressPercent"></span>
             </div>

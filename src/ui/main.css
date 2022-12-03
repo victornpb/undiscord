@@ -167,3 +167,13 @@
 #undiscord .mb1 {
     margin-bottom: 8px;
 }
+
+#undiscord .importJson {
+    display: flex;
+    flex-direction: row;
+}
+
+#undiscord .importJson button {
+    margin-left: 5px;
+    width: fit-content;
+}

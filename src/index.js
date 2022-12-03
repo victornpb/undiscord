@@ -134,8 +134,19 @@ function initUI() {
     const file = files[0];
     file.text().then(text => {
       let json = JSON.parse(text);
-      channelIdField.value =  Object.keys(json).join(',');
+      channelIdField.value = Object.keys(json).join(',');
     });
+  };
+
+  $('button#loadLastImport').onclick = () => {
+    const lastImport = GM_getValue('undiscordLastImport');
+
+    if(typeof lastImport === 'undefined') return alert('No import found');
+
+    const { channelId, guildId, authorId } = lastImport;
+    $('input#channelId').value = channelId;
+    $('input#guildId').value = guildId;
+    $('input#authorId').value = authorId;
   };
 }
 
@@ -211,11 +222,14 @@ async function start() {
     $('#start').disabled = true;
     $('#stop').disabled = false;
 
-    await deleteMessages(authToken, authorId, guildId, channelId, minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
+    await deleteMessages(authToken, authorId, guildId, channelId, minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg,  $('#autoConfirm').checked);
     await wait(searchDelay); // try to prevent discord rate limiting
 
     // Remove the channel id in which we already deleted all messages
     $('input#channelId').value = $('input#channelId').value.replace(`${channelId},`, '');
+
+    // Update our progress so we know where to resume
+    GM_setValue('undiscordLastImport', { channelId: $('input#channelId').value, guildId, authorId });
   }
 
   stop(); // clear the running state
