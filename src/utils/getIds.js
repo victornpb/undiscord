@@ -10,12 +10,12 @@ Object.defineProperty(window, 'localStorage', getLocalStoragePropertyDescriptor(
 export function getToken() {
   window.dispatchEvent(new Event('beforeunload'));
   const LSToken = (webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
-  return JSON.parse(LSToken);
+  return LSToken;
 }
 
 export function getAuthorId() {
   const LS = getLocalStoragePropertyDescriptor().get.call(window);
-  return JSON.parse(LS.user_id_cache);
+  return LS.user_id_cache;
 }
 
 export function getGuildId() {
