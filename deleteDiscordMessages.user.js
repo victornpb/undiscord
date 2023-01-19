@@ -25,7 +25,6 @@
     box-shadow: var(--elevation-stroke), var(--elevation-high);
     overflow: hidden;
 }
-
 #undiscord.container,
 #undiscord .container {
     background-color: var(--background-secondary);
@@ -34,7 +33,6 @@
     cursor: default;
     flex-direction: column;
 }
-
 #undiscord .header {
     background-color: var(--background-tertiary);
     height: 48px;
@@ -44,7 +42,6 @@
     display: flex;
     color: var(--header-secondary);
 }
-
 #undiscord .header .icon {
     color: var(--interactive-normal);
     margin-right: 8px;
@@ -52,11 +49,9 @@
     width: 24;
     height: 24;
 }
-
 #undiscord .header .icon:hover {
     color: var(--interactive-hover);
 }
-
 #undiscord .header h3 {
     font-size: 16px;
     line-height: 20px;
@@ -66,11 +61,9 @@
     flex-shrink: 0;
     margin-right: 16px;
 }
-
 #undiscord .header .spacer {
     flex-grow: 1;
 }
-
 #undiscord .header .vert-divider {
     width: 1px;
     height: 24px;
@@ -78,7 +71,6 @@
     margin-right: 16px;
     flex-shrink: 0;
 }
-
 #undiscord legend,
 #undiscord label {
     display: block;
@@ -92,7 +84,6 @@
     font-family: var(--font-display);
     margin-bottom: 8px;
 }
-
 #undiscord .multiInput {
     display: flex;
     align-items: center;
@@ -105,15 +96,12 @@
     border: none;
     transition: border-color 0.2s ease-in-out 0s;
 }
-
 #undiscord .multiInput :first-child {
     flex-grow: 1;
 }
-
 #undiscord .multiInput button:last-child {
     margin-right: 4px;
 }
-
 #undiscord .input {
     font-size: 16px;
     box-sizing: border-box;
@@ -123,15 +111,12 @@
     background-color: var(--input-background);
     border: none;
     transition: border-color 0.2s ease-in-out 0s;
-
     padding: 10px;
     height: 40px;
 }
-
 #undiscord fieldset {
     margin-top: 16px;
 }
-
 #undiscord .input-wrapper {
     display: flex;
     align-items: center;
@@ -144,7 +129,6 @@
     border: none;
     transition: border-color 0.2s ease-in-out 0s;
 }
-
 #undiscord input[type="text"],
 #undiscord input[type="search"],
 #undiscord input[type="password"],
@@ -161,7 +145,6 @@
     padding: 10px;
     height: 40px;
 }
-
 #undiscord .divider,
 #undiscord hr {
     border: none;
@@ -169,7 +152,6 @@
     padding-bottom: 4px;
     border-bottom: 1px solid var(--background-modifier-accent);
 }
-
 #undiscord .sectionDescription {
     margin-bottom: 16px;
     color: var(--header-secondary);
@@ -177,12 +159,10 @@
     line-height: 20px;
     font-weight: 400;
 }
-
 #undiscord a {
     color: var(--text-link);
     text-decoration: none;
 }
-
 #undiscord .btn,
 #undiscord button {
     position: relative;
@@ -200,56 +180,45 @@
     line-height: 16px;
     padding: 2px 16px;
     user-select: none;
-
     /* sizeSmall */
     width: 60px;
     height: 32px;
     min-width: 60px;
     min-height: 32px;
-
     /* lookFilled colorPrimary */
     color: rgb(255, 255, 255);
     background-color: var(--button-secondary-background);
 }
-
 #undiscord .sizeMedium {
     width: 96px;
     height: 38px;
     min-width: 96px;
     min-height: 38px;
 }
-
 /* lookFilled colorPrimary */
 #undiscord .accent {
     background-color: var(--brand-experiment);
 }
-
 #undiscord .danger {
     background-color: var(--button-danger-background);
 }
-
 #undiscord .positive {
     background-color: var(--button-positive-background);
 }
-
-
 #undiscord .info {
     font-size: 12px;
     line-height: 16px;
     padding: 8px 10px;
     color: var(--text-muted);
 }
-
 /* Scrollbar */
 #undiscord .scroll::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
-
 #undiscord .scroll::-webkit-scrollbar-corner {
     background-color: transparent;
 }
-
 #undiscord .scroll::-webkit-scrollbar-thumb {
     background-clip: padding-box;
     border: 2px solid transparent;
@@ -257,19 +226,16 @@
     background-color: var(--scrollbar-thin-thumb);
     min-height: 40px;
 }
-
 #undiscord .scroll::-webkit-scrollbar-track {
     border-color: var(--scrollbar-thin-track);
     background-color: var(--scrollbar-thin-track);
     border: 2px solid var(--scrollbar-thin-track);
 }
-
 /* fade scrollbar */
 #undiscord .scroll::-webkit-scrollbar-thumb,
 #undiscord .scroll::-webkit-scrollbar-track {
     visibility: hidden;
 }
-
 #undiscord .scroll:hover::-webkit-scrollbar-thumb,
 #undiscord .scroll:hover::-webkit-scrollbar-track {
     visibility: visible;
@@ -287,7 +253,6 @@
     color: var(--interactive-normal);
     flex: 0 0 auto;
 }
-
 #undicord-btn progress {
     position: absolute;
     top: 7px;
@@ -295,7 +260,6 @@
     width: 14px;
     height: 14px;
 }
-
 /**** Undiscord Interface ****/
 #undiscord {
     position: fixed;
@@ -316,15 +280,12 @@
     box-shadow: var(--elevation-stroke), var(--elevation-high);
     will-change: top, left, width, height;
 }
-
 #undiscord .header .icon {
     cursor: pointer;
 }
-
 #undiscord .window-body {
     height: calc(100% - 48px);
 }
-
 #undiscord .sidebar {
     overflow: hidden scroll;
     overflow-y: auto;
@@ -335,14 +296,12 @@
     padding: 8px;
     background: var(--background-secondary);
 }
-
 #undiscord .main {
     display: flex;
     max-width: calc(100% - 250px);
     background-color: var(--background-primary);
     flex-grow: 1;
 }
-
 #undiscord #logArea {
     font-family: Consolas, Liberation Mono, Menlo, Courier, monospace;
     font-size: .75rem;
@@ -352,23 +311,18 @@
     flex-grow: 1;
     flex-grow: 1;
 }
-
 #undiscord .tbar {
     padding: 8px;
     background-color: var(--background-secondary-alt);
 }
-
 #undiscord .tbar button {
     margin-right: 4px;
     margin-bottom: 4px;
 }
-
 #undiscord .footer {
     cursor: se-resize;
 }
-
 /**** Elements ****/
-
 #undiscord summary {
     font-size: 16px;
     font-weight: 500;
@@ -384,17 +338,14 @@
     border-radius: 4px;
     flex-shrink: 0;
 }
-
 #undiscord fieldset {
     padding-left: 8px;
 }
-
 /* help link */
 #undiscord legend a {
     float: right;
     text-transform: initial;
 }
-
 #undiscord progress {
     height: 8px;
     margin-top: 4px;
@@ -402,47 +353,36 @@
     /* background-color: var(--background-primary);
     border-radius: 3px; */
 }
-
 /* #undiscord progress::-webkit-progress-value{
     background-color: var(--brand-experiment);
 } */
-
 /**** functional classes ****/
-
 #undiscord.redact .priv {
     display: none !important;
 }
-
 #undiscord:not(.redact) .mask {
     display: none !important;
 }
-
 #undiscord.redact [priv] {
     -webkit-text-security: disc !important;
 }
-
 #undiscord :disabled {
     display: none;
 }
-
 /**** layout misc ****/
-
 #undiscord,
 #undiscord * {
     box-sizing: border-box;
 }
-
 #undiscord .col {
     display: flex;
     flex-direction: column;
 }
-
 #undiscord .row {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
-
 #undiscord .mb1 {
     margin-bottom: 8px;
 }
@@ -691,7 +631,6 @@
         </div>
     </div>
 </div>
-
 `);
 
   /**
@@ -719,6 +658,7 @@
   return pd;
 }
 Object.defineProperty(window, 'localStorage', getLocalStoragePropertyDescriptor());
+const LS = getLocalStoragePropertyDescriptor().get.call(window);
   async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, extLogger, stopHndl, onProgress) {
     const start = new Date();
     let delCount = 0;
@@ -1144,7 +1084,6 @@ body.undiscord-pick-message [data-list-id="chat-messages"] {
   background-color: var(--background-secondary-alt);
   box-shadow: inset 0 0 0px 2px var(--button-outline-brand-border);
 }
-
 body.undiscord-pick-message [id^="message-content-"]:hover {
   cursor: pointer;
   cursor: cell;
@@ -1210,13 +1149,11 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 
   function getToken() {
     window.dispatchEvent(new Event('beforeunload'));
-    const LSToken = (webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
-    return LSToken;
+    return JSON.parse(LS.token);
   }
 
   function getAuthorId() {
-    const LS = getLocalStoragePropertyDescriptor().get.call(window);
-    return LS.user_id_cache;
+    return JSON.parse(LS.user_id_cache);
   }
 
   function getGuildId() {
