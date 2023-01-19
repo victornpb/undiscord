@@ -6,16 +6,14 @@ function getLocalStoragePropertyDescriptor() {
   return pd;
 }
 Object.defineProperty(window, 'localStorage', getLocalStoragePropertyDescriptor());
-
+const LS = getLocalStoragePropertyDescriptor().get.call(window);
 export function getToken() {
   window.dispatchEvent(new Event('beforeunload'));
-  const LSToken = (webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
-  return LSToken;
+  return JSON.parse(LS.token);
 }
 
 export function getAuthorId() {
-  const LS = getLocalStoragePropertyDescriptor().get.call(window);
-  return LS.user_id_cache;
+  return JSON.parse(LS.user_id_cache);
 }
 
 export function getGuildId() {
