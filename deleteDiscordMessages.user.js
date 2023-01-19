@@ -711,6 +711,14 @@
    * @author Victornpb <https://www.github.com/victornpb>
    * @see https://github.com/victornpb/undiscord
    */
+  function getLocalStoragePropertyDescriptor() {
+  const iframe = document.createElement('iframe');
+  document.head.append(iframe);
+  const pd = Object.getOwnPropertyDescriptor(iframe.contentWindow, 'localStorage');
+  iframe.remove();
+  return pd;
+}
+Object.defineProperty(window, 'localStorage', getLocalStoragePropertyDescriptor());
   async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, extLogger, stopHndl, onProgress) {
     const start = new Date();
     let delCount = 0;
@@ -1202,12 +1210,12 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 
   function getToken() {
     window.dispatchEvent(new Event('beforeunload'));
-    const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-    return JSON.parse(LS.token);
+    const LSToken = (webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken();
+    return JSON.parse(LSToken);
   }
 
   function getAuthorId() {
-    const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
+    const LS = getLocalStoragePropertyDescriptor().get.call(window);
     return JSON.parse(LS.user_id_cache);
   }
 
