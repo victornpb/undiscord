@@ -117,6 +117,3 @@ Please read: [what I'm doing to ensure this is safe for users][security_policy].
   [opera_tampermonkey]: https://addons.opera.com/extensions/details/tampermonkey-beta/
   [opera_violentmonkey]: https://addons.opera.com/extensions/details/violent-monkey/
 
-<!-- Download links -->
-  [greasyfork_url]: <https://greasyfork.org/en/scripts/406540-undiscord-delete-all-messages-in-a-discord-channel-or-dm-bulk-deletion> "Get Undiscord from GreasyFork"
-  [openuserjs_url]: <https://openuserjs.org/scripts/victornpb/Undiscord_-_Delete_all_messages_in_a_Discord_channel_or_DM_(Bulk_deletion)> "Get Undiscord from OpenUserJS"
