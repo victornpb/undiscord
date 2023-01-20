@@ -38,7 +38,7 @@
 
 ![Screenshot](https://user-images.githubusercontent.com/3372598/86538983-b60c7980-becf-11ea-8cad-1a33950e77fc.gif)
 
-I made this tool just for you ❤️ , it would be awesome if you could just click the [⭐️ Star button](https://github.com/victornpb/undiscord) at the top!
+I did not make this tool, I have simply fixed some of the code so it works for later versions of discord. Find the original version of this project [here](https://github.com/victornpb/undiscord). Make sure to star their project!
 
 > A few extra generous people asked for this, so here you can [buy me a coffee](https://www.buymeacoffee.com/vitim). Thank you! You'll be in my special list ^_^
 
