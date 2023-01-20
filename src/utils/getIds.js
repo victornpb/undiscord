@@ -1,11 +1,20 @@
+function getLocalStorage() {
+  var iframe = document.createElement('iframe');
+  document.head.append(iframe);
+  var ls = Object.getOwnPropertyDescriptor(iframe.contentWindow, 'localStorage');
+  iframe.remove();
+  Object.defineProperty(window, 'localStorage', ls);
+  return ls.get.call(window);
+}
+
 export function getToken() {
   window.dispatchEvent(new Event('beforeunload'));
-  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
+  var LS = getLocalStorage();
   return JSON.parse(LS.token);
 }
 
 export function getAuthorId() {
-  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
+  var LS = getLocalStorage();
   return JSON.parse(LS.user_id_cache);
 }
 
