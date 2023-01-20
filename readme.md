@@ -1,4 +1,5 @@
 # Undiscord - Delete all messages in a Discord channel or DM
+## I did not make this tool, I have simply fixed some of the code so it works for later versions of discord. Find the original version of this project [here](https://github.com/victornpb/undiscord). Make sure to star their project!
 <!-- shields -->
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/victornpb/undiscord?color=%235865f2&display_name=tag&label=Undiscord&style=flat-square)][greasyfork_url]
 [![GitHub Release Date](https://img.shields.io/github/release-date/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/releases)
@@ -38,9 +39,8 @@
 
 ![Screenshot](https://user-images.githubusercontent.com/3372598/86538983-b60c7980-becf-11ea-8cad-1a33950e77fc.gif)
 
-I did not make this tool, I have simply fixed some of the code so it works for later versions of discord. Find the original version of this project [here](https://github.com/victornpb/undiscord). Make sure to star their project!
 
-> A few extra generous people asked for this, so here you can [buy me a coffee](https://www.buymeacoffee.com/vitim). Thank you! You'll be in my special list ^_^
+> You can buy the original creator a coffee [here](https://www.buymeacoffee.com/vitim). 
 
 ----
 ### Need help?
