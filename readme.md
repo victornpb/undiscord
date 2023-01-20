@@ -25,9 +25,8 @@
    * Edge: [Tampermonkey][edge_tampermonkey]  
    * Safari: ~[Tampermonkey][safari_tampermonkey]~ 
     
-1. Install Undiscord Patched:  
-  [![][greasyfork_icon]][greasyfork_url] or [![][openuserjs_icon]][openuserjs_url]  
-  (NOTE: GreasyFork is recommended for now, OpenUserJS is not receiving updates)
+1. Install Undiscord Patched:
+  [here](https://github.com/titushm/undiscord-patched/raw/master/deleteDiscordMessages.user.js)
 
 1. Open <a href="https://discord.com/channels/@me" target="_blank">Discord</a> in your __browser__ (Not the App) and go to the channel or direct message you would like to be wiped.
 
