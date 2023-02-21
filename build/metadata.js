@@ -42,8 +42,10 @@ export default () => {
     delete metadata.downloadURL;
     delete metadata.updateURL;
     delete metadata.homepageURL;
-    metadata.version = new Date().toISOString();
-    // metadata.namespace = 'foobar';
+
+    const devVersion = new Date().toISOString().replace(/[-:T]/g, '.').replace('Z', '');
+    metadata.version = `0.${devVersion}-dev`;
+    metadata.namespace = metadata.namespace + '_DEV';
   }
 
   return generateComment(metadata);
