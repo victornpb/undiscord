@@ -1,17 +1,19 @@
-// import babel from 'rollup-plugin-babel';
-// import { terser } from 'rollup-plugin-terser';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import banner from 'rollup-plugin-banner2';
 import json from '@rollup/plugin-json';
+import serve from 'rollup-plugin-serve';
+import livereload from 'rollup-plugin-livereload';
+import S from 'tiny-dedent';
+
 import packageJson from './package.json';
-// import { string } from "rollup-plugin-string";
-import { string } from "./build/strings-plugin";
+import { string } from './build/strings-plugin';
 
 import userScriptMetadataBlock from './build/metadata.js';
 
 const production = !process.env.ROLLUP_WATCH;
 const sourcemap = production ? true : 'inline';
+
 const entry = 'src/index.js';
 
 // const assumptions = {
@@ -28,6 +30,40 @@ const entry = 'src/index.js';
 //   setPublicClassFields: true,
 // };
 
+let devPlugins = [];
+if (!production) {
+  devPlugins = [
+    serve({
+    // Launch in browser (default: false)
+    // open: true,
+      openPage: '/' + packageJson.main,
+      // contentBase: 'dist'
+      host: 'localhost',
+      port: 10001,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      onListening(server) {
+        const address = server.address();
+        const host = address.address === '::' ? 'localhost' : address.address;
+        // by using a bound function, we can access options as `this`
+        const protocol = this.https ? 'https' : 'http';
+        console.log(S(`
+        \n\n
+        Live server started...
+        _____________________________________________________________
+        
+        👇 Open this URL to install the development user extension 👇
+
+        ${protocol}://${host}:${address.port}/${packageJson.main}
+        _____________________________________________________________
+      `));
+      }
+    }),
+    livereload(),
+  ];
+}
+
 const config = [
 
   // Modern Module (No babel preset)
@@ -42,14 +78,17 @@ const config = [
       },
     ],
     plugins: [
+      ...devPlugins,
+
       json(),
       resolve(),
       commonjs(),
       banner(userScriptMetadataBlock),
       string({
         // Required to be specified
-        include: ["**/*.html", '**/*.css'],
-      })
+        include: ['**/*.html', '**/*.css'],
+      }),
+
     ]
   },
 ];

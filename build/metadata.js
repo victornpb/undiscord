@@ -1,4 +1,3 @@
-// const pkg = require('../package.json');
 import pkg from '../package.json';
 
 //
@@ -25,7 +24,7 @@ function generateComment(manifest) {
   ].join('\n');
 }
 
-export default () => {
+export default function userScriptMetadataBlock() {
   const metadata = {
     name: pkg.nameFull,
     description: pkg.description,
@@ -39,14 +38,17 @@ export default () => {
   };
 
   if (!production) {
+    const devVersion = new Date().toISOString().replace(/[-:T]/g, '.').replace('Z', '');
+    metadata.name = metadata.name + ' [DEV]';
+    metadata.version = `0.${devVersion}-dev`;
+    metadata.namespace = metadata.namespace + '_DEV';
+
     delete metadata.downloadURL;
     delete metadata.updateURL;
     delete metadata.homepageURL;
 
-    const devVersion = new Date().toISOString().replace(/[-:T]/g, '.').replace('Z', '');
-    metadata.version = `0.${devVersion}-dev`;
-    metadata.namespace = metadata.namespace + '_DEV';
+    metadata.downloadURL = metadata.updateURL = metadata.homepageURL = 'http://localhost:10001/dist/script.user.js';
   }
 
   return generateComment(metadata);
-};
+}
