@@ -20,12 +20,11 @@ import {
  * @param {boolean} hasLink Filter messages that contains link
  * @param {boolean} hasFile Filter messages that contains file
  * @param {boolean} includeNsfw Search in NSFW channels
- * @param {function(string, Array)} extLogger Function for logging
- * @param {function} stopHndl stopHndl used for stopping
+
  * @author Victornpb <https://www.github.com/victornpb>
  * @see https://github.com/victornpb/undiscord
  */
-class deleteMessages {
+class Deleter {
 
   options = {
     authToken: null,
@@ -55,8 +54,8 @@ class deleteMessages {
     iterations: 0,
 
     _seachResponse: null,
-    _messagesToDelete: null,
-    _skippedMessages: null,
+    _messagesToDelete: [],
+    _skippedMessages: [],
   };
 
   stats = {
@@ -67,78 +66,118 @@ class deleteMessages {
     avgPing: null, // average ping used to calculate the estimated remaining time
   };
 
-  extLogger = undefined;
-  stopHndl = undefined;
+  onStart = undefined;
   onProgress = undefined;
+  onStop = undefined;
+
+  resetState() {
+    this.state = {
+      running: false,
+      delCount: 0,
+      failCount: 0,
+      grandTotal: 0,
+      offset: 0,
+      iterations: 0,
+
+      _seachResponse: null,
+      _messagesToDelete: [],
+      _skippedMessages: [],
+    };
+  }
 
   async run() {
+    if (this.state.running) return log.error('Already running!');
+
     this.state.running = true;
     this.stats.startTime = new Date();
 
-    log.success(`\nStarted at ${start.toLocaleString()}`);
+    log.success(`\nStarted at ${this.stats.startTime.toLocaleString()}`);
     log.debug(
-      `authorId = "${redact(authorId)}"`,
-      `guildId = "${redact(guildId)}"`,
-      `channelId = "${redact(channelId)}"`,
-      `minId = "${redact(minId)}"`,
-      `maxId = "${redact(maxId)}"`,
-      `hasLink = ${!!hasLink}`,
-      `hasFile = ${!!hasFile}`,
+      `authorId = "${redact(this.options.authorId)}"`,
+      `guildId = "${redact(this.options.guildId)}"`,
+      `channelId = "${redact(this.options.channelId)}"`,
+      `minId = "${redact(this.options.minId)}"`,
+      `maxId = "${redact(this.options.maxId)}"`,
+      `hasLink = ${!!this.options.hasLink}`,
+      `hasFile = ${!!this.options.hasFile}`,
     );
 
-    while (true) {
+    if (this.onStart) this.onStart(this.state, this.stats);
 
+    do {
       // Search messages
       await this.search();
       // Process results and find which messages should be deleted
       await this.filterResponse();
 
-      // Calculate
-      const etr = msToHMS((this.options.searchDelay * Math.round(total / 25)) + ((this.options.deleteDelay + this.stats.avgPing) * total));
       log.info(
-        `Total messages found: ${data.total_results}`,
-        `(Messages in current page: ${data.messages.length}`,
-        `To be deleted: ${messagesToDelete.length}`,
-        `System: ${this.state._skippedMessages.length})`,
+        `Total messages found: ${this.state.grandTotal}`,
+        `(Messages in current page: ${this.state._seachResponse.messages.length}`,
+        `To be deleted: ${this.state._messagesToDelete.length}`,
+        `Skipped: ${this.state._skippedMessages.length})`,
         `offset: ${this.state.offset}`
       );
-      this.printDelayStats();
-      log.verb(`Estimated time remaining: ${etr}`);
+      this.printStats();
 
+      // Calculate estimated time
+      this.calcEtr();
+      log.verb(`Estimated time remaining: ${this.stats.etr}`);
 
-      if (this.state._messagesToDelete.length > 0 || this.state._skippedMessages.length > 0) {
+      // if there are messages to delete, delete them
+      if (this.state._messagesToDelete.length > 0) {
 
-        if (++iterations < 1) {
-          log.verb('Waiting for your confirmation...');
-          const answer = await ask(
-            `Do you want to delete ~${total} messages? (Estimated time: ${etr})` +
-            '\n\n---- Preview ----\n' +
-            this.state._messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n'));
-          if (!answer) {
-            log.error('Aborted by you!');
-            break;
-          }
-          log.verb('OK');
+        if (++this.state.iterations < 1) {
+          const r = this.confirm();
+          if (!r) break;
         }
 
-        await this.deleteMessagesFromPage();
+        await this.deleteMessagesFromList();
+      }
+      else if (this.state._skippedMessages.length > 0) {
+        // There are stuff, but nothing to delete (example a page full of system messages)
+        // check next page until we see a page with nothing in it (end of results).
+        log.verb('There\'s nothing we can delete on this page, checking next page...');
+        this.state.offset += this.state._skippedMessages.length;
       }
       else {
-        if (total - offset > 0) log.warn('Ended because API returned an empty page.');
-        break;
+        log.verb('End condition?!', this);
+        if (this.state.grandTotal - this.state.offset > 0) log.warn('Ended because API returned an empty page.');
+        this.state.running = false;
       }
-    }
+    } while (this.state.running);
 
-    this.state.running = false;
     this.stats.endTime = new Date();
     log.success(`Ended at ${this.stats.endTime.toLocaleString()}! Total time: ${msToHMS(this.stats.endTime.getTime() - this.stats.startTime.getTime())}`);
-    this.printDelayStats();
+    this.printStats();
     log.verb(`Rate Limited: ${this.stats.throttledCount} times. Total time throttled: ${msToHMS(this.stats.throttledTotalTime)}.`);
     log.debug(`Deleted ${this.state.delCount} messages, ${this.state.failCount} failed.\n`);
+
+    if (this.onStop) this.onStop(this.state, this.stats);
   }
 
   stop() {
     this.state.running = false;
+  }
+
+  calcEtr() {
+    this.stats.etr = (this.options.searchDelay * Math.round(this.state.grandTotal / 25)) + ((this.options.deleteDelay + this.stats.avgPing) * this.state.grandTotal);
+  }
+
+  async confirm() {
+    if (!this.options.askForConfirmation) return true;
+
+    log.verb('Waiting for your confirmation...');
+    const preview = this.state._messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n');
+
+    const answer = await ask(
+      `Do you want to delete ~${this.state.grandTotal} messages? (Estimated time: ${msToHMS(this.stats.etr)})` +
+      '(The actual number of messages may be less, depending if you\'re using filters to skip some messages)',
+      '\n\n---- Preview ----\n' + preview
+    );
+
+    if (!answer) log.error('Aborted by you!');
+    else log.verb('OK');
+    return answer;
   }
 
   async search() {
@@ -161,9 +200,11 @@ class deleteMessages {
         ['has', this.options.hasFile ? 'file' : undefined],
         ['content', this.options.content || undefined],
         ['include_nsfw', this.options.includeNsfw ? true : undefined],
-      ]), { headers: {
-        'Authorization': this.options.authToken,
-      } });
+      ]), {
+        headers: {
+          'Authorization': this.options.authToken,
+        }
+      });
       this.afterRequest();
     } catch (err) {
       this.running = false;
@@ -188,31 +229,37 @@ class deleteMessages {
         this.stats.throttledTotalTime += w;
         this.stats.searchDelay += w; // increase delay
         log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
-        this.printDelayStats();
+        this.printStats();
         log.verb(`Cooling down for ${w * 2}ms before retrying...`);
 
         await wait(w * 2);
-        return await search();
+        return await this.search();
       } else {
         this.running = false;
         return log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
       }
     }
-
-    this.state._seachResponse = resp;
-    return resp;
+    const data = await resp.json();
+    this.state._seachResponse = data;
+    return data;
   }
 
   async filterResponse() {
-    const data = await this.state._seachResponse.json();
+    const data = await this.state._seachResponse;
+
+    // the search total will decrease as we delete stuff
     const total = data.total_results;
-    if (!this.state.grandTotal) this.state.grandTotal = total;
+    if (total > this.state.grandTotal) this.state.grandTotal = total;
+
+    // search returns messages near the the actual message, only get the messages we searched for.
     const discoveredMessages = data.messages.map(convo => convo.find(message => message.hit === true));
 
+    // we can only delete some types of messages, system messages are not deletable.
     let messagesToDelete = discoveredMessages;
     messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
-    messagesToDelete = messagesToDelete.filter(msg => includePinned && msg.pinned);
+    messagesToDelete = messagesToDelete.filter(msg => this.options.includePinned && msg.pinned);
 
+    // custom filter of messages
     try {
       const regex = new RegExp(this.options.pattern, 'i');
       messagesToDelete = messagesToDelete.filter(msg => regex.test(msg.content));
@@ -220,14 +267,14 @@ class deleteMessages {
       log.warn('Ignoring RegExp because pattern is malformed!', e);
     }
 
+    // create an array containing everything we skipped. (used to calculate offset for next searches)
     const skippedMessages = discoveredMessages.filter(msg => !messagesToDelete.find(m => m.id === msg.id));
 
     this.state._messagesToDelete = messagesToDelete;
     this.state._skippedMessages = skippedMessages;
   }
 
-
-  async deleteMessagesFromPage() {
+  async deleteMessagesFromList() {
     for (let i = 0; i < this.state._messagesToDelete.length; i++) {
       const message = this.state._messagesToDelete[i];
       if (!this.running) return log.error('Stopped by you!');
@@ -240,8 +287,14 @@ class deleteMessages {
         `<i>${redact(message.content).replace(/\n/g, '↵')}</i>`,
         message.attachments.length ? redact(JSON.stringify(message.attachments)) : ''
       );
-      if (this.onProgress) this.onProgress(this.state);
-      this.deleteMessage(message);
+
+      // Delete a single message
+      const result = this.deleteMessage(message);
+      if (result === 'RETRY') i--;
+
+      this.calcEtr();
+      if (this.onProgress) this.onProgress(this.state, this.stats);
+
       await wait(this.options.deleteDelay);
     }
   }
@@ -258,31 +311,37 @@ class deleteMessages {
         },
       });
       this.afterRequest();
-      this.stats.delCount++;
     } catch (err) {
+      // no response error (e.g. network error)
       log.error('Delete request throwed an error:', err);
       log.verb('Related object:', redact(JSON.stringify(message)));
       this.stats.failCount++;
+      return 'FAILED';
     }
 
     if (!resp.ok) {
-      // deleting messages too fast
       if (resp.status === 429) {
+        // deleting messages too fast
         const w = (await resp.json()).retry_after * 1000;
         this.stats.throttledCount++;
         this.stats.throttledTotalTime += w;
         this.options.deleteDelay = w; // increase delay
         log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${this.options.deleteDelay}ms.`);
-        this.printDelayStats();
+        this.printStats();
         log.verb(`Cooling down for ${w * 2}ms before retrying...`);
         await wait(w * 2);
-        i--; // retry <================================================================
+        return 'RETRY';
       } else {
+        // other error
         log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
         log.verb('Related object:', redact(JSON.stringify(message)));
         this.stats.failCount++;
+        return 'FAILED';
       }
     }
+
+    this.stats.delCount++;
+    return 'OK';
   }
 
 
@@ -295,7 +354,7 @@ class deleteMessages {
     this.stats.avgPing = this.stats.avgPing > 0 ? (this.stats.avgPing * 0.9) + (this.stats.lastPing * 0.1) : this.stats.lastPing;
   }
 
-  printDelayStats() {
+  printStats() {
     log.verb(
       `Delete delay: ${this.options.deleteDelay}ms, Search delay: ${this.options.searchDelay}ms`,
       `Last Ping: ${this.stats.lastPing}ms, Average Ping: ${this.stats.avgPing | 0}ms`
@@ -304,4 +363,4 @@ class deleteMessages {
 
 }
 
-export default deleteMessages;
+export default Deleter;
