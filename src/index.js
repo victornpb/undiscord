@@ -1,3 +1,5 @@
+const PREFIX = '[UNDISCORD]';
+
 import { version as VERSION } from '../package.json';
 
 import discordStyles from './ui/discord-styles.css';
@@ -5,55 +7,64 @@ import undiscordStyles from './ui/main.css';
 import buttonHtml from './ui/undiscord-button.html';
 import undiscordTemplate from './ui/undiscord.html';
 
-import deleteMessages from './deleteMessages';
+import Deleter from './deleteMessages';
 import Drag from './utils/drag';
 import createElm from './utils/createElm';
 import insertCss from './utils/insertCss';
 import messagePicker from './utils/messagePicker';
 import { getToken, getAuthorId, getGuildId, getChannelId } from './utils/getIds';
 
-// ------------------------- User interface ------------------------------ //
+import { setLogFn } from './utils/log.js';
+import { replaceInterpolations } from './utils/helpers';
 
+// -------------------------- User interface ------------------------------- //
+
+// links
 const HOME = 'https://github.com/victornpb/undiscord';
 const WIKI = 'https://github.com/victornpb/undiscord/wiki';
 
-const $ = s => undiscordWindow.querySelector(s);
+const deleter = new Deleter();
+messagePicker.init();
 
-let undiscordWindow;
-let undiscordBtn;
+const ui = {
+  undiscordWindow: null,
+  undiscordBtn: null,
+  logArea: null,
+  autoScroll: null,
+
+  // progress handler
+  progressMain: null,
+  progressIcon: null,
+  percent: null,
+};
+const $ = s => ui.undiscordWindow.querySelector(s);
 
 function initUI() {
 
   insertCss(discordStyles);
   insertCss(undiscordStyles);
 
-  function replaceInterpolations(str, obj, removeMissing = false) {
-    return str.replace(/\{\{([\w_]+)\}\}/g, (m, key) => obj[key] || (removeMissing ? '' : m));
-  }
-
-  const templateVariables = {
+  // create undiscord window
+  const undiscordUI = replaceInterpolations(undiscordTemplate, {
     VERSION,
     HOME,
     WIKI,
-  };
+  });
+  ui.undiscordWindow = createElm(undiscordUI);
+  document.body.appendChild(ui.undiscordWindow);
 
-  // create undiscord window
-  const undiscordUI = replaceInterpolations(undiscordTemplate, templateVariables);
-  undiscordWindow = createElm(undiscordUI);
-  document.body.appendChild(undiscordWindow);
+  // enable drag and resize on undiscord window
+  new Drag(ui.undiscordWindow, $('.header'), { mode: 'move' });
+  new Drag(ui.undiscordWindow, $('.footer'), { mode: 'resize' });
 
-  new Drag(undiscordWindow, $('.header'), { mode: 'move' });
-  new Drag(undiscordWindow, $('.footer'), { mode: 'resize' });
-
-  // create undiscord button
-  undiscordBtn = createElm(buttonHtml);
-  undiscordBtn.onclick = toggleWindow;
+  // create undiscord Trash icon
+  ui.undiscordBtn = createElm(buttonHtml);
+  ui.undiscordBtn.onclick = toggleWindow;
   function mountBtn() {
     const toolbar = document.querySelector('#app-mount [class^=toolbar]');
-    if (toolbar) toolbar.appendChild(undiscordBtn);
+    if (toolbar) toolbar.appendChild(ui.undiscordBtn);
   }
   mountBtn();
-
   // watch for changes and re-mount button if necessary
   const discordElm = document.querySelector('#app-mount');
   let observerThrottle = null;
@@ -61,29 +72,34 @@ function initUI() {
     if (observerThrottle) return;
     observerThrottle = setTimeout(() => {
       observerThrottle = null;
-      if (!discordElm.contains(undiscordBtn)) mountBtn(); // re-mount the button to the toolbar
+      if (!discordElm.contains(ui.undiscordBtn)) mountBtn(); // re-mount the button to the toolbar
     }, 3000);
   });
   observer.observe(discordElm, { attributes: false, childList: true, subtree: true });
 
   function toggleWindow() {
-    if (undiscordWindow.style.display !== 'none') {
-      undiscordWindow.style.display = 'none';
-      undiscordBtn.style.color = 'var(--interactive-normal)';
+    if (ui.undiscordWindow.style.display !== 'none') {
+      ui.undiscordWindow.style.display = 'none';
+      ui.undiscordBtn.style.color = 'var(--interactive-normal)';
     }
     else {
-      undiscordWindow.style.display = '';
-      undiscordBtn.style.color = 'var(--interactive-active)';
+      ui.undiscordWindow.style.display = '';
+      ui.undiscordBtn.style.color = 'var(--interactive-active)';
     }
   }
 
-  messagePicker.init();
+  // cached elements
+  ui.logArea = $('#logArea');
+  ui.autoScroll = $('#autoScroll');
+  ui.progressMain = $('#progressBar');
+  ui.progressIcon = ui.undiscordBtn.querySelector('progress');
+  ui.percent = $('#progressPercent');
 
   // register event listeners
   $('#hide').onclick = toggleWindow;
-  $('button#start').onclick = start;
-  $('button#stop').onclick = stop;
-  $('button#clear').onclick = () => $('#logArea').innerHTML = '';
+  $('button#start').onclick = startAction;
+  $('button#stop').onclick = stopAction;
+  $('button#clear').onclick = () => ui.logArea.innerHTML = '';
   $('button#getAuthor').onclick = () => $('input#authorId').value = getAuthorId();
   $('button#getGuild').onclick = () => {
     const guildId = $('input#guildId').value = getGuildId();
@@ -94,19 +110,23 @@ function initUI() {
     $('input#guildId').value = getGuildId();
   };
   $('#redact').onchange = () => {
-    const b = undiscordWindow.classList.toggle('redact');
+    const b = ui.undiscordWindow.classList.toggle('redact');
     if (b) alert('This mode will attempt to hide personal information, so you can screen share / take screenshots.\nAlways double check you are not sharing sensitive information!');
   };
 
   $('#pickMessageAfter').onclick = async () => {
-    // alert('Select a message on the chat.\nThe message below it will be deleted.');
+    alert('Select a message on the chat.\nThe message below it will be deleted.');
+    toggleWindow();
     const id = await messagePicker.grab('after');
     if (id) $('input#minId').value = id;
+    toggleWindow();
   };
   $('#pickMessageBefore').onclick = async () => {
-    // alert('Select a message on the chat.\nThe message above it will be deleted.');
+    alert('Select a message on the chat.\nThe message above it will be deleted.');
+    toggleWindow();
     const id = await messagePicker.grab('before');
     if (id) $('input#maxId').value = id;
+    toggleWindow();
   };
 
   // const fileSelection = $('input#importJson');
@@ -123,14 +143,66 @@ function initUI() {
   //   }
   // };
 
+  // redirect console logs to inside the window after setting up the UI
+  setLogFn(printLog);
+
+  setupDeleter();
 }
 
-let _stopFlag = false;
-const stopHndl = () => _stopFlag;
+function printLog(type = '', args) {
+  const style = { '': '', info: 'color:#00b0f4;', verb: 'color:#72767d;', warn: 'color:#faa61a;', error: 'color:#f04747;', success: 'color:#43b581;' }[type];
+  ui.logArea.insertAdjacentHTML('beforeend', `<div style="${style}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
+  if (ui.autoScroll.checked) ui.logArea.querySelector('div:last-child').scrollIntoView(false);
+}
 
-async function start() {
-  console.log('start');
-  _stopFlag = false;
+function setupDeleter() {
+
+  deleter.onStart = (state, stats) => {
+    console.log(PREFIX, 'onStart', state, stats);
+    $('#start').disabled = true;
+    $('#stop').disabled = false;
+
+    ui.progressIcon.style.display = 'block';
+    ui.progressMain.style.display = 'block';
+    ui.percent.style.display = 'block';
+  };
+
+  deleter.onProgress = (state, stats) => {
+    console.log(PREFIX, 'onProgress', state, stats);
+    const value = 0; // TODO:
+    let min = 0;
+    let max = 100;
+
+    if (value && max && value > max) max = value;
+    ui.progressIcon.setAttribute('max', max);
+    ui.progressMain.setAttribute('max', max);
+    ui.progressIcon.value = value;
+    ui.progressMain.value = value;
+    ui.progressIcon.style.display = max ? '' : 'none';
+    ui.progressMain.style.display = max ? '' : 'none';
+    ui.percent.style.display = value && max ? '' : 'none';
+    ui.percent.innerHTML = value >= 0 && max ? Math.round(value / max * 100) + '%' : '';
+    // indeterminate progress bar
+    if (value === -1) {
+      ui.progressIcon.removeAttribute('value');
+      ui.progressMain.removeAttribute('value');
+      ui.percent.innerHTML = '...';
+    }
+  };
+
+  deleter.onStop = (state, stats) => {
+    console.log(PREFIX, 'onStop', state, stats);
+    $('#start').disabled = false;
+    $('#stop').disabled = true;
+
+    ui.progressIcon.style.display = 'none';
+    ui.progressMain.style.display = 'none';
+    ui.percent.style.display = 'none';
+  };
+}
+
+async function startAction() {
+  console.log(PREFIX, 'startAction');
 
   // general
   const authToken = getToken();
@@ -154,62 +226,44 @@ async function start() {
   const searchDelay = parseInt($('input#searchDelay').value.trim());
   const deleteDelay = parseInt($('input#deleteDelay').value.trim());
 
-  // progress handler
-  const progress = $('#progressBar');
-  const progress2 = undiscordBtn.querySelector('progress');
-  const percent = $('#progressPercent');
-  const onProg = (value, max) => {
-    if (value && max && value > max) max = value;
-    progress.setAttribute('max', max);
-    progress2.setAttribute('max', max);
-    progress.value = value;
-    progress2.value = value;
-    progress.style.display = max ? '' : 'none';
-    progress2.style.display = max ? '' : 'none';
-    percent.style.display = value && max ? '' : 'none';
-    percent.innerHTML = value >= 0 && max ? Math.round(value / max * 100) + '%' : '';
-    // indeterminate progress bar
-    if (value === -1) {
-      progress.removeAttribute('value');
-      progress2.removeAttribute('value');
-      percent.innerHTML = '...';
-    }
-  };
-
-  let logArea = $('#logArea');
-  let autoScroll = $('#autoScroll');
-  const logger = (type = '', args) => {
-    const style = { '': '', info: 'color:#00b0f4;', verb: 'color:#72767d;', warn: 'color:#faa61a;', error: 'color:#f04747;', success: 'color:#43b581;' }[type];
-    logArea.insertAdjacentHTML('beforeend', `<div style="${style}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
-    if (autoScroll.checked) logArea.querySelector('div:last-child').scrollIntoView(false);
-  };
-
-  logArea.innerHTML = '';
+  // clear logArea
+  ui.logArea.innerHTML = '';
 
   // validate input
-  if (!authToken) return logger('error', ['Could not detect the authorization token!']) || logger('info', ['Please make sure Undiscord is up to date']);
-  else if (!guildId) return logger('error', ['You must provide a Server ID!']);
+  if (!authToken) return printLog('error', ['Could not detect the authorization token!']) || printLog('info', ['Please make sure Undiscord is up to date']);
+  else if (!guildId) return printLog('error', ['You must provide a Server ID!']);
 
-  for (let i = 0; i < channelIds.length; i++) {
-    $('#start').disabled = true;
-    $('#stop').disabled = false;
-    await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
-    stop(); // clear the running state
-  }
+  // TODO: multiple channels
+  // for (let i = 0; i < channelIds.length; i++) {
 
+  // }
+
+  deleter.options = {
+    authToken,
+    authorId,
+    guildId,
+    channelId: channelIds[0],
+    minId: minId || minDate,
+    maxId: maxId || maxDate,
+    content,
+    hasLink,
+    hasFile,
+    includeNsfw,
+    includePinned,
+    pattern,
+    searchDelay,
+    deleteDelay,
+  };
+
+  deleter.resetState();
+  deleter.run();
 }
 
-function stop() {
-  _stopFlag = true;
-  $('#start').disabled = false;
-  $('#stop').disabled = true;
-
-  $('#progressBar').style.display = 'none';
-  $('#progressPercent').style.display = 'none';
-  undiscordBtn.querySelector('progress').style.display = 'none';
+function stopAction() {
+  console.log(PREFIX, 'stopAction');
+  deleter.stop();
 }
 
 initUI();
-
 
 // ---- END Undiscord ----
