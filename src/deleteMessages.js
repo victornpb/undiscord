@@ -1,20 +1,12 @@
-const wait = async ms => new Promise(done => setTimeout(done, ms));
-const msToHMS = s => `${s / 3.6e6 | 0}h ${(s % 3.6e6) / 6e4 | 0}m ${(s % 6e4) / 1000 | 0}s`;
-const escapeHTML = html => html.replace(/[&<"']/g, m => ({ '&': '&amp;', '<': '&lt;', '"': '&quot;', '\'': '&#039;' })[m]);
-const redact = str => `<span class="priv">${escapeHTML(str)}</span><span class="mask">REDACTED</span>`;
-const queryString = params => params.filter(p => p[1] !== undefined).map(p => p[0] + '=' + encodeURIComponent(p[1])).join('&');
-const ask = async msg => new Promise(resolve => setTimeout(() => resolve(window.confirm(msg)), 10));
-const toSnowflake = (date) => /:/.test(date) ? ((new Date(date).getTime() - 1420070400000) * Math.pow(2, 22)) : date;
-
-
-const log = {
-  debug() { return extLogger ? extLogger('debug', arguments) : console.debug.apply(console, arguments); },
-  info() { return extLogger ? extLogger('info', arguments) : console.info.apply(console, arguments); },
-  verb() { return extLogger ? extLogger('verb', arguments) : console.log.apply(console, arguments); },
-  warn() { return extLogger ? extLogger('warn', arguments) : console.warn.apply(console, arguments); },
-  error() { return extLogger ? extLogger('error', arguments) : console.error.apply(console, arguments); },
-  success() { return extLogger ? extLogger('success', arguments) : console.info.apply(console, arguments); },
-};
+import { log } from './utils/log.js';
+import {
+  wait,
+  msToHMS,
+  redact,
+  queryString,
+  ask,
+  toSnowflake,
+} from './utils/helpers.js';
 
 /**
  * Delete all messages in a Discord channel or DM
