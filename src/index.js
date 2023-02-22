@@ -168,9 +168,8 @@ function setupDeleter() {
 
   deleter.onProgress = (state, stats) => {
     console.log(PREFIX, 'onProgress', state, stats);
-    const value = 0; // TODO:
-    let min = 0;
-    let max = 100;
+    let max = state.grandTotal;
+    const value = state.delCount + state.failCount;
 
     if (value && max && value > max) max = value;
     ui.progressIcon.setAttribute('max', max);
@@ -182,7 +181,7 @@ function setupDeleter() {
     ui.percent.style.display = value && max ? '' : 'none';
     ui.percent.innerHTML = value >= 0 && max ? Math.round(value / max * 100) + '%' : '';
     // indeterminate progress bar
-    if (value === -1) {
+    if (!max) {
       ui.progressIcon.removeAttribute('value');
       ui.progressMain.removeAttribute('value');
       ui.percent.innerHTML = '...';
