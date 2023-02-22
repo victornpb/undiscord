@@ -357,7 +357,11 @@ class Deleter {
   printStats() {
     log.verb(
       `Delete delay: ${this.options.deleteDelay}ms, Search delay: ${this.options.searchDelay}ms`,
-      `Last Ping: ${this.stats.lastPing}ms, Average Ping: ${this.stats.avgPing | 0}ms`
+      `Last Ping: ${this.stats.lastPing}ms, Average Ping: ${this.stats.avgPing | 0}ms`,
+    );
+    log.verb(
+      `Rate Limited: ${this.stats.throttledCount} times.`,
+      `Total time throttled: ${msToHMS(this.stats.throttledTotalTime)}.`
     );
   }
 
