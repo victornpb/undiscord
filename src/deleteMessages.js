@@ -341,7 +341,7 @@ class Deleter {
       // no response error (e.g. network error)
       log.error('Delete request throwed an error:', err);
       log.verb('Related object:', redact(JSON.stringify(message)));
-      this.stats.failCount++;
+      this.state.failCount++;
       return 'FAILED';
     }
 
@@ -361,12 +361,12 @@ class Deleter {
         // other error
         log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
         log.verb('Related object:', redact(JSON.stringify(message)));
-        this.stats.failCount++;
+        this.state.failCount++;
         return 'FAILED';
       }
     }
 
-    this.stats.delCount++;
+    this.state.delCount++;
     return 'OK';
   }
 
