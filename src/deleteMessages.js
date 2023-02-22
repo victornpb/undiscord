@@ -294,9 +294,19 @@ class Deleter {
         message.attachments.length ? redact(JSON.stringify(message.attachments)) : ''
       );
 
-      // Delete a single message
+      // Delete a single message (with retry)
+      const maxAttempt = 3;
+      let attempt = maxAttempt;
+      while (attempt < maxAttempt) {
       const result = this.deleteMessage(message);
-      if (result === 'RETRY') i--;
+
+        if (result === 'RETRY') {
+          attempt++;
+          log.verb(`Retrying in ${this.options.deleteDelay}ms... (${attempt}/${maxAttempt})`);
+          await wait(this.options.deleteDelay);
+        }
+        else break;
+      }
 
       this.calcEtr();
       if (this.onProgress) this.onProgress(this.state, this.stats);
