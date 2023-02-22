@@ -47,7 +47,7 @@ export default function userScriptMetadataBlock() {
     delete metadata.updateURL;
     delete metadata.homepageURL;
 
-    metadata.downloadURL = metadata.updateURL = metadata.homepageURL = 'http://localhost:10001/dist/script.user.js';
+    metadata.downloadURL = metadata.updateURL = metadata.homepageURL = 'http://localhost:10001/deleteDiscordMessages.user.js';
   }
 
   return generateComment(metadata);
