@@ -295,12 +295,13 @@ class Deleter {
       if (!this.state.running) return log.error('Stopped by you!');
 
       log.debug(
-        `${((this.state.delCount + 1) / this.state.grandTotal * 100).toFixed(2)}%`,
-        `(${this.state.delCount + 1}/${this.state.grandTotal})`,
-        `Deleting ID:${redact(message.id)}`,
-        `<b>${redact(message.author.username + '#' + message.author.discriminator)} <small>(${redact(new Date(message.timestamp).toLocaleString())})</small>:</b>`,
+        // `${((this.state.delCount + 1) / this.state.grandTotal * 100).toFixed(2)}%`,
+        `[${this.state.delCount + 1}/${this.state.grandTotal}] `+
+        `<sup>${redact(new Date(message.timestamp).toLocaleString())}</sup> `+
+        `<b>${redact(message.author.username + '#' + message.author.discriminator)}:</b>`,
         `<i>${redact(message.content).replace(/\n/g, '↵')}</i>`,
-        message.attachments.length ? redact(JSON.stringify(message.attachments)) : ''
+        message.attachments.length ? redact(JSON.stringify(message.attachments)) : '',
+        `<span>{ID:${redact(message.id)}}</span>`
       );
 
       // Delete a single message (with retry)
