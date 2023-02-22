@@ -167,3 +167,26 @@
 #undiscord .mb1 {
     margin-bottom: 8px;
 }
+
+#undiscord .log {
+    
+}
+#undiscord .log-debug {
+    color: inherit;
+}
+#undiscord .log-info {
+    color:#00b0f4;
+}
+#undiscord .log-verb {
+    color:#72767d;
+}
+#undiscord .log-warn {
+    color:#faa61a;
+}
+#undiscord .log-error {
+    color:#f04747;
+}
+#undiscord .log-success {
+    color:#43b581;
+}
+
