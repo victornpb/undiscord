@@ -83,6 +83,8 @@ class Deleter {
       _messagesToDelete: [],
       _skippedMessages: [],
     };
+
+    this.options.askForConfirmation = true;
   }
 
   async run() {
@@ -126,10 +128,7 @@ class Deleter {
       // if there are messages to delete, delete them
       if (this.state._messagesToDelete.length > 0) {
 
-        if (++this.state.iterations < 1) {
-          const r = this.confirm();
-          if (!r) break;
-        }
+        if (await this.confirm() === false) break;
 
         await this.deleteMessagesFromList();
       }
@@ -171,13 +170,20 @@ class Deleter {
 
     const answer = await ask(
       `Do you want to delete ~${this.state.grandTotal} messages? (Estimated time: ${msToHMS(this.stats.etr)})` +
-      '(The actual number of messages may be less, depending if you\'re using filters to skip some messages)',
-      '\n\n---- Preview ----\n' + preview
+      '(The actual number of messages may be less, depending if you\'re using filters to skip some messages)' +
+      '\n\n---- Preview ----\n' +
+      preview
     );
 
-    if (!answer) log.error('Aborted by you!');
-    else log.verb('OK');
-    return answer;
+    if (!answer) {
+      log.error('Aborted by you!');
+      return false;
+    }
+    else {
+      log.verb('OK');
+      this.options.askForConfirmation = false; // do not ask for confirmation again on the next request
+      return true;
+    }
   }
 
   async search() {
