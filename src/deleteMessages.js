@@ -251,7 +251,7 @@ class Deleter {
   }
 
   async filterResponse() {
-    const data = await this.state._seachResponse;
+    const data = this.state._seachResponse;
 
     // the search total will decrease as we delete stuff
     const total = data.total_results;
@@ -263,7 +263,7 @@ class Deleter {
     // we can only delete some types of messages, system messages are not deletable.
     let messagesToDelete = discoveredMessages;
     messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
-    messagesToDelete = messagesToDelete.filter(msg => this.options.includePinned && msg.pinned);
+    messagesToDelete = messagesToDelete.filter(msg =>  msg.pinned ? this.options.includePinned : true);
 
     // custom filter of messages
     try {
