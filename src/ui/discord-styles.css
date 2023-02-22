@@ -21,6 +21,7 @@
     padding: 0 16px;
     display: flex;
     color: var(--header-secondary);
+    cursor: grab;
 }
 
 #undiscord .header .icon {
@@ -45,7 +46,7 @@
     margin-right: 16px;
 }
 
-#undiscord .header .spacer {
+#undiscord .spacer {
     flex-grow: 1;
 }
 
@@ -59,8 +60,6 @@
 
 #undiscord legend,
 #undiscord label {
-    display: block;
-    width: 100%;
     color: var(--header-secondary);
     font-size: 12px;
     line-height: 16px;
@@ -69,6 +68,10 @@
     cursor: default;
     font-family: var(--font-display);
     margin-bottom: 8px;
+}
+#undiscord .sidebar label {
+    display: block;
+    width: 100%;
 }
 
 #undiscord .multiInput {

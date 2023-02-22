@@ -87,6 +87,25 @@
 
 #undiscord .footer {
     cursor: se-resize;
+    padding-right: 30px;
+}
+
+#undiscord .footer #progressPercent {
+    padding: 0 1em;
+    font-size: small;
+    color: var(--interactive-muted);
+    flex-grow: 1;
+}
+
+.resize-handle {
+    position: absolute;
+    bottom: -15px;
+    right: -15px;
+    width: 30px;
+    height: 30px;
+    transform: rotate(-45deg);
+    background: repeating-linear-gradient( 0, var(--background-modifier-accent), var(--background-modifier-accent) 1px, transparent 2px, transparent 4px);
+    cursor: nwse-resize;
 }
 
 /**** Elements ****/

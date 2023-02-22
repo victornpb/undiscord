@@ -15,7 +15,7 @@ import messagePicker from './utils/messagePicker';
 import { getToken, getAuthorId, getGuildId, getChannelId } from './utils/getIds';
 
 import { setLogFn } from './utils/log.js';
-import { replaceInterpolations } from './utils/helpers';
+import { replaceInterpolations, msToHMS } from './utils/helpers';
 
 // -------------------------- User interface ------------------------------- //
 
@@ -171,6 +171,10 @@ function setupDeleter() {
     let max = state.grandTotal;
     const value = state.delCount + state.failCount;
 
+    const percent = value >= 0 && max ? Math.round(value / max * 100) + '%' : '';
+    const elapsed = msToHMS(Date.now() - stats.startTime.getTime());
+    const remaining = msToHMS(stats.etr);
+
     if (value && max && value > max) max = value;
     ui.progressIcon.setAttribute('max', max);
     ui.progressMain.setAttribute('max', max);
@@ -178,8 +182,8 @@ function setupDeleter() {
     ui.progressMain.value = value;
     ui.progressIcon.style.display = max ? '' : 'none';
     ui.progressMain.style.display = max ? '' : 'none';
-    ui.percent.style.display = value && max ? '' : 'none';
-    ui.percent.innerHTML = value >= 0 && max ? Math.round(value / max * 100) + '%' : '';
+    // ui.percent.style.display = max ? '' : 'none';
+    ui.percent.innerHTML = `${percent} (${value}/${max}) Elapsed: ${elapsed} Remaining: ${remaining}`;
     // indeterminate progress bar
     if (!max) {
       ui.progressIcon.removeAttribute('value');

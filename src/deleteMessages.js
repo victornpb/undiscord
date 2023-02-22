@@ -66,6 +66,7 @@ class Deleter {
     throttledTotalTime: 0, // the total amount of time you spent being throttled
     lastPing: null, // the most recent ping
     avgPing: null, // average ping used to calculate the estimated remaining time
+    etr: 0,
   };
 
   onStart = undefined;
