@@ -1,3 +1,5 @@
+const PREFIX = '[UNDISCORD]';
+
 import { log } from './utils/log.js';
 import {
   wait,
@@ -107,13 +109,16 @@ class Deleter {
     if (this.onStart) this.onStart(this.state, this.stats);
 
     do {
+      this.state.iterations++;
+
+      log.verb('Fetching messages...');
       // Search messages
       await this.search();
       // Process results and find which messages should be deleted
       await this.filterResponse();
 
-      log.info(
-        `Total messages found: ${this.state.grandTotal}`,
+      log.verb(
+        `Grand total: ${this.state.grandTotal}`,
         `(Messages in current page: ${this.state._seachResponse.messages.length}`,
         `To be deleted: ${this.state._messagesToDelete.length}`,
         `Skipped: ${this.state._skippedMessages.length})`,
@@ -123,7 +128,7 @@ class Deleter {
 
       // Calculate estimated time
       this.calcEtr();
-      log.verb(`Estimated time remaining: ${this.stats.etr}`);
+      log.verb(`Estimated time remaining: ${msToHMS(this.stats.etr)}`);
 
       // if there are messages to delete, delete them
       if (this.state._messagesToDelete.length > 0) {
@@ -135,12 +140,14 @@ class Deleter {
       else if (this.state._skippedMessages.length > 0) {
         // There are stuff, but nothing to delete (example a page full of system messages)
         // check next page until we see a page with nothing in it (end of results).
-        log.verb('There\'s nothing we can delete on this page, checking next page...');
+        const oldOffset = this.state.offset;
         this.state.offset += this.state._skippedMessages.length;
+        log.verb('There\'s nothing we can delete on this page, checking next page...');
+        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, ajusted to ${this.state.offset})`);
       }
       else {
-        log.verb('End condition?!', this);
-        if (this.state.grandTotal - this.state.offset > 0) log.warn('Ended because API returned an empty page.');
+        log.verb('Ended because API returned an empty page.');
+        if (this.state.grandTotal - this.state.offset > 0) log.warn('[End condition] if you see this please report.', this.state); // I don't remember why this was here. (looks like messagesToDelete==0 && skippedMessages==0 is enough
         this.state.running = false;
       }
     } while (this.state.running);
@@ -148,7 +155,6 @@ class Deleter {
     this.stats.endTime = new Date();
     log.success(`Ended at ${this.stats.endTime.toLocaleString()}! Total time: ${msToHMS(this.stats.endTime.getTime() - this.stats.startTime.getTime())}`);
     this.printStats();
-    log.verb(`Rate Limited: ${this.stats.throttledCount} times. Total time throttled: ${msToHMS(this.stats.throttledTotalTime)}.`);
     log.debug(`Deleted ${this.state.delCount} messages, ${this.state.failCount} failed.\n`);
 
     if (this.onStop) this.onStop(this.state, this.stats);
@@ -213,7 +219,7 @@ class Deleter {
       });
       this.afterRequest();
     } catch (err) {
-      this.running = false;
+      this.state.running = false;
       return log.error('Search request threw an error:', err);
     }
 
@@ -241,12 +247,13 @@ class Deleter {
         await wait(w * 2);
         return await this.search();
       } else {
-        this.running = false;
+        this.state.running = false;
         return log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
       }
     }
     const data = await resp.json();
     this.state._seachResponse = data;
+    console.log(PREFIX, 'search', data);
     return data;
   }
 
@@ -278,12 +285,14 @@ class Deleter {
 
     this.state._messagesToDelete = messagesToDelete;
     this.state._skippedMessages = skippedMessages;
+
+    console.log(PREFIX, 'filterResponse', this.state);
   }
 
   async deleteMessagesFromList() {
     for (let i = 0; i < this.state._messagesToDelete.length; i++) {
       const message = this.state._messagesToDelete[i];
-      if (!this.running) return log.error('Stopped by you!');
+      if (!this.state.running) return log.error('Stopped by you!');
 
       log.debug(
         `${((this.state.delCount + 1) / this.state.grandTotal * 100).toFixed(2)}%`,
@@ -298,7 +307,7 @@ class Deleter {
       const maxAttempt = 3;
       let attempt = maxAttempt;
       while (attempt < maxAttempt) {
-      const result = this.deleteMessage(message);
+        const result = this.deleteMessage(message);
 
         if (result === 'RETRY') {
           attempt++;
