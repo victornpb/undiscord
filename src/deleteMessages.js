@@ -307,9 +307,9 @@ class Deleter {
 
       // Delete a single message (with retry)
       const maxAttempt = 3;
-      let attempt = maxAttempt;
+      let attempt = 0;
       while (attempt < maxAttempt) {
-        const result = this.deleteMessage(message);
+        const result = await this.deleteMessage(message);
 
         if (result === 'RETRY') {
           attempt++;
