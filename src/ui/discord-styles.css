@@ -69,10 +69,6 @@
     font-family: var(--font-display);
     margin-bottom: 8px;
 }
-#undiscord .sidebar label {
-    display: block;
-    width: 100%;
-}
 
 #undiscord .multiInput {
     display: flex;

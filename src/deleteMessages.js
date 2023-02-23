@@ -229,7 +229,7 @@ class Deleter {
       const w = (await resp.json()).retry_after * 1000;
       this.stats.throttledCount++;
       this.stats.throttledTotalTime += w;
-      log.warn(`This channel wasn't indexed, waiting ${w}ms for discord to index it...`);
+      log.warn(`This channel isn't indexed yet. Waiting ${w}ms for discord to index it...`);
       await wait(w);
       return await this.search();
     }
@@ -298,11 +298,11 @@ class Deleter {
       log.debug(
         // `${((this.state.delCount + 1) / this.state.grandTotal * 100).toFixed(2)}%`,
         `[${this.state.delCount + 1}/${this.state.grandTotal}] `+
-        `<sup>${redact(new Date(message.timestamp).toLocaleString())}</sup> `+
-        `<b>${redact(message.author.username + '#' + message.author.discriminator)}:</b>`,
-        `<i>${redact(message.content).replace(/\n/g, '↵')}</i>`,
-        message.attachments.length ? redact(JSON.stringify(message.attachments)) : '',
-        `<span>{ID:${redact(message.id)}}</span>`
+        `<b>${redact(message.author.username + '#' + message.author.discriminator)}</b> `+
+        `<sup>${redact(new Date(message.timestamp).toLocaleString())}</sup>`+
+        `: <i>${redact(message.content).replace(/\n/g, '↵')}</i>`+
+        (message.attachments.length ? redact(JSON.stringify(message.attachments)) : ''),
+        `<sup>{ID:${redact(message.id)}}</sup>`
       );
 
       // Delete a single message (with retry)
@@ -391,6 +391,7 @@ class Deleter {
       `Total time throttled: ${msToHMS(this.stats.throttledTotalTime)}.`
     );
   }
+
 
 }
 

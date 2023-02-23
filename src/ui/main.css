@@ -57,6 +57,12 @@
     background: var(--background-secondary);
 }
 
+#undiscord .sidebar legend,
+#undiscord .sidebar label {
+    display: block;
+    width: 100%;
+}
+
 #undiscord .main {
     display: flex;
     max-width: calc(100% - 250px);
