@@ -263,6 +263,7 @@ async function startAction() {
   else if (!guildId) return printLog('error', ['You must provide a Server ID!']);
 
   undiscordCore.options = {
+    ...undiscordCore.options,
     authToken,
     authorId,
     guildId,
@@ -277,12 +278,13 @@ async function startAction() {
     pattern,
     searchDelay,
     deleteDelay,
+    // maxAttempt: 2,
   };
 
   if (channelIds.length > 1) {
     // multiple channels
     undiscordCore.resetState();
-    undiscordCore.runSequence(channelIds);
+    undiscordCore.runBatch(channelIds);
   }
   else {
     // single channel

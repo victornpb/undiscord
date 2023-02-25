@@ -81,27 +81,34 @@ class UndiscordCore {
   }
 
   /** Automate the deletion process of multiple channels */
-  async runSequence(sequence) {
+  async runBatch(queue) {
     if (this.state.running) return log.error('Already running!');
 
-    for (let i = 0; i < sequence.length; i++) {
-      const channelId = sequence[i];
-      log.info('Running sequence', `(${i + 1}/ out of ${sequence.length})`);
+    log.info(`Runnning batch with queue of ${queue.length} jobs`);
+    for (let i = 0; i < queue.length; i++) {
+      const job = queue[i];
+      log.info('Starting job...', `(${i + 1}/${queue.length})`);
 
       // set options
+      const channelId = job;
       this.options.channelId = channelId;
 
-      await this.start();
+      await this.run(true);
+      if (!this.state.running) break;
+
+      log.info('Job ended.', `(${i + 1}/${queue.length})`);
       this.resetState();
       this.options.askForConfirmation = false;
-      if (!this.state.running) break;
+      this.state.running = true; // continue running
     }
-    log.info('Finished sequence.');
+
+    log.info('Batch finished.');
+    this.state.running = false;
   }
 
   /** Start the deletion process */
-  async run() {
-    if (this.state.running) return log.error('Already running!');
+  async run(isJob = false) {
+    if (this.state.running && !isJob) return log.error('Already running!');
 
     this.state.running = true;
     this.stats.startTime = new Date();
@@ -158,7 +165,9 @@ class UndiscordCore {
       }
       else {
         log.verb('Ended because API returned an empty page.');
-        if (this.state.grandTotal - this.state.offset > 0) log.warn('[End condition] if you see this please report.', this.state); // I don't remember why this was here. (looks like messagesToDelete==0 && skippedMessages==0 is enough
+        if (this.state.grandTotal - this.state.offset > 0) log.warn('[End condition A] if you see this please report.', this.state); // I don't remember why this was here. (looks like messagesToDelete==0 && skippedMessages==0 is enough
+        else log.warn('[End condition B] if you see this please report.', this.state);
+        if (isJob) break; // break without stopping if this is part of a job
         this.state.running = false;
       }
     } while (this.state.running);
