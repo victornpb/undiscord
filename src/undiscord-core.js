@@ -43,7 +43,7 @@ class UndiscordCore {
     pattern: null,
     searchDelay: null,
     deleteDelay: null,
-
+    maxAttempt: 2, // Attempts to delete a single message if it fails
     askForConfirmation: true,
   };
 
@@ -328,14 +328,13 @@ class UndiscordCore {
       );
 
       // Delete a single message (with retry)
-      const maxAttempt = 3;
       let attempt = 0;
-      while (attempt < maxAttempt) {
+      while (attempt < this.options.maxAttempt) {
         const result = await this.deleteMessage(message);
 
         if (result === 'RETRY') {
           attempt++;
-          log.verb(`Retrying in ${this.options.deleteDelay}ms... (${attempt}/${maxAttempt})`);
+          log.verb(`Retrying in ${this.options.deleteDelay}ms... (${attempt}/${this.options.maxAttempt})`);
           await wait(this.options.deleteDelay);
         }
         else break;
