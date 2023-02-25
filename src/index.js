@@ -129,6 +129,24 @@ function initUI() {
     toggleWindow();
   };
 
+
+  // sync delays
+  $('input#searchDelay').onchange = (e) => {
+    const v = parseInt(e.target.value);
+    if (v) deleter.options.searchDelay = v;
+  };
+  $('input#deleteDelay').onchange = (e) => {
+    const v = parseInt(e.target.value);
+    if (v) deleter.options.deleteDelay = v;
+  };
+
+  $('input#searchDelay').addEventListener('input', (event) => {
+    $('div#searchDelayValue').textContent = event.target.value + 'ms';
+  });
+  $('input#deleteDelay').addEventListener('input', (event) => {
+    $('div#deleteDelayValue').textContent = event.target.value + 'ms';
+  });
+
   // const fileSelection = $('input#importJson');
   // fileSelection.onchange = () => {
   //   const files = fileSelection.files;
@@ -190,6 +208,15 @@ function setupDeleter() {
       ui.progressMain.removeAttribute('value');
       ui.percent.innerHTML = '...';
     }
+
+    // update delays
+    const searchDelayInput = $('input#searchDelay');
+    searchDelayInput.value = deleter.options.searchDelay;
+    $('div#searchDelayValue').textContent = deleter.options.searchDelay+'ms';
+
+    const deleteDelayInput = $('input#deleteDelay');
+    deleteDelayInput.value = deleter.options.deleteDelay;
+    $('div#deleteDelayValue').textContent = deleter.options.deleteDelay+'ms';
   };
 
   deleter.onStop = (state, stats) => {

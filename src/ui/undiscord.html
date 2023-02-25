@@ -176,7 +176,8 @@
                         <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="searchDelay" type="number" value="100" step="100">
+                        <input id="searchDelay" type="range" value="1000" step="50" min="50" max="5000">
+                        <div id="searchDelayValue"></div>
                     </div>
                 </fieldset>
                 <fieldset>
@@ -185,7 +186,8 @@
                         <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="deleteDelay" type="number" value="1000" step="100">
+                        <input id="deleteDelay" type="range" value="1000" step="50" min="50" max="5000">
+                        <div id="deleteDelayValue"></div>
                     </div>
                     <br>
                     <div class="sectionDescription">

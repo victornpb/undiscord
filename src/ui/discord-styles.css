@@ -126,7 +126,9 @@
 #undiscord input[type="search"],
 #undiscord input[type="password"],
 #undiscord input[type="datetime-local"],
-#undiscord input[type="number"] {
+#undiscord input[type="number"],
+#undiscord input[type="range"]
+{
     font-size: 16px;
     box-sizing: border-box;
     width: 100%;
