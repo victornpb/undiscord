@@ -90,6 +90,26 @@ class Deleter {
     this.options.askForConfirmation = true;
   }
 
+  /** Automate the deletion process of multiple channels */
+  async runSequence(sequence) {
+    if (this.state.running) return log.error('Already running!');
+
+    for (let i = 0; i < sequence.length; i++) {
+      const channelId = sequence[i];
+      log.info('Running sequence', `(${i + 1}/ out of ${sequence.length})`);
+
+      // set options
+      this.options.channelId = channelId;
+
+      await this.start();
+      this.resetState();
+      this.options.askForConfirmation = false;
+      if (!this.state.running) break;
+    }
+    log.info('Finished sequence.');
+  }
+
+  /** Start the deletion process */
   async run() {
     if (this.state.running) return log.error('Already running!');
 
@@ -165,10 +185,12 @@ class Deleter {
     this.state.running = false;
   }
 
+  /** Calculate the estimated time remaining based on the current stats */
   calcEtr() {
     this.stats.etr = (this.options.searchDelay * Math.round(this.state.grandTotal / 25)) + ((this.options.deleteDelay + this.stats.avgPing) * this.state.grandTotal);
   }
 
+  /** As for confirmation in the beggining process */
   async confirm() {
     if (!this.options.askForConfirmation) return true;
 
