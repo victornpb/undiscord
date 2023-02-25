@@ -12,37 +12,26 @@ import {
 
 /**
  * Delete all messages in a Discord channel or DM
- * @param {string} authToken Your authorization token
- * @param {string} authorId Author of the messages you want to delete
- * @param {string} guildId Server were the messages are located
- * @param {string} channelId Channel were the messages are located
- * @param {string} minId Only delete messages after this, leave blank do delete all
- * @param {string} maxId Only delete messages before this, leave blank do delete all
- * @param {string} content Filter messages that contains this text content
- * @param {boolean} hasLink Filter messages that contains link
- * @param {boolean} hasFile Filter messages that contains file
- * @param {boolean} includeNsfw Search in NSFW channels
-
  * @author Victornpb <https://www.github.com/victornpb>
  * @see https://github.com/victornpb/undiscord
  */
 class UndiscordCore {
 
   options = {
-    authToken: null,
-    authorId: null,
-    guildId: null,
-    channelId: null,
-    minId: null,
-    maxId: null,
-    content: null,
-    hasLink: null,
-    hasFile: null,
-    includeNsfw: null,
-    includePinned: null,
-    pattern: null,
-    searchDelay: null,
-    deleteDelay: null,
+    authToken: null, // Your authorization token
+    authorId: null, // Author of the messages you want to delete
+    guildId: null, // Server were the messages are located
+    channelId: null, // Channel were the messages are located
+    minId: null, // Only delete messages after this, leave blank do delete all
+    maxId: null, // Only delete messages before this, leave blank do delete all
+    content: null, // Filter messages that contains this text content
+    hasLink: null, // Filter messages that contains link
+    hasFile: null, // Filter messages that contains file
+    includeNsfw: null, // Search in NSFW channels
+    includePinned: null, // Delete messages that are pinned
+    pattern: null, // Only delete messages that match the regex (insensitive)
+    searchDelay: null, // Delay each time we fetch for more messages
+    deleteDelay: null, // Delay between each delete operation
     maxAttempt: 2, // Attempts to delete a single message if it fails
     askForConfirmation: true,
   };
@@ -69,6 +58,7 @@ class UndiscordCore {
     etr: 0,
   };
 
+  // events
   onStart = undefined;
   onProgress = undefined;
   onStop = undefined;
@@ -392,8 +382,7 @@ class UndiscordCore {
     return 'OK';
   }
 
-
-  #beforeTs = 0;
+  #beforeTs = 0; // used to calculate latency
   beforeRequest() {
     this.#beforeTs = Date.now();
   }
@@ -412,8 +401,6 @@ class UndiscordCore {
       `Total time throttled: ${msToHMS(this.stats.throttledTotalTime)}.`
     );
   }
-
-
 }
 
 export default UndiscordCore;
