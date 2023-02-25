@@ -271,7 +271,7 @@ async function startAction() {
     authToken,
     authorId,
     guildId,
-    channelId: channelIds[0],
+    channelId: channelIds.length === 1 ? channelIds[0] : null,
     minId: minId || minDate,
     maxId: maxId || maxDate,
     content,
@@ -284,8 +284,16 @@ async function startAction() {
     deleteDelay,
   };
 
-  deleter.resetState();
-  deleter.run();
+  if (channelIds.length > 1) {
+    // multiple channels
+    deleter.resetState();
+    deleter.runSequence(channelIds);
+  }
+  else {
+    // single channel
+    deleter.resetState();
+    deleter.run();
+  }
 }
 
 function stopAction() {
