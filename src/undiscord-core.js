@@ -26,7 +26,7 @@ import {
  * @author Victornpb <https://www.github.com/victornpb>
  * @see https://github.com/victornpb/undiscord
  */
-class Deleter {
+class UndiscordCore {
 
   options = {
     authToken: null,
@@ -417,4 +417,4 @@ class Deleter {
 
 }
 
-export default Deleter;
+export default UndiscordCore;
