@@ -7,7 +7,7 @@ import undiscordStyles from './ui/main.css';
 import buttonHtml from './ui/undiscord-button.html';
 import undiscordTemplate from './ui/undiscord.html';
 
-import Deleter from './deleteMessages';
+import UndiscordCore from './undiscord-core';
 import Drag from './utils/drag';
 import createElm from './utils/createElm';
 import insertCss from './utils/insertCss';
@@ -23,7 +23,7 @@ import { replaceInterpolations, msToHMS } from './utils/helpers';
 const HOME = 'https://github.com/victornpb/undiscord';
 const WIKI = 'https://github.com/victornpb/undiscord/wiki';
 
-const deleter = new Deleter();
+const undiscordCore = new UndiscordCore();
 messagePicker.init();
 
 const ui = {
@@ -133,11 +133,11 @@ function initUI() {
   // sync delays
   $('input#searchDelay').onchange = (e) => {
     const v = parseInt(e.target.value);
-    if (v) deleter.options.searchDelay = v;
+    if (v) undiscordCore.options.searchDelay = v;
   };
   $('input#deleteDelay').onchange = (e) => {
     const v = parseInt(e.target.value);
-    if (v) deleter.options.deleteDelay = v;
+    if (v) undiscordCore.options.deleteDelay = v;
   };
 
   $('input#searchDelay').addEventListener('input', (event) => {
@@ -164,7 +164,7 @@ function initUI() {
   // redirect console logs to inside the window after setting up the UI
   setLogFn(printLog);
 
-  setupDeleter();
+  setupUndiscordCore();
 }
 
 function printLog(type = '', args) {
@@ -172,9 +172,9 @@ function printLog(type = '', args) {
   if (ui.autoScroll.checked) ui.logArea.querySelector('div:last-child').scrollIntoView(false);
 }
 
-function setupDeleter() {
+function setupUndiscordCore() {
 
-  deleter.onStart = (state, stats) => {
+  undiscordCore.onStart = (state, stats) => {
     console.log(PREFIX, 'onStart', state, stats);
     $('#start').disabled = true;
     $('#stop').disabled = false;
@@ -184,7 +184,7 @@ function setupDeleter() {
     ui.percent.style.display = 'block';
   };
 
-  deleter.onProgress = (state, stats) => {
+  undiscordCore.onProgress = (state, stats) => {
     console.log(PREFIX, 'onProgress', state, stats);
     let max = state.grandTotal;
     const value = state.delCount + state.failCount;
@@ -211,15 +211,15 @@ function setupDeleter() {
 
     // update delays
     const searchDelayInput = $('input#searchDelay');
-    searchDelayInput.value = deleter.options.searchDelay;
-    $('div#searchDelayValue').textContent = deleter.options.searchDelay+'ms';
+    searchDelayInput.value = undiscordCore.options.searchDelay;
+    $('div#searchDelayValue').textContent = undiscordCore.options.searchDelay+'ms';
 
     const deleteDelayInput = $('input#deleteDelay');
-    deleteDelayInput.value = deleter.options.deleteDelay;
-    $('div#deleteDelayValue').textContent = deleter.options.deleteDelay+'ms';
+    deleteDelayInput.value = undiscordCore.options.deleteDelay;
+    $('div#deleteDelayValue').textContent = undiscordCore.options.deleteDelay+'ms';
   };
 
-  deleter.onStop = (state, stats) => {
+  undiscordCore.onStop = (state, stats) => {
     console.log(PREFIX, 'onStop', state, stats);
     $('#start').disabled = false;
     $('#stop').disabled = true;
@@ -262,16 +262,11 @@ async function startAction() {
   if (!authToken) return printLog('error', ['Could not detect the authorization token!']) || printLog('info', ['Please make sure Undiscord is up to date']);
   else if (!guildId) return printLog('error', ['You must provide a Server ID!']);
 
-  // TODO: multiple channels
-  // for (let i = 0; i < channelIds.length; i++) {
-
-  // }
-
-  deleter.options = {
+  undiscordCore.options = {
     authToken,
     authorId,
     guildId,
-    channelId: channelIds.length === 1 ? channelIds[0] : null,
+    channelId: channelIds.length === 1 ? channelIds[0] : null, // single or multiple channel
     minId: minId || minDate,
     maxId: maxId || maxDate,
     content,
@@ -286,21 +281,21 @@ async function startAction() {
 
   if (channelIds.length > 1) {
     // multiple channels
-    deleter.resetState();
-    deleter.runSequence(channelIds);
+    undiscordCore.resetState();
+    undiscordCore.runSequence(channelIds);
   }
   else {
     // single channel
-    deleter.resetState();
-    deleter.run();
+    undiscordCore.resetState();
+    undiscordCore.run();
   }
 }
 
 function stopAction() {
   console.log(PREFIX, 'stopAction');
-  deleter.stop();
+  undiscordCore.stop();
 }
 
-initUI();
+export default initUI;
 
 // ---- END Undiscord ----
