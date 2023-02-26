@@ -281,13 +281,29 @@ async function startAction() {
     // maxAttempt: 2,
   };
 
-  if (channelIds.length > 1) {
-    // multiple channels
+  // multiple guilds and channels
+  if (0) {
+    // TODO: import feature
+    const jobs = [].map(x => ({
+      guildId: x.guildId,
+      channelId: x.ch,
+    }));
+
     undiscordCore.resetState();
-    undiscordCore.runBatch(channelIds);
+    undiscordCore.runBatch(jobs);
   }
+  // multiple channels
+  else if (channelIds.length > 1) {
+    const jobs = channelIds.map(ch => ({
+      guildId: guildId,
+      channelId: ch,
+    }));
+
+    undiscordCore.resetState();
+    undiscordCore.runBatch(jobs);
+  }
+  // single channel
   else {
-    // single channel
     undiscordCore.resetState();
     undiscordCore.run();
   }

@@ -90,8 +90,10 @@ class UndiscordCore {
       log.info('Starting job...', `(${i + 1}/${queue.length})`);
 
       // set options
-      const channelId = job;
-      this.options.channelId = channelId;
+      this.options = {
+        ...this.options, // keep current options
+        job, // override with options for that job
+      };
 
       await this.run(true);
       if (!this.state.running) break;
