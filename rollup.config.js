@@ -4,13 +4,14 @@ import banner from 'rollup-plugin-banner2';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
+import bakedEnv from 'rollup-plugin-baked-env';
 import S from 'tiny-dedent';
 
 import packageJson from './package.json';
 import { string } from './build/strings-plugin';
-
 import userScriptMetadataBlock from './build/metadata.js';
 
+process.env.VERSION = packageJson.version;
 const production = !process.env.ROLLUP_WATCH;
 const sourcemap = production ? true : 'inline';
 
@@ -32,6 +33,9 @@ const entry = 'src/index.js';
 
 let devPlugins = [];
 if (!production) {
+  const DEV_VERSION = `0.${new Date().toISOString().replace(/[-:T]/g, '.').replace('Z', '')}-dev`;
+  process.env.VERSION = DEV_VERSION;
+
   devPlugins = [
     serve({
     // Launch in browser (default: false)
@@ -79,7 +83,7 @@ const config = [
     ],
     plugins: [
       ...devPlugins,
-
+      bakedEnv(),
       json(),
       resolve(),
       commonjs(),

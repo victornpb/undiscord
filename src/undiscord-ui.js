@@ -1,6 +1,6 @@
 const PREFIX = '[UNDISCORD]';
 
-import { version as VERSION } from '../package.json';
+import { VERSION } from 'process.env';
 
 import discordStyles from './ui/discord-styles.css';
 import undiscordStyles from './ui/main.css';

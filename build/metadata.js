@@ -28,7 +28,7 @@ export default function userScriptMetadataBlock() {
   const metadata = {
     name: pkg.nameFull,
     description: pkg.description,
-    version: pkg.version,
+    version: process.env.VERSION,
     author: pkg.author,
     homepageURL: pkg.homepage,
     supportURL: pkg.bugs.url,
@@ -38,9 +38,7 @@ export default function userScriptMetadataBlock() {
   };
 
   if (!production) {
-    const devVersion = new Date().toISOString().replace(/[-:T]/g, '.').replace('Z', '');
     metadata.name = metadata.name + ' [DEV]';
-    metadata.version = `0.${devVersion}-dev`;
     metadata.namespace = metadata.namespace + '_DEV';
 
     delete metadata.downloadURL;
