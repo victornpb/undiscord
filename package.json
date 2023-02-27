@@ -16,7 +16,7 @@
   "description": "Delete all messages in a Discord channel or DM (Bulk deletion)",
   "license": "MIT",
   "engines": {
-    "node": ">=12"
+    "node": ">=18"
   },
   "repository": {
     "type": "git",
@@ -49,20 +49,18 @@
   ],
   "sideEffects": false,
   "devDependencies": {
-    "@rollup/plugin-json": "^4.1.0",
-    "asciitable.js": "^1.0.3",
-    "eslint": "^8.13.0",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.4.0",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.70.2",
+    "@rollup/plugin-json": "^6.0.0",
+    "asciitable.js": "^2.0.1",
+    "eslint": "^8.35.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.2",
+    "rimraf": "^4.1.2",
+    "rollup": "^3.17.3",
+    "rollup-plugin-baked-env": "^1.0.1",
     "rollup-plugin-banner2": "^1.2.2",
     "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-serve": "^2.0.2",
-    "rollup-plugin-string": "^3.0.0",
     "tiny-dedent": "^1.0.2"
   },
   "husky": {
