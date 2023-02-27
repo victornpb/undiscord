@@ -13,7 +13,7 @@ import userScriptMetadataBlock from './build/metadata.js';
 
 process.env.VERSION = packageJson.version;
 const production = !process.env.ROLLUP_WATCH;
-const sourcemap = production ? true : 'inline';
+const sourcemap = production ? false : 'inline';
 
 const entry = 'src/index.js';
 
@@ -77,7 +77,7 @@ const config = [
       {
         file: packageJson.main,
         format: 'iife',
-        sourcemap: false,
+        sourcemap,
         // exports: 'default',
       },
     ],
