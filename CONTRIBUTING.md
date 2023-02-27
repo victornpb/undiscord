@@ -24,9 +24,13 @@ Also, do not commit changes to the `deleteDiscordMessages.user.js` file!
 
 -------------------------------------------------------------------------------
 
-# Now that you read that, this is what youo do:
+# Building the project
+# Now that you read that, this is what you do
 
-## Building the project
+#### Click to watch video (45 seconds):
+[![Video Instructions](https://img.youtube.com/vi/AKTCvzvcPig/0.jpg)](https://www.youtube.com/watch?v=AKTCvzvcPig)
+https://www.youtube.com/watch?v=AKTCvzvcPig
+
 
 If you're unfamilliar with compiled Javascript, this is how you do it:
 
