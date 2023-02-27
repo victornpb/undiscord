@@ -1,15 +1,17 @@
+import fs from 'fs';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import banner from 'rollup-plugin-banner2';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import livereload from 'rollup-plugin-livereload';
 import bakedEnv from 'rollup-plugin-baked-env';
 import S from 'tiny-dedent';
+import matrixToAsciiTable from 'asciitable.js';
 
-import packageJson from './package.json';
-import { string } from './build/strings-plugin';
-import userScriptMetadataBlock from './build/metadata.js';
+import { string } from './build/strings-plugin.mjs';
+import userScriptMetadataBlock from './build/metadata.mjs';
+const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
+const packageJson = loadJSON('./package.json');
 
 process.env.VERSION = packageJson.version;
 const production = !process.env.ROLLUP_WATCH;
@@ -64,7 +66,6 @@ if (!production) {
       `));
       }
     }),
-    livereload(),
   ];
 }
 
@@ -101,7 +102,6 @@ const config = [
 // generate a markdown table containing output options for the README
 function updateReadmeOutputTable() {
   function generateOutputDescription(rollupConfig) {
-    const matrixToAsciiTable = require('asciitable.js');
     const gihubTable = {
       row: {
         paddingLeft: '|',
@@ -137,7 +137,6 @@ function updateReadmeOutputTable() {
     const endIndex = str.indexOf(endString, startIndex + startString.length);
     return (startIndex !== -1 && endIndex !== -1) ? str.slice(0, startIndex + startString.length) + substitute + str.slice(endIndex) : str;
   }
-  const fs = require('fs');
   const readme = fs.readFileSync('README.md', 'utf8');
   const outputDescription = generateOutputDescription(config);
   const newReadme = replaceBetween(readme, '<!-- Output table (auto generated do not modify) -->', '<!-- END -->', `\n\n${outputDescription}\n\n`);

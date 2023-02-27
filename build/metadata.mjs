@@ -1,4 +1,6 @@
-import pkg from '../package.json';
+import fs from 'fs';
+const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
+const pkg = loadJSON('../package.json');
 
 //
 // Generate metadata block with information from package.json

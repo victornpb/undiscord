@@ -1,4 +1,4 @@
-const { createFilter } = require('rollup-pluginutils');
+import { createFilter } from 'rollup-pluginutils';
 
 export function string(opts = {}) {
   if (!opts.include) {
