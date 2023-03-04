@@ -147,42 +147,16 @@ function initUI() {
     $('div#deleteDelayValue').textContent = event.target.value + 'ms';
   });
 
-  // const fileSelection = $('input#importJson');
-  // fileSelection.onchange = () => {
-  //   const files = fileSelection.files;
-  //   const channelIdField = $('input#channelId');
-  //   if (files.length > 0) {
-  //     const file = files[0];
-  //     file.text().then(text => {
-  //       let json = JSON.parse(text);
-  //       let channels = Object.keys(json);
-  //       channelIdField.value = channels.join(',');
-  //     });
-  //   }
-  // };
-
-  $('button#loadLastImport').onclick = () => {
-    const lastImport = GM_getValue('undiscordLastImport');
-
-    if(typeof lastImport === 'undefined') return alert('No import found');
-
-    const { channelId, guildId, authorId } = lastImport;
-    $('input#channelId').value = channelId;
-    $('input#guildId').value = guildId;
-    $('input#authorId').value = authorId;
-  };
-
-  const fileSelection = $('input#importJson');
-
-  $('button#importJson').onclick = () => {
+  // import json
+  const fileSelection = $('input#importJsonInput');
+  $('button#importJsonBtn').onclick = () => {
     fileSelection.click();
   };
-
-  fileSelection.onchange = () => {
+  fileSelection.onchange = async () => {
     const files = fileSelection.files;
 
     // No files added
-    if (files.length === 0) return;
+    if (files.length === 0) return printLog('warn', ['No file selected.']);
 
     // Get channel id field to set it later
     const channelIdField = $('input#channelId');
@@ -193,12 +167,16 @@ function initUI() {
 
     // Set author id in case its not set already
     $('input#authorId').value = getAuthorId();
-
-    const file = files[0];
-    file.text().then(text => {
-      let json = JSON.parse(text);
-      channelIdField.value = Object.keys(json).join(',');
-    });
+    try {
+      const file = files[0];
+      const text = await file.text();
+      const json = JSON.parse(text);
+      const channelIds = Object.keys(json);
+      channelIdField.value = channelIds.join(',');
+      printLog('info', [`Loaded ${channelIds.length} channels.`]);
+    } catch(err) {
+      printLog('error', ['Error parsing file ', err]);
+    }
   };
 
   // redirect console logs to inside the window after setting up the UI
