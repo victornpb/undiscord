@@ -2,8 +2,8 @@ const PREFIX = '[UNDISCORD]';
 
 import { VERSION } from 'process.env';
 
-import discordStyles from './ui/discord-styles.css';
-import undiscordStyles from './ui/main.css';
+import themeCss from './ui/theme.css';
+import mainCss from './ui/main.css';
 import buttonHtml from './ui/undiscord-button.html';
 import undiscordTemplate from './ui/undiscord.html';
 
@@ -41,8 +41,8 @@ const $ = s => ui.undiscordWindow.querySelector(s);
 
 function initUI() {
 
-  insertCss(discordStyles);
-  insertCss(undiscordStyles);
+  insertCss(themeCss);
+  insertCss(mainCss);
 
   // create undiscord window
   const undiscordUI = replaceInterpolations(undiscordTemplate, {
