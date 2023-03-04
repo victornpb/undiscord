@@ -97,6 +97,7 @@ function initUI() {
 
   // register event listeners
   $('#hide').onclick = toggleWindow;
+  $('#toggleSidebar').onclick = ()=> ui.undiscordWindow.classList.toggle('hide-sidebar');
   $('button#start').onclick = startAction;
   $('button#stop').onclick = stopAction;
   $('button#clear').onclick = () => ui.logArea.innerHTML = '';

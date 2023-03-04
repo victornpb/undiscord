@@ -197,6 +197,10 @@
     min-width: 96px;
     min-height: 38px;
 }
+#undiscord .sizeMedium.icon {
+    width: 38px;
+    min-width: 38px;
+}
 
 /* lookFilled colorPrimary */
 #undiscord .accent {

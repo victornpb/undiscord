@@ -70,6 +70,13 @@
     flex-grow: 1;
 }
 
+#undiscord.hide-sidebar .sidebar {
+    display: none;
+}
+#undiscord.hide-sidebar .main {
+    max-width: 100%;
+}
+
 #undiscord #logArea {
     font-family: Consolas, Liberation Mono, Menlo, Courier, monospace;
     font-size: .75rem;
