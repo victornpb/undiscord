@@ -154,6 +154,16 @@
     background-color: var(--brand-experiment);
 } */
 
+#undiscord .importJson {
+    display: flex;
+    flex-direction: row;
+}
+
+#undiscord .importJson button {
+    margin-left: 5px;
+    width: fit-content;
+}
+
 /**** functional classes ****/
 
 #undiscord.redact .priv {

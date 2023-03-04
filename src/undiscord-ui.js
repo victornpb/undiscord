@@ -161,6 +161,46 @@ function initUI() {
   //   }
   // };
 
+  $('button#loadLastImport').onclick = () => {
+    const lastImport = GM_getValue('undiscordLastImport');
+
+    if(typeof lastImport === 'undefined') return alert('No import found');
+
+    const { channelId, guildId, authorId } = lastImport;
+    $('input#channelId').value = channelId;
+    $('input#guildId').value = guildId;
+    $('input#authorId').value = authorId;
+  };
+
+  const fileSelection = $('input#importJson');
+
+  $('button#importJson').onclick = () => {
+    fileSelection.click();
+  };
+
+  fileSelection.onchange = () => {
+    const files = fileSelection.files;
+
+    // No files added
+    if (files.length === 0) return;
+
+    // Get channel id field to set it later
+    const channelIdField = $('input#channelId');
+
+    // Force the guild id to be ourself (@me)
+    const guildIdField = $('input#guildId');
+    guildIdField.value = '@me';
+
+    // Set author id in case its not set already
+    $('input#authorId').value = getAuthorId();
+
+    const file = files[0];
+    file.text().then(text => {
+      let json = JSON.parse(text);
+      channelIdField.value = Object.keys(json).join(',');
+    });
+  };
+
   // redirect console logs to inside the window after setting up the UI
   setLogFn(printLog);
 

@@ -70,11 +70,10 @@
                         Import JSON
                         <a href="{{WIKI}}/importJson" title="Help" target="_blank">help</a>
                     </legend>
-                    <div class="sectionDescription">
-                        The import feature will be added back in the future.
-                    </div>
-                    <div class="">
-                        <button id="importJson" disabled>Import</button>
+                    <div class="importJson">
+                        <button id="importJson">Import</button>
+                        <input type="file" id="importJson" hidden>
+                        <button id="loadLastImport">Load last import</button>
                     </div>
                 </fieldset>
             </details>
