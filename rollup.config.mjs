@@ -34,10 +34,14 @@ const entry = 'src/index.js';
 
 let devPlugins = [];
 if (!production) {
-  const DEV_VERSION = `0.${new Date().toISOString().replace(/[-:T]/g, '.').replace('Z', '')}-dev`;
-  process.env.VERSION = DEV_VERSION;
-
   devPlugins = [
+    {
+      buildStart() {
+        const DEV_VERSION = `0.${new Date().toISOString().replace(/[-:T]/g, '.').replace('Z', '')}-dev`;
+        process.env.VERSION = DEV_VERSION;
+      }
+    },
+
     serve({
     // Launch in browser (default: false)
     // open: true,
