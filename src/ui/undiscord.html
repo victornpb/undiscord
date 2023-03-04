@@ -74,6 +74,9 @@
                         <button id="importJsonBtn">Import</button>
                         <input type="file" id="importJsonInput" hidden>
                     </div>
+                    <div class="sectionDescription">
+                        Select the "messages/index.json" file from the discord archive.
+                    </div>
                 </fieldset>
             </details>
             <hr>
@@ -127,13 +130,13 @@
                         <div class="input-wrapper">
                             <input id="minId" type="text" placeholder="After a message" priv>
                         </div>
-                        <button id="pickMessageAfter">select</button>
+                        <button id="pickMessageAfter">Pick</button>
                     </div>
                     <div class="multiInput">
                         <div class="input-wrapper">
                             <input id="maxId" type="text" placeholder="Before a message" priv>
                         </div>
-                        <button id="pickMessageBefore">select</button>
+                        <button id="pickMessageBefore">Pick</button>
                     </div>
                     <div class="sectionDescription">
                         Specify an interval to delete messages.
@@ -141,7 +144,7 @@
                 </fieldset>
             </details>
             <details>
-                <summary>Date</summary>
+                <summary>Date interval</summary>
                 <fieldset>
                     <legend>
                         After date
