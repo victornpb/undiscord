@@ -8,6 +8,8 @@ Only make changes to the files inside the `src/` folder, otherwise I can't merge
 
 Also, do not commit changes to the `deleteDiscordMessages.user.js` file!
 
+Do not alter the version, because I may have to change this depending on the order of things that get merged into main. So please leave it as is to avoid conflicts.
+
 ## Oddities about this project
 
 > This is NOT your typical javascript App, so this project has a few oddities:
