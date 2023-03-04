@@ -1,6 +1,8 @@
 {
   "name": "undiscord",
   "nameFull": "Undiscord",
+  "version": "5.0.3",
+  "description": "Delete all messages in a Discord channel or DM (Bulk deletion)",
   "userScript": {
     "namespace": "https://github.com/victornpb/deleteDiscordMessages",
     "match": [
@@ -12,8 +14,6 @@
     "contributionURL": "https://www.buymeacoffee.com/vitim",
     "grant": "none"
   },
-  "version": "5.0.3",
-  "description": "Delete all messages in a Discord channel or DM (Bulk deletion)",
   "license": "MIT",
   "engines": {
     "node": ">=18"
@@ -28,9 +28,6 @@
   "homepage": "https://github.com/victornpb/undiscord",
   "author": "victornpb",
   "main": "deleteDiscordMessages.user.js",
-  "module": "dist/foo-bar.esm.js",
-  "unpkg": "dist/foo-bar.js",
-  "globalVar": "FooBar",
   "scripts": {
     "start": "npm run watch",
     "build": "rollup -c",
@@ -44,18 +41,21 @@
     "dist"
   ],
   "keywords": [
-    "foo",
-    "bar"
+    "delete",
+    "messages",
+    "discord",
+    "wipe",
+    "purge",
+    "clean",
+    "bulk"
   ],
-  "sideEffects": false,
   "devDependencies": {
     "@rollup/plugin-json": "^6.0.0",
-    "asciitable.js": "^2.0.1",
     "eslint": "^8.35.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.2",
-    "rimraf": "^4.1.2",
-    "rollup": "^3.17.3",
+    "rimraf": "^4.3.0",
+    "rollup": "^3.18.0",
     "rollup-plugin-baked-env": "^1.0.1",
     "rollup-plugin-banner2": "^1.2.2",
     "rollup-plugin-commonjs": "^10.1.0",
