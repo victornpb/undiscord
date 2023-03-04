@@ -54,6 +54,8 @@ Is prefered that _issues_ follow a certain format. If you're not familiar with b
 
 If you believe you found a bug please file an [issue](https://github.com/victornpb/undiscord/issues), but please fill the issue template.
 
+If you are looking to contribute please read the [CONTRIBUTING](./CONTRIBUTING.md) first.
+
 ### Copy paste version
 Looking for the old Copy/Paste version? [here](https://github.com/victornpb/undiscord/wiki/Copy-paste-method)
 
