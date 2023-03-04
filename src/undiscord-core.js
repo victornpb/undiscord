@@ -170,7 +170,7 @@ class UndiscordCore {
       }
       else {
         log.verb('Ended because API returned an empty page.');
-        if (this.state.grandTotal - this.state.offset > 0) log.warn('[End condition A] if you see this please report.', this.state); // I don't remember why this was here. (looks like messagesToDelete==0 && skippedMessages==0 is enough
+        if (this.state.grandTotal - this.state.offset > 0) log.warn('[End condition A].', this.state); // I don't remember why this was here. (looks like messagesToDelete==0 && skippedMessages==0 is enough
         else log.warn('[End condition B] if you see this please report.', this.state);
         if (isJob) break; // break without stopping if this is part of a job
         this.state.running = false;
