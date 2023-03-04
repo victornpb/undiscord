@@ -14,7 +14,7 @@ import insertCss from './utils/insertCss';
 import messagePicker from './utils/messagePicker';
 import { getToken, getAuthorId, getGuildId, getChannelId } from './utils/getIds';
 
-import { setLogFn } from './utils/log.js';
+import { log, setLogFn } from './utils/log.js';
 import { replaceInterpolations, msToHMS } from './utils/helpers';
 
 // -------------------------- User interface ------------------------------- //
@@ -147,6 +147,7 @@ function initUI() {
     $('div#deleteDelayValue').textContent = event.target.value + 'ms';
   });
 
+
   // import json
   const fileSelection = $('input#importJsonInput');
   $('button#importJsonBtn').onclick = () => {
@@ -156,7 +157,7 @@ function initUI() {
     const files = fileSelection.files;
 
     // No files added
-    if (files.length === 0) return printLog('warn', ['No file selected.']);
+    if (files.length === 0) return log.warn('No file selected.');
 
     // Get channel id field to set it later
     const channelIdField = $('input#channelId');
@@ -173,9 +174,9 @@ function initUI() {
       const json = JSON.parse(text);
       const channelIds = Object.keys(json);
       channelIdField.value = channelIds.join(',');
-      printLog('info', [`Loaded ${channelIds.length} channels.`]);
+      log.info(`Loaded ${channelIds.length} channels.`);
     } catch(err) {
-      printLog('error', ['Error parsing file ', err]);
+      log.error('Error parsing file!', err);
     }
   };
 
