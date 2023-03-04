@@ -153,7 +153,10 @@ class UndiscordCore {
       // if there are messages to delete, delete them
       if (this.state._messagesToDelete.length > 0) {
 
-        if (await this.confirm() === false) break;
+        if (await this.confirm() === false) {
+          this.state.running = false; // break out of a job
+          break; // immmediately stop this iteration
+        }
 
         await this.deleteMessagesFromList();
       }
