@@ -202,6 +202,10 @@
     min-width: 38px;
 }
 
+#undiscord sup {
+    vertical-align: top;
+}
+
 /* lookFilled colorPrimary */
 #undiscord .accent {
     background-color: var(--brand-experiment);

@@ -324,8 +324,8 @@ class UndiscordCore {
       log.debug(
         // `${((this.state.delCount + 1) / this.state.grandTotal * 100).toFixed(2)}%`,
         `[${this.state.delCount + 1}/${this.state.grandTotal}] `+
-        `<b>${redact(message.author.username + '#' + message.author.discriminator)}</b> `+
-        `<sup>${redact(new Date(message.timestamp).toLocaleString())}</sup>`+
+        `<sup>${new Date(message.timestamp).toLocaleString()}</sup> `+
+        `<b>${redact(message.author.username + '#' + message.author.discriminator)}</b>`+
         `: <i>${redact(message.content).replace(/\n/g, '↵')}</i>`+
         (message.attachments.length ? redact(JSON.stringify(message.attachments)) : ''),
         `<sup>{ID:${redact(message.id)}}</sup>`
