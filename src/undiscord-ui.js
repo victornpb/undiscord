@@ -208,22 +208,22 @@ function setupUndiscordCore() {
     console.log(PREFIX, 'onProgress', state, stats);
     let max = state.grandTotal;
     const value = state.delCount + state.failCount;
+    max = Math.max(max, value, 0); // clamp max
 
+    // status bar
     const percent = value >= 0 && max ? Math.round(value / max * 100) + '%' : '';
     const elapsed = msToHMS(Date.now() - stats.startTime.getTime());
     const remaining = msToHMS(stats.etr);
+    ui.percent.innerHTML = `${percent} (${value}/${max}) Elapsed: ${elapsed} Remaining: ${remaining}`;
 
-    if (value && max && value > max) max = value;
-    ui.progressIcon.setAttribute('max', max);
-    ui.progressMain.setAttribute('max', max);
     ui.progressIcon.value = value;
     ui.progressMain.value = value;
-    ui.progressIcon.style.display = max ? '' : 'none';
-    ui.progressMain.style.display = max ? '' : 'none';
-    // ui.percent.style.display = max ? '' : 'none';
-    ui.percent.innerHTML = `${percent} (${value}/${max}) Elapsed: ${elapsed} Remaining: ${remaining}`;
+
     // indeterminate progress bar
-    if (!max) {
+    if (max) {
+      ui.progressIcon.setAttribute('max', max);
+      ui.progressMain.setAttribute('max', max);
+    } else {
       ui.progressIcon.removeAttribute('value');
       ui.progressMain.removeAttribute('value');
       ui.percent.innerHTML = '...';
