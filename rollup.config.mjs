@@ -10,7 +10,7 @@ import S from 'tiny-dedent';
 import { string } from './build/strings-plugin.mjs';
 import userScriptMetadataBlock from './build/metadata.mjs';
 const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
-const packageJson = loadJSON('./package.json');
+let packageJson = loadJSON('./package.json');
 
 process.env.VERSION = packageJson.version;
 const production = !process.env.ROLLUP_WATCH;
@@ -37,6 +37,7 @@ if (!production) {
   devPlugins = [
     {
       buildStart() {
+        packageJson = loadJSON('./package.json');
         const DEV_VERSION = `0.${new Date().toISOString().replace(/[-:T]/g, '.').replace('Z', '')}-dev`;
         process.env.VERSION = DEV_VERSION;
       }

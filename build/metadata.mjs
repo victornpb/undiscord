@@ -1,6 +1,6 @@
 import fs from 'fs';
 const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
-const pkg = loadJSON('../package.json');
+
 
 //
 // Generate metadata block with information from package.json
@@ -27,6 +27,8 @@ function generateComment(manifest) {
 }
 
 export default function userScriptMetadataBlock() {
+  const pkg = loadJSON('../package.json');
+
   const metadata = {
     name: pkg.nameFull,
     description: pkg.description,
