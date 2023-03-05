@@ -253,7 +253,13 @@ async function startAction() {
   console.log(PREFIX, 'startAction');
 
   // general
-  const authToken = getToken();
+  let authToken;
+  try {
+    authToken = getToken();
+  } catch (err) {
+    console.error(err);
+    log.error(err);
+  }
   const authorId = $('input#authorId').value.trim();
   const guildId = $('input#guildId').value.trim();
   const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
@@ -278,15 +284,16 @@ async function startAction() {
   ui.logArea.innerHTML = '';
 
   // validate input
-  if (!authToken) return printLog('error', ['Could not detect the authorization token!']) || printLog('info', ['Please make sure Undiscord is up to date']);
-  else if (!guildId) return printLog('error', ['You must provide a Server ID!']);
+  if (!authToken) return log.error('Could not detect the authorization token!') || log.info('Please make sure Undiscord is up to date');
+  else if (!guildId) return log.error('You must provide a Server ID!');
 
+  undiscordCore.resetState();
   undiscordCore.options = {
     ...undiscordCore.options,
     authToken,
     authorId,
     guildId,
-    channelId: channelIds.length === 1 ? channelIds[0] : null, // single or multiple channel
+    channelId: channelIds.length === 1 ? channelIds[0] : undefined, // single or multiple channel
     minId: minId || minDate,
     maxId: maxId || maxDate,
     content,
@@ -308,8 +315,12 @@ async function startAction() {
       channelId: x.ch,
     }));
 
-    undiscordCore.resetState();
-    undiscordCore.runBatch(jobs);
+    try {
+      undiscordCore.runBatch(jobs);
+    } catch (err) {
+      console.error(err);
+      log.error(err);
+    }
   }
   // multiple channels
   else if (channelIds.length > 1) {
@@ -318,13 +329,21 @@ async function startAction() {
       channelId: ch,
     }));
 
-    undiscordCore.resetState();
-    undiscordCore.runBatch(jobs);
+    try {
+      undiscordCore.runBatch(jobs);
+    } catch (err) {
+      console.error(err);
+      log.error(err);
+    }
   }
   // single channel
   else {
-    undiscordCore.resetState();
-    undiscordCore.run();
+    try {
+      undiscordCore.run();
+    } catch (err) {
+      console.error(err);
+      log.error(err);
+    }
   }
 }
 
