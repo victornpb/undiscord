@@ -92,7 +92,7 @@ class UndiscordCore {
       // set options
       this.options = {
         ...this.options, // keep current options
-        job, // override with options for that job
+        ...job, // override with options for that job
       };
 
       await this.run(true);
