@@ -10,6 +10,7 @@
       "https://*.discord.com/channels/*",
       "https://*.discord.com/login"
     ],
+    "icon":"https://github.com/victornpb/undiscord/images/icon128.png",
     "downloadURL": "https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js",
     "contributionURL": "https://www.buymeacoffee.com/vitim",
     "grant": "none"
