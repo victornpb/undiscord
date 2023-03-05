@@ -151,9 +151,9 @@ function initUI() {
 
   // import json
   const fileSelection = $('input#importJsonInput');
-  $('button#importJsonBtn').onclick = () => {
-    fileSelection.click();
-  };
+  // $('button#importJsonBtn').onclick = () => {
+  //   fileSelection.click();
+  // };
   fileSelection.onchange = async () => {
     const files = fileSelection.files;
 
