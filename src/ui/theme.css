@@ -100,7 +100,6 @@
     background-color: var(--input-background);
     border: none;
     transition: border-color 0.2s ease-in-out 0s;
-
     padding: 10px;
     height: 40px;
 }
@@ -127,8 +126,7 @@
 #undiscord input[type="password"],
 #undiscord input[type="datetime-local"],
 #undiscord input[type="number"],
-#undiscord input[type="range"]
-{
+#undiscord input[type="range"] {
     font-size: 16px;
     box-sizing: border-box;
     width: 100%;
@@ -197,6 +195,7 @@
     min-width: 96px;
     min-height: 38px;
 }
+
 #undiscord .sizeMedium.icon {
     width: 38px;
     min-width: 38px;
@@ -218,7 +217,6 @@
 #undiscord .positive {
     background-color: var(--button-positive-background);
 }
-
 
 #undiscord .info {
     font-size: 12px;
@@ -262,9 +260,7 @@
     visibility: visible;
 }
 
-
 /**** functional classes ****/
-
 #undiscord.redact .priv {
     display: none !important;
 }
@@ -274,9 +270,11 @@
     background-color: var(--primary-700) !important;
     cursor: default;
 }
+
 #undiscord.redact x:hover {
     position: relative;
 }
+
 #undiscord.redact x:hover::after {
     content: "Redacted information (Streamer mode: ON)";
     position: absolute;
@@ -329,21 +327,27 @@
 #undiscord .log {
     margin-bottom: 0.25em;
 }
+
 #undiscord .log-debug {
     color: inherit;
 }
+
 #undiscord .log-info {
-    color:#00b0f4;
+    color: #00b0f4;
 }
+
 #undiscord .log-verb {
-    color:#72767d;
+    color: #72767d;
 }
+
 #undiscord .log-warn {
-    color:#faa61a;
+    color: #faa61a;
 }
+
 #undiscord .log-error {
-    color:#f04747;
+    color: #f04747;
 }
+
 #undiscord .log-success {
-    color:#43b581;
+    color: #43b581;
 }

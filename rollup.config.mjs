@@ -91,10 +91,25 @@ const config = [
       json(),
       resolve(),
       commonjs(),
+
       banner(userScriptMetadataBlock),
+
+      // import html as string
       string({
-        // Required to be specified
-        include: ['**/*.html', '**/*.css'],
+        include: ['**/*.html'],
+      }),
+
+      // import css as string
+      string({
+        include: ['**/*.css'],
+        transform(code, id) {
+          // compact CSS
+          return code
+            .replace(/^\s*\n/gm, '') // remove empty lines
+            .replace(/\{\n */g, '{ ') // remove line break after {
+            .replace(/;\n */g, '; ') // remove line breaks after ;
+            .replace(/;\s(\/\*.+\*\/)\n/g,'; $1 '); // remove line break after comments on properties
+        }
       }),
     ]
   },
