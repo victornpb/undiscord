@@ -308,7 +308,8 @@ async function startAction() {
   };
 
   // multiple guilds and channels
-  if (0) {
+  const FALSE = false;
+  if (FALSE) {
     // TODO: import feature
     const jobs = [].map(x => ({
       guildId: x.guildId,
