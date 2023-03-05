@@ -11,10 +11,18 @@
 
 #undicord-btn progress {
     position: absolute;
-    top: 7px;
-    left: 5px;
-    width: 14px;
-    height: 14px;
+    top: 23px;
+    left: -4px;
+    width: 32px;
+    height: 12px;
+    display: none;
+}
+
+#undicord-btn.running {
+    color: var(--button-danger-background) !important;
+}
+#undicord-btn.running progress {
+    display: block;
 }
 
 /**** Undiscord Interface ****/

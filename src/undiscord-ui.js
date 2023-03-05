@@ -199,7 +199,7 @@ function setupUndiscordCore() {
     $('#start').disabled = true;
     $('#stop').disabled = false;
 
-    ui.progressIcon.style.display = 'block';
+    ui.undiscordBtn.classList.add('running');
     ui.progressMain.style.display = 'block';
     ui.percent.style.display = 'block';
   };
@@ -243,8 +243,7 @@ function setupUndiscordCore() {
     console.log(PREFIX, 'onStop', state, stats);
     $('#start').disabled = false;
     $('#stop').disabled = true;
-
-    ui.progressIcon.style.display = 'none';
+    ui.undiscordBtn.classList.remove('running');
     ui.progressMain.style.display = 'none';
     ui.percent.style.display = 'none';
   };
