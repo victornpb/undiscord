@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.1.0
+// @version         5.1.1
 // @author          victornpb
 // @homepageURL     https://github.com/victornpb/undiscord
 // @supportURL      https://github.com/victornpb/undiscord/issues
@@ -10,7 +10,7 @@
 // @match           https://*.discord.com/login
 // @license         MIT
 // @namespace       https://github.com/victornpb/deleteDiscordMessages
-// @icon            https://github.com/victornpb/undiscord/images/icon128.png
+// @icon            https://victornpb.github.io/undiscord/images/icon128.png
 // @downloadURL     https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
 // @contributionURL https://www.buymeacoffee.com/vitim
 // @grant           none
@@ -19,7 +19,7 @@
 	'use strict';
 
 	/* rollup-plugin-baked-env */
-	const VERSION = "5.1.0";
+	const VERSION = "5.1.1";
 
 	var themeCss = (`
 /* undiscord window */
