@@ -75,6 +75,8 @@ class UndiscordCore {
       _seachResponse: null,
       _messagesToDelete: [],
       _skippedMessages: [],
+
+      _messagesToDeleteCache: [],
     };
 
     this.options.askForConfirmation = true;
@@ -219,6 +221,36 @@ class UndiscordCore {
     }
   }
 
+  async prefetch() {
+    log.info('Prefetching messages...');
+    this.state.running = true;
+    const PAGE_SIZE = 25;
+    do {
+      // Search messages
+      const data = await this.search();
+      var total = data.total_results;
+      // Process results and find which messages should be deleted
+      await this.filterResponse();
+
+      //fill buffer
+      this.state._messagesToDeleteCache.push(...this.state._messagesToDelete);
+      this.state.offset += PAGE_SIZE;
+
+      log.verb(`[${this.state._messagesToDeleteCache.length} / ${total}] Found ${this.state._messagesToDelete.length} in the current page. (Skipped: ${this.state._skippedMessages.length} Offset: ${this.state.offset})`);
+      await wait(this.options.searchDelay);
+
+      if (this.onProgress) this.onProgress(this.state, this.stats);
+      if (!this.state.running) break;
+    }
+    while (this.state.offset < total);
+    log.success(`Pre fetched a total of ${this.state._messagesToDeleteCache.length} messages.`);
+
+    // move the prefetched data to the normal state
+    this.state.offset = 0;
+    this.state._messagesToDelete = this.state._messagesToDeleteCache;
+    this.state._messagesToDeleteCache = [];
+  }
+
   async search() {
     let API_SEARCH_URL;
     if (this.options.guildId === '@me') API_SEARCH_URL = `https://discord.com/api/v9/channels/${this.options.channelId}/messages/`; // DMs
@@ -266,7 +298,7 @@ class UndiscordCore {
         const w = (await resp.json()).retry_after * 1000;
         this.stats.throttledCount++;
         this.stats.throttledTotalTime += w;
-        this.stats.searchDelay += w; // increase delay
+        this.options.searchDelay += w; // increase delay
         log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
         this.printStats();
         log.verb(`Cooling down for ${w * 2}ms before retrying...`);

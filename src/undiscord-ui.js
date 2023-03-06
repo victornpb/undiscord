@@ -307,6 +307,10 @@ async function startAction() {
     // maxAttempt: 2,
   };
 
+  if ($('#prefetch').checked) {
+    return undiscordCore.prefetch();
+  }
+
   // multiple guilds and channels
   const FALSE = false;
   if (FALSE) {
