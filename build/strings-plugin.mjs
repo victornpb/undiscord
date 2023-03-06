@@ -1,4 +1,4 @@
-const { createFilter } = require('rollup-pluginutils');
+import { createFilter } from 'rollup-pluginutils';
 
 export function string(opts = {}) {
   if (!opts.include) {
@@ -12,6 +12,7 @@ export function string(opts = {}) {
 
     transform(code, id) {
       if (filter(id)) {
+        if (opts.transform) code = opts.transform(code, id, opts);
         return {
           code:  'export default (`\n'+ code + '\n`);',
           map: { mappings: '' }

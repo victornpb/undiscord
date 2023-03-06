@@ -1,5 +1,6 @@
-// const pkg = require('../package.json');
-import pkg from '../package.json';
+import fs from 'fs';
+const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
+
 
 //
 // Generate metadata block with information from package.json
@@ -25,11 +26,13 @@ function generateComment(manifest) {
   ].join('\n');
 }
 
-export default () => {
+export default function userScriptMetadataBlock() {
+  const pkg = loadJSON('../package.json');
+
   const metadata = {
     name: pkg.nameFull,
     description: pkg.description,
-    version: pkg.version,
+    version: process.env.VERSION,
     author: pkg.author,
     homepageURL: pkg.homepage,
     supportURL: pkg.bugs.url,
@@ -39,12 +42,15 @@ export default () => {
   };
 
   if (!production) {
+    metadata.name = metadata.name + ' [DEV]';
+    metadata.namespace = metadata.namespace + '_DEV';
+
     delete metadata.downloadURL;
     delete metadata.updateURL;
     delete metadata.homepageURL;
-    metadata.version = new Date().toISOString();
-    // metadata.namespace = 'foobar';
+
+    metadata.downloadURL = metadata.updateURL = metadata.homepageURL = 'http://localhost:10001/deleteDiscordMessages.user.js';
   }
 
   return generateComment(metadata);
-};
+}

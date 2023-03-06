@@ -21,6 +21,7 @@
     padding: 0 16px;
     display: flex;
     color: var(--header-secondary);
+    cursor: grab;
 }
 
 #undiscord .header .icon {
@@ -45,7 +46,7 @@
     margin-right: 16px;
 }
 
-#undiscord .header .spacer {
+#undiscord .spacer {
     flex-grow: 1;
 }
 
@@ -59,8 +60,6 @@
 
 #undiscord legend,
 #undiscord label {
-    display: block;
-    width: 100%;
     color: var(--header-secondary);
     font-size: 12px;
     line-height: 16px;
@@ -101,7 +100,6 @@
     background-color: var(--input-background);
     border: none;
     transition: border-color 0.2s ease-in-out 0s;
-
     padding: 10px;
     height: 40px;
 }
@@ -127,7 +125,8 @@
 #undiscord input[type="search"],
 #undiscord input[type="password"],
 #undiscord input[type="datetime-local"],
-#undiscord input[type="number"] {
+#undiscord input[type="number"],
+#undiscord input[type="range"] {
     font-size: 16px;
     box-sizing: border-box;
     width: 100%;
@@ -197,6 +196,15 @@
     min-height: 38px;
 }
 
+#undiscord .sizeMedium.icon {
+    width: 38px;
+    min-width: 38px;
+}
+
+#undiscord sup {
+    vertical-align: top;
+}
+
 /* lookFilled colorPrimary */
 #undiscord .accent {
     background-color: var(--brand-experiment);
@@ -209,7 +217,6 @@
 #undiscord .positive {
     background-color: var(--button-positive-background);
 }
-
 
 #undiscord .info {
     font-size: 12px;
@@ -251,4 +258,96 @@
 #undiscord .scroll:hover::-webkit-scrollbar-thumb,
 #undiscord .scroll:hover::-webkit-scrollbar-track {
     visibility: visible;
+}
+
+/**** functional classes ****/
+#undiscord.redact .priv {
+    display: none !important;
+}
+
+#undiscord.redact x:not(:active) {
+    color: transparent !important;
+    background-color: var(--primary-700) !important;
+    cursor: default;
+}
+
+#undiscord.redact x:hover {
+    position: relative;
+}
+
+#undiscord.redact x:hover::after {
+    content: "Redacted information (Streamer mode: ON)";
+    position: absolute;
+    display: inline-block;
+    top: -32px;
+    left: -20px;
+    padding: 4px;
+    width: 150px;
+    font-size: 8pt;
+    text-align: center;
+    white-space: pre-wrap;
+    background-color: var(--background-floating);
+    -webkit-box-shadow: var(--elevation-high);
+    box-shadow: var(--elevation-high);
+    color: var(--text-normal);
+    border-radius: 5px;
+    pointer-events: none;
+}
+
+#undiscord.redact [priv] {
+    -webkit-text-security: disc !important;
+}
+
+#undiscord :disabled {
+    display: none;
+}
+
+/**** layout and utility classes ****/
+
+#undiscord,
+#undiscord * {
+    box-sizing: border-box;
+}
+
+#undiscord .col {
+    display: flex;
+    flex-direction: column;
+}
+
+#undiscord .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#undiscord .mb1 {
+    margin-bottom: 8px;
+}
+
+#undiscord .log {
+    margin-bottom: 0.25em;
+}
+
+#undiscord .log-debug {
+    color: inherit;
+}
+
+#undiscord .log-info {
+    color: #00b0f4;
+}
+
+#undiscord .log-verb {
+    color: #72767d;
+}
+
+#undiscord .log-warn {
+    color: #faa61a;
+}
+
+#undiscord .log-error {
+    color: #f04747;
+}
+
+#undiscord .log-success {
+    color: #43b581;
 }

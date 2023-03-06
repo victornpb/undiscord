@@ -25,7 +25,7 @@
                 <fieldset>
                     <legend>
                         Author ID
-                        <a href="{{WIKI}}/authorId" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/authorId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
@@ -38,7 +38,7 @@
                 <fieldset>
                     <legend>
                         Server ID
-                        <a href="{{WIKI}}/guildId" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/guildId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
@@ -50,7 +50,7 @@
                 <fieldset>
                     <legend>
                         Channel ID
-                        <a href="{{WIKI}}/channelId" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/channelId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput mb1">
                         <div class="input-wrapper">
@@ -64,17 +64,19 @@
                 </fieldset>
             </details>
             <details>
-                <summary>Import</summary>
+                <summary>Wipe Archive</summary>
                 <fieldset>
                     <legend>
-                        Import JSON
-                        <a href="{{WIKI}}/importJson" title="Help" target="_blank">help</a>
+                        Import index.json
+                        <a href="{{WIKI}}/importJson" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
-                    <div class="sectionDescription">
-                        The import feature will be added back in the future.
+                    <div class="input-wrapper">
+                        <input type="file" id="importJsonInput" accept="application/json,.json" style="width:100%";>
                     </div>
-                    <div class="">
-                        <button id="importJson" disabled>Import</button>
+                    <div class="sectionDescription">
+                        <br>
+                        After requesting your data from discord, you can import it here.<br>
+                        Select the "messages/index.json" file from the discord archive.
                     </div>
                 </fieldset>
             </details>
@@ -84,7 +86,7 @@
                 <fieldset>
                     <legend>
                         Search
-                        <a href="{{WIKI}}/filters" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/filters" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
                         <input id="search" type="text" placeholder="Containing text" priv>
@@ -106,7 +108,7 @@
                 <fieldset>
                     <legend>
                         Pattern
-                        <a href="{{WIKI}}/pattern" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/pattern" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="sectionDescription">
                         Delete messages that match the regular expression
@@ -123,19 +125,19 @@
                 <fieldset>
                     <legend>
                         Interval of messages
-                        <a href="{{WIKI}}/messageId" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/messageId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput mb1">
                         <div class="input-wrapper">
                             <input id="minId" type="text" placeholder="After a message" priv>
                         </div>
-                        <button id="pickMessageAfter">select</button>
+                        <button id="pickMessageAfter">Pick</button>
                     </div>
                     <div class="multiInput">
                         <div class="input-wrapper">
                             <input id="maxId" type="text" placeholder="Before a message" priv>
                         </div>
-                        <button id="pickMessageBefore">select</button>
+                        <button id="pickMessageBefore">Pick</button>
                     </div>
                     <div class="sectionDescription">
                         Specify an interval to delete messages.
@@ -143,18 +145,18 @@
                 </fieldset>
             </details>
             <details>
-                <summary>Date</summary>
+                <summary>Date interval</summary>
                 <fieldset>
                     <legend>
                         After date
-                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper mb1">
                         <input id="minDate" type="datetime-local" title="Messages posted AFTER this date">
                     </div>
                     <legend>
                         Before date
-                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
                         <input id="maxDate" type="datetime-local" title="Messages posted BEFORE this date">
@@ -173,19 +175,21 @@
                 <fieldset>
                     <legend>
                         Search delay
-                        <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="searchDelay" type="number" value="100" step="100">
+                        <input id="searchDelay" type="range" value="1000" step="50" min="50" max="5000">
+                        <div id="searchDelayValue"></div>
                     </div>
                 </fieldset>
                 <fieldset>
                     <legend>
                         Delete delay
-                        <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="deleteDelay" type="number" value="1000" step="100">
+                        <input id="deleteDelay" type="range" value="1000" step="50" min="50" max="5000">
+                        <div id="deleteDelayValue"></div>
                     </div>
                     <br>
                     <div class="sectionDescription">
@@ -204,28 +208,31 @@
         <div class="main col">
             <div class="tbar col">
                 <div class="row">
-                    <button id="start" class="sizeMedium accent">Start</button>
-                    <button id="stop" class="sizeMedium danger" disabled>Stop</button>
+                    <button id="toggleSidebar" class="sizeMedium icon">☰</button>
+                    <button id="start" class="sizeMedium danger" style="width: 150px;" title="Start the deletion process">▶︎ Delete</button>
+                    <button id="stop" class="sizeMedium" title="Stop the deletion process" disabled>🛑 Stop</button>
                     <button id="clear" class="sizeMedium">Clear log</button>
                     <label class="row" title="Hide sensitive information on your screen for taking screenshots">
                         <input id="redact" type="checkbox" checked> Streamer mode
                     </label>
                 </div>
                 <div class="row">
-                    <progress id="progressBar" value="-1"></progress>
+                    <progress id="progressBar" style="display:none;"></progress>
                 </div>
             </div>
             <pre id="logArea" class="logarea scroll">
                 <center>
-                    <div>Star <a href="{{HOME}}" target="_blank">this project</a> on GitHub!</div>
-                    <div><a href="{{HOME}}/discussions" target="_blank">Issues or help</a></div>
+                    <div>Star <a href="{{HOME}}" target="_blank" rel="noopener noreferrer">this project</a> on GitHub!</div>
+                    <div><a href="{{HOME}}/discussions" target="_blank" rel="noopener noreferrer">Issues or help</a></div>
                 </center>
             </pre>
             <div class="tbar footer row">
+                <div id="progressPercent"></div>
+                <span class="spacer"></span>
                 <label>
                     <input id="autoScroll" type="checkbox" checked> Auto scroll
                 </label>
-                <span id="progressPercent"></span>
+                <div class="resize-handle"></div>
             </div>
         </div>
     </div>

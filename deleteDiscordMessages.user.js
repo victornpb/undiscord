@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.0.3
+// @version         5.1.0
 // @author          victornpb
 // @homepageURL     https://github.com/victornpb/undiscord
 // @supportURL      https://github.com/victornpb/undiscord/issues
@@ -10,455 +10,130 @@
 // @match           https://*.discord.com/login
 // @license         MIT
 // @namespace       https://github.com/victornpb/deleteDiscordMessages
+// @icon            https://github.com/victornpb/undiscord/images/icon128.png
 // @downloadURL     https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
 // @contributionURL https://www.buymeacoffee.com/vitim
 // @grant           none
 // ==/UserScript==
 (function () {
-  'use strict';
+	'use strict';
 
-  var version = "5.0.3";
+	/* rollup-plugin-baked-env */
+	const VERSION = "5.1.0";
 
-  var discordStyles = (`
+	var themeCss = (`
 /* undiscord window */
-#undiscord.browser {
-    box-shadow: var(--elevation-stroke), var(--elevation-high);
-    overflow: hidden;
-}
-
+#undiscord.browser { box-shadow: var(--elevation-stroke), var(--elevation-high); overflow: hidden; }
 #undiscord.container,
-#undiscord .container {
-    background-color: var(--background-secondary);
-    border-radius: 8px;
-    box-sizing: border-box;
-    cursor: default;
-    flex-direction: column;
-}
-
-#undiscord .header {
-    background-color: var(--background-tertiary);
-    height: 48px;
-    align-items: center;
-    min-height: 48px;
-    padding: 0 16px;
-    display: flex;
-    color: var(--header-secondary);
-}
-
-#undiscord .header .icon {
-    color: var(--interactive-normal);
-    margin-right: 8px;
-    flex-shrink: 0;
-    width: 24;
-    height: 24;
-}
-
-#undiscord .header .icon:hover {
-    color: var(--interactive-hover);
-}
-
-#undiscord .header h3 {
-    font-size: 16px;
-    line-height: 20px;
-    font-weight: 500;
-    font-family: var(--font-display);
-    color: var(--header-primary);
-    flex-shrink: 0;
-    margin-right: 16px;
-}
-
-#undiscord .header .spacer {
-    flex-grow: 1;
-}
-
-#undiscord .header .vert-divider {
-    width: 1px;
-    height: 24px;
-    background-color: var(--background-modifier-accent);
-    margin-right: 16px;
-    flex-shrink: 0;
-}
-
+#undiscord .container { background-color: var(--background-secondary); border-radius: 8px; box-sizing: border-box; cursor: default; flex-direction: column; }
+#undiscord .header { background-color: var(--background-tertiary); height: 48px; align-items: center; min-height: 48px; padding: 0 16px; display: flex; color: var(--header-secondary); cursor: grab; }
+#undiscord .header .icon { color: var(--interactive-normal); margin-right: 8px; flex-shrink: 0; width: 24; height: 24; }
+#undiscord .header .icon:hover { color: var(--interactive-hover); }
+#undiscord .header h3 { font-size: 16px; line-height: 20px; font-weight: 500; font-family: var(--font-display); color: var(--header-primary); flex-shrink: 0; margin-right: 16px; }
+#undiscord .spacer { flex-grow: 1; }
+#undiscord .header .vert-divider { width: 1px; height: 24px; background-color: var(--background-modifier-accent); margin-right: 16px; flex-shrink: 0; }
 #undiscord legend,
-#undiscord label {
-    display: block;
-    width: 100%;
-    color: var(--header-secondary);
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 500;
-    text-transform: uppercase;
-    cursor: default;
-    font-family: var(--font-display);
-    margin-bottom: 8px;
-}
-
-#undiscord .multiInput {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    box-sizing: border-box;
-    width: 100%;
-    border-radius: 3px;
-    color: var(--text-normal);
-    background-color: var(--input-background);
-    border: none;
-    transition: border-color 0.2s ease-in-out 0s;
-}
-
-#undiscord .multiInput :first-child {
-    flex-grow: 1;
-}
-
-#undiscord .multiInput button:last-child {
-    margin-right: 4px;
-}
-
-#undiscord .input {
-    font-size: 16px;
-    box-sizing: border-box;
-    width: 100%;
-    border-radius: 3px;
-    color: var(--text-normal);
-    background-color: var(--input-background);
-    border: none;
-    transition: border-color 0.2s ease-in-out 0s;
-
-    padding: 10px;
-    height: 40px;
-}
-
-#undiscord fieldset {
-    margin-top: 16px;
-}
-
-#undiscord .input-wrapper {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    box-sizing: border-box;
-    width: 100%;
-    border-radius: 3px;
-    color: var(--text-normal);
-    background-color: var(--input-background);
-    border: none;
-    transition: border-color 0.2s ease-in-out 0s;
-}
-
+#undiscord label { color: var(--header-secondary); font-size: 12px; line-height: 16px; font-weight: 500; text-transform: uppercase; cursor: default; font-family: var(--font-display); margin-bottom: 8px; }
+#undiscord .multiInput { display: flex; align-items: center; font-size: 16px; box-sizing: border-box; width: 100%; border-radius: 3px; color: var(--text-normal); background-color: var(--input-background); border: none; transition: border-color 0.2s ease-in-out 0s; }
+#undiscord .multiInput :first-child { flex-grow: 1; }
+#undiscord .multiInput button:last-child { margin-right: 4px; }
+#undiscord .input { font-size: 16px; box-sizing: border-box; width: 100%; border-radius: 3px; color: var(--text-normal); background-color: var(--input-background); border: none; transition: border-color 0.2s ease-in-out 0s; padding: 10px; height: 40px; }
+#undiscord fieldset { margin-top: 16px; }
+#undiscord .input-wrapper { display: flex; align-items: center; font-size: 16px; box-sizing: border-box; width: 100%; border-radius: 3px; color: var(--text-normal); background-color: var(--input-background); border: none; transition: border-color 0.2s ease-in-out 0s; }
 #undiscord input[type="text"],
 #undiscord input[type="search"],
 #undiscord input[type="password"],
 #undiscord input[type="datetime-local"],
-#undiscord input[type="number"] {
-    font-size: 16px;
-    box-sizing: border-box;
-    width: 100%;
-    border-radius: 3px;
-    color: var(--text-normal);
-    background-color: var(--input-background);
-    border: none;
-    transition: border-color 0.2s ease-in-out 0s;
-    padding: 10px;
-    height: 40px;
-}
-
+#undiscord input[type="number"],
+#undiscord input[type="range"] { font-size: 16px; box-sizing: border-box; width: 100%; border-radius: 3px; color: var(--text-normal); background-color: var(--input-background); border: none; transition: border-color 0.2s ease-in-out 0s; padding: 10px; height: 40px; }
 #undiscord .divider,
-#undiscord hr {
-    border: none;
-    margin-bottom: 24px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid var(--background-modifier-accent);
-}
-
-#undiscord .sectionDescription {
-    margin-bottom: 16px;
-    color: var(--header-secondary);
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 400;
-}
-
-#undiscord a {
-    color: var(--text-link);
-    text-decoration: none;
-}
-
+#undiscord hr { border: none; margin-bottom: 24px; padding-bottom: 4px; border-bottom: 1px solid var(--background-modifier-accent); }
+#undiscord .sectionDescription { margin-bottom: 16px; color: var(--header-secondary); font-size: 14px; line-height: 20px; font-weight: 400; }
+#undiscord a { color: var(--text-link); text-decoration: none; }
 #undiscord .btn,
-#undiscord button {
-    position: relative;
-    display: flex;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    align-items: center;
-    box-sizing: border-box;
-    background: none;
-    border: none;
-    border-radius: 3px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 16px;
-    padding: 2px 16px;
-    user-select: none;
-
-    /* sizeSmall */
-    width: 60px;
-    height: 32px;
-    min-width: 60px;
-    min-height: 32px;
-
-    /* lookFilled colorPrimary */
-    color: rgb(255, 255, 255);
-    background-color: var(--button-secondary-background);
-}
-
-#undiscord .sizeMedium {
-    width: 96px;
-    height: 38px;
-    min-width: 96px;
-    min-height: 38px;
-}
-
+#undiscord button { position: relative; display: flex; -webkit-box-pack: center; justify-content: center; -webkit-box-align: center; align-items: center; box-sizing: border-box; background: none; border: none; border-radius: 3px; font-size: 14px; font-weight: 500; line-height: 16px; padding: 2px 16px; user-select: none; /* sizeSmall */     width: 60px; height: 32px; min-width: 60px; min-height: 32px; /* lookFilled colorPrimary */     color: rgb(255, 255, 255); background-color: var(--button-secondary-background); }
+#undiscord .sizeMedium { width: 96px; height: 38px; min-width: 96px; min-height: 38px; }
+#undiscord .sizeMedium.icon { width: 38px; min-width: 38px; }
+#undiscord sup { vertical-align: top; }
 /* lookFilled colorPrimary */
-#undiscord .accent {
-    background-color: var(--brand-experiment);
-}
-
-#undiscord .danger {
-    background-color: var(--button-danger-background);
-}
-
-#undiscord .positive {
-    background-color: var(--button-positive-background);
-}
-
-
-#undiscord .info {
-    font-size: 12px;
-    line-height: 16px;
-    padding: 8px 10px;
-    color: var(--text-muted);
-}
-
+#undiscord .accent { background-color: var(--brand-experiment); }
+#undiscord .danger { background-color: var(--button-danger-background); }
+#undiscord .positive { background-color: var(--button-positive-background); }
+#undiscord .info { font-size: 12px; line-height: 16px; padding: 8px 10px; color: var(--text-muted); }
 /* Scrollbar */
-#undiscord .scroll::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-#undiscord .scroll::-webkit-scrollbar-corner {
-    background-color: transparent;
-}
-
-#undiscord .scroll::-webkit-scrollbar-thumb {
-    background-clip: padding-box;
-    border: 2px solid transparent;
-    border-radius: 4px;
-    background-color: var(--scrollbar-thin-thumb);
-    min-height: 40px;
-}
-
-#undiscord .scroll::-webkit-scrollbar-track {
-    border-color: var(--scrollbar-thin-track);
-    background-color: var(--scrollbar-thin-track);
-    border: 2px solid var(--scrollbar-thin-track);
-}
-
+#undiscord .scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+#undiscord .scroll::-webkit-scrollbar-corner { background-color: transparent; }
+#undiscord .scroll::-webkit-scrollbar-thumb { background-clip: padding-box; border: 2px solid transparent; border-radius: 4px; background-color: var(--scrollbar-thin-thumb); min-height: 40px; }
+#undiscord .scroll::-webkit-scrollbar-track { border-color: var(--scrollbar-thin-track); background-color: var(--scrollbar-thin-track); border: 2px solid var(--scrollbar-thin-track); }
 /* fade scrollbar */
 #undiscord .scroll::-webkit-scrollbar-thumb,
-#undiscord .scroll::-webkit-scrollbar-track {
-    visibility: hidden;
-}
-
+#undiscord .scroll::-webkit-scrollbar-track { visibility: hidden; }
 #undiscord .scroll:hover::-webkit-scrollbar-thumb,
-#undiscord .scroll:hover::-webkit-scrollbar-track {
-    visibility: visible;
-}
-`);
-
-  var undiscordStyles = (`
-/**** Undiscord Button ****/
-#undicord-btn {
-    position: relative;
-    width: auto;
-    height: 24px;
-    margin: 0 8px;
-    cursor: pointer;
-    color: var(--interactive-normal);
-    flex: 0 0 auto;
-}
-
-#undicord-btn progress {
-    position: absolute;
-    top: 7px;
-    left: 5px;
-    width: 14px;
-    height: 14px;
-}
-
-/**** Undiscord Interface ****/
-#undiscord {
-    position: fixed;
-    z-index: 99;
-    top: 44px;
-    right: 10px;
-    display: flex;
-    flex-direction: column;
-    width:800px;
-    height: 80vh;
-    min-width: 610px;
-    max-width: 100vw;
-    min-height: 448px;
-    max-height: 100vh;
-    color: var(--text-normal);
-    border-radius: 4px;
-    background-color: var(--background-secondary);
-    box-shadow: var(--elevation-stroke), var(--elevation-high);
-    will-change: top, left, width, height;
-}
-
-#undiscord .header .icon {
-    cursor: pointer;
-}
-
-#undiscord .window-body {
-    height: calc(100% - 48px);
-}
-
-#undiscord .sidebar {
-    overflow: hidden scroll;
-    overflow-y: auto;
-    width: 270px;
-    min-width: 250px;
-    height: 100%;
-    max-height: 100%;
-    padding: 8px;
-    background: var(--background-secondary);
-}
-
-#undiscord .main {
-    display: flex;
-    max-width: calc(100% - 250px);
-    background-color: var(--background-primary);
-    flex-grow: 1;
-}
-
-#undiscord #logArea {
-    font-family: Consolas, Liberation Mono, Menlo, Courier, monospace;
-    font-size: .75rem;
-    overflow: auto;
-    padding: 10px;
-    user-select: text;
-    flex-grow: 1;
-    flex-grow: 1;
-}
-
-#undiscord .tbar {
-    padding: 8px;
-    background-color: var(--background-secondary-alt);
-}
-
-#undiscord .tbar button {
-    margin-right: 4px;
-    margin-bottom: 4px;
-}
-
-#undiscord .footer {
-    cursor: se-resize;
-}
-
-/**** Elements ****/
-
-#undiscord summary {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 20px;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 2px;
-    padding: 6px 10px;
-    cursor: pointer;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: var(--interactive-normal);
-    border-radius: 4px;
-    flex-shrink: 0;
-}
-
-#undiscord fieldset {
-    padding-left: 8px;
-}
-
-/* help link */
-#undiscord legend a {
-    float: right;
-    text-transform: initial;
-}
-
-#undiscord progress {
-    height: 8px;
-    margin-top: 4px;
-    flex-grow: 1;
-    /* background-color: var(--background-primary);
-    border-radius: 3px; */
-}
-
-/* #undiscord progress::-webkit-progress-value{
-    background-color: var(--brand-experiment);
-} */
-
+#undiscord .scroll:hover::-webkit-scrollbar-track { visibility: visible; }
 /**** functional classes ****/
-
-#undiscord.redact .priv {
-    display: none !important;
-}
-
-#undiscord:not(.redact) .mask {
-    display: none !important;
-}
-
-#undiscord.redact [priv] {
-    -webkit-text-security: disc !important;
-}
-
-#undiscord :disabled {
-    display: none;
-}
-
-/**** layout misc ****/
-
+#undiscord.redact .priv { display: none !important; }
+#undiscord.redact x:not(:active) { color: transparent !important; background-color: var(--primary-700) !important; cursor: default; }
+#undiscord.redact x:hover { position: relative; }
+#undiscord.redact x:hover::after { content: "Redacted information (Streamer mode: ON)"; position: absolute; display: inline-block; top: -32px; left: -20px; padding: 4px; width: 150px; font-size: 8pt; text-align: center; white-space: pre-wrap; background-color: var(--background-floating); -webkit-box-shadow: var(--elevation-high); box-shadow: var(--elevation-high); color: var(--text-normal); border-radius: 5px; pointer-events: none; }
+#undiscord.redact [priv] { -webkit-text-security: disc !important; }
+#undiscord :disabled { display: none; }
+/**** layout and utility classes ****/
 #undiscord,
-#undiscord * {
-    box-sizing: border-box;
-}
-
-#undiscord .col {
-    display: flex;
-    flex-direction: column;
-}
-
-#undiscord .row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-#undiscord .mb1 {
-    margin-bottom: 8px;
-}
+#undiscord * { box-sizing: border-box; }
+#undiscord .col { display: flex; flex-direction: column; }
+#undiscord .row { display: flex; flex-direction: row; align-items: center; }
+#undiscord .mb1 { margin-bottom: 8px; }
+#undiscord .log { margin-bottom: 0.25em; }
+#undiscord .log-debug { color: inherit; }
+#undiscord .log-info { color: #00b0f4; }
+#undiscord .log-verb { color: #72767d; }
+#undiscord .log-warn { color: #faa61a; }
+#undiscord .log-error { color: #f04747; }
+#undiscord .log-success { color: #43b581; }
 `);
 
-  var buttonHtml = (`
+	var mainCss = (`
+/**** Undiscord Button ****/
+#undicord-btn { position: relative; width: auto; height: 24px; margin: 0 8px; cursor: pointer; color: var(--interactive-normal); flex: 0 0 auto; }
+#undicord-btn progress { position: absolute; top: 23px; left: -4px; width: 32px; height: 12px; display: none; }
+#undicord-btn.running { color: var(--button-danger-background) !important; }
+#undicord-btn.running progress { display: block; }
+/**** Undiscord Interface ****/
+#undiscord { position: fixed; z-index: 99; top: 44px; right: 10px; display: flex; flex-direction: column; width: 800px; height: 80vh; min-width: 610px; max-width: 100vw; min-height: 448px; max-height: 100vh; color: var(--text-normal); border-radius: 4px; background-color: var(--background-secondary); box-shadow: var(--elevation-stroke), var(--elevation-high); will-change: top, left, width, height; }
+#undiscord .header .icon { cursor: pointer; }
+#undiscord .window-body { height: calc(100% - 48px); }
+#undiscord .sidebar { overflow: hidden scroll; overflow-y: auto; width: 270px; min-width: 250px; height: 100%; max-height: 100%; padding: 8px; background: var(--background-secondary); }
+#undiscord .sidebar legend,
+#undiscord .sidebar label { display: block; width: 100%; }
+#undiscord .main { display: flex; max-width: calc(100% - 250px); background-color: var(--background-primary); flex-grow: 1; }
+#undiscord.hide-sidebar .sidebar { display: none; }
+#undiscord.hide-sidebar .main { max-width: 100%; }
+#undiscord #logArea { font-family: Consolas, Liberation Mono, Menlo, Courier, monospace; font-size: 0.75rem; overflow: auto; padding: 10px; user-select: text; flex-grow: 1; flex-grow: 1; cursor: auto; }
+#undiscord .tbar { padding: 8px; background-color: var(--background-secondary-alt); }
+#undiscord .tbar button { margin-right: 4px; margin-bottom: 4px; }
+#undiscord .footer { cursor: se-resize; padding-right: 30px; }
+#undiscord .footer #progressPercent { padding: 0 1em; font-size: small; color: var(--interactive-muted); flex-grow: 1; }
+.resize-handle { position: absolute; bottom: -15px; right: -15px; width: 30px; height: 30px; transform: rotate(-45deg); background: repeating-linear-gradient(0, var(--background-modifier-accent), var(--background-modifier-accent) 1px, transparent 2px, transparent 4px); cursor: nwse-resize; }
+/**** Elements ****/
+#undiscord summary { font-size: 16px; font-weight: 500; line-height: 20px; position: relative; overflow: hidden; margin-bottom: 2px; padding: 6px 10px; cursor: pointer; white-space: nowrap; text-overflow: ellipsis; color: var(--interactive-normal); border-radius: 4px; flex-shrink: 0; }
+#undiscord fieldset { padding-left: 8px; }
+#undiscord legend a { float: right; text-transform: initial; }
+#undiscord progress { height: 8px; margin-top: 4px; flex-grow: 1; }
+#undiscord .importJson { display: flex; flex-direction: row; }
+#undiscord .importJson button { margin-left: 5px; width: fit-content; }
+`);
+
+	var buttonHtml = (`
 <div id="undicord-btn" tabindex="0" role="button" aria-label="Delete Messages" title="Delete Messages with Undiscord">
     <svg aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
         <path fill="currentColor" d="M15 3.999V2H9V3.999H3V5.999H21V3.999H15Z"></path>
         <path fill="currentColor" d="M5 6.99902V18.999C5 20.101 5.897 20.999 7 20.999H17C18.103 20.999 19 20.101 19 18.999V6.99902H5ZM11 17H9V11H11V17ZM15 17H13V11H15V17Z"></path>
     </svg>
-    <progress style="display:none;"></progress>
+    <progress></progress>
 </div>
 `);
 
-  var undiscordTemplate = (`
+	var undiscordTemplate = (`
 <div id="undiscord" class="browser container redact" style="display:none;">
     <div class="header">
         <svg class="icon" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
@@ -486,7 +161,7 @@
                 <fieldset>
                     <legend>
                         Author ID
-                        <a href="{{WIKI}}/authorId" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/authorId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
@@ -499,7 +174,7 @@
                 <fieldset>
                     <legend>
                         Server ID
-                        <a href="{{WIKI}}/guildId" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/guildId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
@@ -511,7 +186,7 @@
                 <fieldset>
                     <legend>
                         Channel ID
-                        <a href="{{WIKI}}/channelId" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/channelId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput mb1">
                         <div class="input-wrapper">
@@ -525,17 +200,19 @@
                 </fieldset>
             </details>
             <details>
-                <summary>Import</summary>
+                <summary>Wipe Archive</summary>
                 <fieldset>
                     <legend>
-                        Import JSON
-                        <a href="{{WIKI}}/importJson" title="Help" target="_blank">help</a>
+                        Import index.json
+                        <a href="{{WIKI}}/importJson" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
-                    <div class="sectionDescription">
-                        The import feature will be added back in the future.
+                    <div class="input-wrapper">
+                        <input type="file" id="importJsonInput" accept="application/json,.json" style="width:100%";>
                     </div>
-                    <div class="">
-                        <button id="importJson" disabled>Import</button>
+                    <div class="sectionDescription">
+                        <br>
+                        After requesting your data from discord, you can import it here.<br>
+                        Select the "messages/index.json" file from the discord archive.
                     </div>
                 </fieldset>
             </details>
@@ -545,7 +222,7 @@
                 <fieldset>
                     <legend>
                         Search
-                        <a href="{{WIKI}}/filters" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/filters" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
                         <input id="search" type="text" placeholder="Containing text" priv>
@@ -567,7 +244,7 @@
                 <fieldset>
                     <legend>
                         Pattern
-                        <a href="{{WIKI}}/pattern" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/pattern" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="sectionDescription">
                         Delete messages that match the regular expression
@@ -584,19 +261,19 @@
                 <fieldset>
                     <legend>
                         Interval of messages
-                        <a href="{{WIKI}}/messageId" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/messageId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput mb1">
                         <div class="input-wrapper">
                             <input id="minId" type="text" placeholder="After a message" priv>
                         </div>
-                        <button id="pickMessageAfter">select</button>
+                        <button id="pickMessageAfter">Pick</button>
                     </div>
                     <div class="multiInput">
                         <div class="input-wrapper">
                             <input id="maxId" type="text" placeholder="Before a message" priv>
                         </div>
-                        <button id="pickMessageBefore">select</button>
+                        <button id="pickMessageBefore">Pick</button>
                     </div>
                     <div class="sectionDescription">
                         Specify an interval to delete messages.
@@ -604,18 +281,18 @@
                 </fieldset>
             </details>
             <details>
-                <summary>Date</summary>
+                <summary>Date interval</summary>
                 <fieldset>
                     <legend>
                         After date
-                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper mb1">
                         <input id="minDate" type="datetime-local" title="Messages posted AFTER this date">
                     </div>
                     <legend>
                         Before date
-                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
                         <input id="maxDate" type="datetime-local" title="Messages posted BEFORE this date">
@@ -634,19 +311,21 @@
                 <fieldset>
                     <legend>
                         Search delay
-                        <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="searchDelay" type="number" value="100" step="100">
+                        <input id="searchDelay" type="range" value="1000" step="50" min="50" max="5000">
+                        <div id="searchDelayValue"></div>
                     </div>
                 </fieldset>
                 <fieldset>
                     <legend>
                         Delete delay
-                        <a href="{{WIKI}}/delay" title="Help" target="_blank">help</a>
+                        <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="deleteDelay" type="number" value="1000" step="100">
+                        <input id="deleteDelay" type="range" value="1000" step="50" min="50" max="5000">
+                        <div id="deleteDelayValue"></div>
                     </div>
                     <br>
                     <div class="sectionDescription">
@@ -665,28 +344,31 @@
         <div class="main col">
             <div class="tbar col">
                 <div class="row">
-                    <button id="start" class="sizeMedium accent">Start</button>
-                    <button id="stop" class="sizeMedium danger" disabled>Stop</button>
+                    <button id="toggleSidebar" class="sizeMedium icon">☰</button>
+                    <button id="start" class="sizeMedium danger" style="width: 150px;" title="Start the deletion process">▶︎ Delete</button>
+                    <button id="stop" class="sizeMedium" title="Stop the deletion process" disabled>🛑 Stop</button>
                     <button id="clear" class="sizeMedium">Clear log</button>
                     <label class="row" title="Hide sensitive information on your screen for taking screenshots">
                         <input id="redact" type="checkbox" checked> Streamer mode
                     </label>
                 </div>
                 <div class="row">
-                    <progress id="progressBar" value="-1"></progress>
+                    <progress id="progressBar" style="display:none;"></progress>
                 </div>
             </div>
             <pre id="logArea" class="logarea scroll">
                 <center>
-                    <div>Star <a href="{{HOME}}" target="_blank">this project</a> on GitHub!</div>
-                    <div><a href="{{HOME}}/discussions" target="_blank">Issues or help</a></div>
+                    <div>Star <a href="{{HOME}}" target="_blank" rel="noopener noreferrer">this project</a> on GitHub!</div>
+                    <div><a href="{{HOME}}/discussions" target="_blank" rel="noopener noreferrer">Issues or help</a></div>
                 </center>
             </pre>
             <div class="tbar footer row">
+                <div id="progressPercent"></div>
+                <span class="spacer"></span>
                 <label>
                     <input id="autoScroll" type="checkbox" checked> Auto scroll
                 </label>
-                <span id="progressPercent"></span>
+                <div class="resize-handle"></div>
             </div>
         </div>
     </div>
@@ -694,444 +376,651 @@
 
 `);
 
-  /**
-   * Delete all messages in a Discord channel or DM
-   * @param {string} authToken Your authorization token
-   * @param {string} authorId Author of the messages you want to delete
-   * @param {string} guildId Server were the messages are located
-   * @param {string} channelId Channel were the messages are located
-   * @param {string} minId Only delete messages after this, leave blank do delete all
-   * @param {string} maxId Only delete messages before this, leave blank do delete all
-   * @param {string} content Filter messages that contains this text content
-   * @param {boolean} hasLink Filter messages that contains link
-   * @param {boolean} hasFile Filter messages that contains file
-   * @param {boolean} includeNsfw Search in NSFW channels
-   * @param {function(string, Array)} extLogger Function for logging
-   * @param {function} stopHndl stopHndl used for stopping
-   * @author Victornpb <https://www.github.com/victornpb>
-   * @see https://github.com/victornpb/undiscord
-   */
-  async function deleteMessages(authToken, authorId, guildId, channelId, minId, maxId, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, extLogger, stopHndl, onProgress) {
-    const start = new Date();
-    let delCount = 0;
-    let failCount = 0;
-    let avgPing;
-    let lastPing;
-    let grandTotal;
-    let throttledCount = 0;
-    let throttledTotalTime = 0;
-    let offset = 0;
-    let iterations = -1;
+	const log = {
+	  debug() { return logFn ? logFn('debug', arguments) : console.debug.apply(console, arguments); },
+	  info() { return logFn ? logFn('info', arguments) : console.info.apply(console, arguments); },
+	  verb() { return logFn ? logFn('verb', arguments) : console.log.apply(console, arguments); },
+	  warn() { return logFn ? logFn('warn', arguments) : console.warn.apply(console, arguments); },
+	  error() { return logFn ? logFn('error', arguments) : console.error.apply(console, arguments); },
+	  success() { return logFn ? logFn('success', arguments) : console.info.apply(console, arguments); },
+	};
 
-    const wait = async ms => new Promise(done => setTimeout(done, ms));
-    const msToHMS = s => `${s / 3.6e6 | 0}h ${(s % 3.6e6) / 6e4 | 0}m ${(s % 6e4) / 1000 | 0}s`;
-    const escapeHTML = html => html.replace(/[&<"']/g, m => ({ '&': '&amp;', '<': '&lt;', '"': '&quot;', '\'': '&#039;' })[m]);
-    const redact = str => `<span class="priv">${escapeHTML(str)}</span><span class="mask">REDACTED</span>`;
-    const queryString = params => params.filter(p => p[1] !== undefined).map(p => p[0] + '=' + encodeURIComponent(p[1])).join('&');
-    const ask = async msg => new Promise(resolve => setTimeout(() => resolve(window.confirm(msg)), 10));
-    const printDelayStats = () => log.verb(`Delete delay: ${deleteDelay}ms, Search delay: ${searchDelay}ms`, `Last Ping: ${lastPing}ms, Average Ping: ${avgPing | 0}ms`);
-    const toSnowflake = (date) => /:/.test(date) ? ((new Date(date).getTime() - 1420070400000) * Math.pow(2, 22)) : date;
+	var logFn; // custom console.log function
+	const setLogFn = (fn) => logFn = fn;
 
-    const log = {
-      debug() { return extLogger ? extLogger('debug', arguments) : console.debug.apply(console, arguments); },
-      info() { return extLogger ? extLogger('info', arguments) : console.info.apply(console, arguments); },
-      verb() { return extLogger ? extLogger('verb', arguments) : console.log.apply(console, arguments); },
-      warn() { return extLogger ? extLogger('warn', arguments) : console.warn.apply(console, arguments); },
-      error() { return extLogger ? extLogger('error', arguments) : console.error.apply(console, arguments); },
-      success() { return extLogger ? extLogger('success', arguments) : console.info.apply(console, arguments); },
-    };
+	// Helpers
+	const wait = async ms => new Promise(done => setTimeout(done, ms));
+	const msToHMS = s => `${s / 3.6e6 | 0}h ${(s % 3.6e6) / 6e4 | 0}m ${(s % 6e4) / 1000 | 0}s`;
+	const escapeHTML = html => String(html).replace(/[&<"']/g, m => ({ '&': '&amp;', '<': '&lt;', '"': '&quot;', '\'': '&#039;' })[m]);
+	const redact = str => `<x>${escapeHTML(str)}</x>`;
+	const queryString = params => params.filter(p => p[1] !== undefined).map(p => p[0] + '=' + encodeURIComponent(p[1])).join('&');
+	const ask = async msg => new Promise(resolve => setTimeout(() => resolve(window.confirm(msg)), 10));
+	const toSnowflake = (date) => /:/.test(date) ? ((new Date(date).getTime() - 1420070400000) * Math.pow(2, 22)) : date;
+	const replaceInterpolations = (str, obj, removeMissing = false) => str.replace(/\{\{([\w_]+)\}\}/g, (m, key) => obj[key] || (removeMissing ? '' : m));
 
-    async function recurse() {
-      let API_SEARCH_URL;
-      if (guildId === '@me') {
-        API_SEARCH_URL = `https://discord.com/api/v9/channels/${channelId}/messages/`; // DMs
-      }
-      else {
-        API_SEARCH_URL = `https://discord.com/api/v9/guilds/${guildId}/messages/`; // Server
-      }
+	const PREFIX$1 = '[UNDISCORD]';
 
-      const headers = {
-        'Authorization': authToken
-      };
+	/**
+	 * Delete all messages in a Discord channel or DM
+	 * @author Victornpb <https://www.github.com/victornpb>
+	 * @see https://github.com/victornpb/undiscord
+	 */
+	class UndiscordCore {
 
-      if (onProgress) onProgress(-1, 1);
+	  options = {
+	    authToken: null, // Your authorization token
+	    authorId: null, // Author of the messages you want to delete
+	    guildId: null, // Server were the messages are located
+	    channelId: null, // Channel were the messages are located
+	    minId: null, // Only delete messages after this, leave blank do delete all
+	    maxId: null, // Only delete messages before this, leave blank do delete all
+	    content: null, // Filter messages that contains this text content
+	    hasLink: null, // Filter messages that contains link
+	    hasFile: null, // Filter messages that contains file
+	    includeNsfw: null, // Search in NSFW channels
+	    includePinned: null, // Delete messages that are pinned
+	    pattern: null, // Only delete messages that match the regex (insensitive)
+	    searchDelay: null, // Delay each time we fetch for more messages
+	    deleteDelay: null, // Delay between each delete operation
+	    maxAttempt: 2, // Attempts to delete a single message if it fails
+	    askForConfirmation: true,
+	  };
 
-      let resp;
-      try {
-        const s = Date.now();
-        resp = await fetch(API_SEARCH_URL + 'search?' + queryString([
-          ['author_id', authorId || undefined],
-          ['channel_id', (guildId !== '@me' ? channelId : undefined) || undefined],
-          ['min_id', minId ? toSnowflake(minId) : undefined],
-          ['max_id', maxId ? toSnowflake(maxId) : undefined],
-          ['sort_by', 'timestamp'],
-          ['sort_order', 'desc'],
-          ['offset', offset],
-          ['has', hasLink ? 'link' : undefined],
-          ['has', hasFile ? 'file' : undefined],
-          ['content', content || undefined],
-          ['include_nsfw', includeNsfw ? true : undefined],
-        ]), { headers });
-        lastPing = (Date.now() - s);
-        avgPing = avgPing > 0 ? (avgPing * 0.9) + (lastPing * 0.1) : lastPing;
-      } catch (err) {
-        return log.error('Search request threw an error:', err);
-      }
+	  state = {
+	    running: false,
+	    delCount: 0,
+	    failCount: 0,
+	    grandTotal: 0,
+	    offset: 0,
+	    iterations: 0,
 
-      // not indexed yet
-      if (resp.status === 202) {
-        const w = (await resp.json()).retry_after * 1000;
-        throttledCount++;
-        throttledTotalTime += w;
-        log.warn(`This channel wasn't indexed, waiting ${w}ms for discord to index it...`);
-        await wait(w);
-        return await recurse();
-      }
+	    _seachResponse: null,
+	    _messagesToDelete: [],
+	    _skippedMessages: [],
+	  };
 
-      if (!resp.ok) {
-        // searching messages too fast
-        if (resp.status === 429) {
-          const w = (await resp.json()).retry_after * 1000;
-          throttledCount++;
-          throttledTotalTime += w;
-          searchDelay += w; // increase delay
-          log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
-          printDelayStats();
-          log.verb(`Cooling down for ${w * 2}ms before retrying...`);
+	  stats = {
+	    startTime: new Date(), // start time
+	    throttledCount: 0, // how many times you have been throttled
+	    throttledTotalTime: 0, // the total amount of time you spent being throttled
+	    lastPing: null, // the most recent ping
+	    avgPing: null, // average ping used to calculate the estimated remaining time
+	    etr: 0,
+	  };
 
-          await wait(w * 2);
-          return await recurse();
-        } else {
-          return log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
-        }
-      }
+	  // events
+	  onStart = undefined;
+	  onProgress = undefined;
+	  onStop = undefined;
 
-      let regex;
+	  resetState() {
+	    this.state = {
+	      running: false,
+	      delCount: 0,
+	      failCount: 0,
+	      grandTotal: 0,
+	      offset: 0,
+	      iterations: 0,
 
-      try {
-        regex = new RegExp(pattern);
-      } catch (e) {
-        log.warn('Ignoring RegExp because pattern is malformed');
-      }
+	      _seachResponse: null,
+	      _messagesToDelete: [],
+	      _skippedMessages: [],
+	    };
 
-      const data = await resp.json();
-      const total = data.total_results;
-      if (!grandTotal) grandTotal = total;
-      const discoveredMessages = data.messages.map(convo => convo.find(message => message.hit === true));
-      const messagesToDelete = discoveredMessages.filter(msg => {
-        return (msg.type === 0 || (msg.type >= 6 && msg.type <= 21) || (msg.pinned && includePinned)) && (!regex || msg.content.match(regex));
-      });
-      const skippedMessages = discoveredMessages.filter(msg => !messagesToDelete.find(m => m.id === msg.id));
+	    this.options.askForConfirmation = true;
+	  }
 
-      const end = () => {
-        log.success(`Ended at ${new Date().toLocaleString()}! Total time: ${msToHMS(Date.now() - start.getTime())}`);
-        printDelayStats();
-        log.verb(`Rate Limited: ${throttledCount} times. Total time throttled: ${msToHMS(throttledTotalTime)}.`);
-        log.debug(`Deleted ${delCount} messages, ${failCount} failed.\n`);
-      };
+	  /** Automate the deletion process of multiple channels */
+	  async runBatch(queue) {
+	    if (this.state.running) return log.error('Already running!');
 
-      const etr = msToHMS((searchDelay * Math.round(total / 25)) + ((deleteDelay + avgPing) * total));
-      log.info(`Total messages found: ${data.total_results}`, `(Messages in current page: ${data.messages.length}, To be deleted: ${messagesToDelete.length}, System: ${skippedMessages.length})`, `offset: ${offset}`);
-      printDelayStats();
-      log.verb(`Estimated time remaining: ${etr}`);
+	    log.info(`Runnning batch with queue of ${queue.length} jobs`);
+	    for (let i = 0; i < queue.length; i++) {
+	      const job = queue[i];
+	      log.info('Starting job...', `(${i + 1}/${queue.length})`);
+
+	      // set options
+	      this.options = {
+	        ...this.options, // keep current options
+	        ...job, // override with options for that job
+	      };
+
+	      await this.run(true);
+	      if (!this.state.running) break;
+
+	      log.info('Job ended.', `(${i + 1}/${queue.length})`);
+	      this.resetState();
+	      this.options.askForConfirmation = false;
+	      this.state.running = true; // continue running
+	    }
+
+	    log.info('Batch finished.');
+	    this.state.running = false;
+	  }
+
+	  /** Start the deletion process */
+	  async run(isJob = false) {
+	    if (this.state.running && !isJob) return log.error('Already running!');
+
+	    this.state.running = true;
+	    this.stats.startTime = new Date();
+
+	    log.success(`\nStarted at ${this.stats.startTime.toLocaleString()}`);
+	    log.debug(
+	      `authorId = "${redact(this.options.authorId)}"`,
+	      `guildId = "${redact(this.options.guildId)}"`,
+	      `channelId = "${redact(this.options.channelId)}"`,
+	      `minId = "${redact(this.options.minId)}"`,
+	      `maxId = "${redact(this.options.maxId)}"`,
+	      `hasLink = ${!!this.options.hasLink}`,
+	      `hasFile = ${!!this.options.hasFile}`,
+	    );
+
+	    if (this.onStart) this.onStart(this.state, this.stats);
+
+	    do {
+	      this.state.iterations++;
+
+	      log.verb('Fetching messages...');
+	      // Search messages
+	      await this.search();
+	      // Process results and find which messages should be deleted
+	      await this.filterResponse();
+
+	      log.verb(
+	        `Grand total: ${this.state.grandTotal}`,
+	        `(Messages in current page: ${this.state._seachResponse.messages.length}`,
+	        `To be deleted: ${this.state._messagesToDelete.length}`,
+	        `Skipped: ${this.state._skippedMessages.length})`,
+	        `offset: ${this.state.offset}`
+	      );
+	      this.printStats();
+
+	      // Calculate estimated time
+	      this.calcEtr();
+	      log.verb(`Estimated time remaining: ${msToHMS(this.stats.etr)}`);
+
+	      // if there are messages to delete, delete them
+	      if (this.state._messagesToDelete.length > 0) {
+
+	        if (await this.confirm() === false) {
+	          this.state.running = false; // break out of a job
+	          break; // immmediately stop this iteration
+	        }
+
+	        await this.deleteMessagesFromList();
+	      }
+	      else if (this.state._skippedMessages.length > 0) {
+	        // There are stuff, but nothing to delete (example a page full of system messages)
+	        // check next page until we see a page with nothing in it (end of results).
+	        const oldOffset = this.state.offset;
+	        this.state.offset += this.state._skippedMessages.length;
+	        log.verb('There\'s nothing we can delete on this page, checking next page...');
+	        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, ajusted to ${this.state.offset})`);
+	      }
+	      else {
+	        log.verb('Ended because API returned an empty page.');
+	        if (this.state.grandTotal - this.state.offset > 0) log.warn('[End condition A].', this.state); // I don't remember why this was here. (looks like messagesToDelete==0 && skippedMessages==0 is enough
+	        else log.warn('[End condition B] if you see this please report.', this.state);
+	        if (isJob) break; // break without stopping if this is part of a job
+	        this.state.running = false;
+	      }
+	    } while (this.state.running);
+
+	    this.stats.endTime = new Date();
+	    log.success(`Ended at ${this.stats.endTime.toLocaleString()}! Total time: ${msToHMS(this.stats.endTime.getTime() - this.stats.startTime.getTime())}`);
+	    this.printStats();
+	    log.debug(`Deleted ${this.state.delCount} messages, ${this.state.failCount} failed.\n`);
+
+	    if (this.onStop) this.onStop(this.state, this.stats);
+	  }
+
+	  stop() {
+	    this.state.running = false;
+	  }
+
+	  /** Calculate the estimated time remaining based on the current stats */
+	  calcEtr() {
+	    this.stats.etr = (this.options.searchDelay * Math.round(this.state.grandTotal / 25)) + ((this.options.deleteDelay + this.stats.avgPing) * this.state.grandTotal);
+	  }
+
+	  /** As for confirmation in the beggining process */
+	  async confirm() {
+	    if (!this.options.askForConfirmation) return true;
+
+	    log.verb('Waiting for your confirmation...');
+	    const preview = this.state._messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n');
+
+	    const answer = await ask(
+	      `Do you want to delete ~${this.state.grandTotal} messages? (Estimated time: ${msToHMS(this.stats.etr)})` +
+	      '(The actual number of messages may be less, depending if you\'re using filters to skip some messages)' +
+	      '\n\n---- Preview ----\n' +
+	      preview
+	    );
+
+	    if (!answer) {
+	      log.error('Aborted by you!');
+	      return false;
+	    }
+	    else {
+	      log.verb('OK');
+	      this.options.askForConfirmation = false; // do not ask for confirmation again on the next request
+	      return true;
+	    }
+	  }
+
+	  async search() {
+	    let API_SEARCH_URL;
+	    if (this.options.guildId === '@me') API_SEARCH_URL = `https://discord.com/api/v9/channels/${this.options.channelId}/messages/`; // DMs
+	    else API_SEARCH_URL = `https://discord.com/api/v9/guilds/${this.options.guildId}/messages/`; // Server
+
+	    let resp;
+	    try {
+	      this.beforeRequest();
+	      resp = await fetch(API_SEARCH_URL + 'search?' + queryString([
+	        ['author_id', this.options.authorId || undefined],
+	        ['channel_id', (this.options.guildId !== '@me' ? this.options.channelId : undefined) || undefined],
+	        ['min_id', this.options.minId ? toSnowflake(this.options.minId) : undefined],
+	        ['max_id', this.options.maxId ? toSnowflake(this.options.maxId) : undefined],
+	        ['sort_by', 'timestamp'],
+	        ['sort_order', 'desc'],
+	        ['offset', this.state.offset],
+	        ['has', this.options.hasLink ? 'link' : undefined],
+	        ['has', this.options.hasFile ? 'file' : undefined],
+	        ['content', this.options.content || undefined],
+	        ['include_nsfw', this.options.includeNsfw ? true : undefined],
+	      ]), {
+	        headers: {
+	          'Authorization': this.options.authToken,
+	        }
+	      });
+	      this.afterRequest();
+	    } catch (err) {
+	      this.state.running = false;
+	      return log.error('Search request threw an error:', err);
+	    }
+
+	    // not indexed yet
+	    if (resp.status === 202) {
+	      const w = (await resp.json()).retry_after * 1000;
+	      this.stats.throttledCount++;
+	      this.stats.throttledTotalTime += w;
+	      log.warn(`This channel isn't indexed yet. Waiting ${w}ms for discord to index it...`);
+	      await wait(w);
+	      return await this.search();
+	    }
+
+	    if (!resp.ok) {
+	      // searching messages too fast
+	      if (resp.status === 429) {
+	        const w = (await resp.json()).retry_after * 1000;
+	        this.stats.throttledCount++;
+	        this.stats.throttledTotalTime += w;
+	        this.stats.searchDelay += w; // increase delay
+	        log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
+	        this.printStats();
+	        log.verb(`Cooling down for ${w * 2}ms before retrying...`);
+
+	        await wait(w * 2);
+	        return await this.search();
+	      } else {
+	        this.state.running = false;
+	        return log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
+	      }
+	    }
+	    const data = await resp.json();
+	    this.state._seachResponse = data;
+	    console.log(PREFIX$1, 'search', data);
+	    return data;
+	  }
+
+	  async filterResponse() {
+	    const data = this.state._seachResponse;
+
+	    // the search total will decrease as we delete stuff
+	    const total = data.total_results;
+	    if (total > this.state.grandTotal) this.state.grandTotal = total;
+
+	    // search returns messages near the the actual message, only get the messages we searched for.
+	    const discoveredMessages = data.messages.map(convo => convo.find(message => message.hit === true));
+
+	    // we can only delete some types of messages, system messages are not deletable.
+	    let messagesToDelete = discoveredMessages;
+	    messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
+	    messagesToDelete = messagesToDelete.filter(msg =>  msg.pinned ? this.options.includePinned : true);
+
+	    // custom filter of messages
+	    try {
+	      const regex = new RegExp(this.options.pattern, 'i');
+	      messagesToDelete = messagesToDelete.filter(msg => regex.test(msg.content));
+	    } catch (e) {
+	      log.warn('Ignoring RegExp because pattern is malformed!', e);
+	    }
+
+	    // create an array containing everything we skipped. (used to calculate offset for next searches)
+	    const skippedMessages = discoveredMessages.filter(msg => !messagesToDelete.find(m => m.id === msg.id));
+
+	    this.state._messagesToDelete = messagesToDelete;
+	    this.state._skippedMessages = skippedMessages;
+
+	    console.log(PREFIX$1, 'filterResponse', this.state);
+	  }
+
+	  async deleteMessagesFromList() {
+	    for (let i = 0; i < this.state._messagesToDelete.length; i++) {
+	      const message = this.state._messagesToDelete[i];
+	      if (!this.state.running) return log.error('Stopped by you!');
+
+	      log.debug(
+	        // `${((this.state.delCount + 1) / this.state.grandTotal * 100).toFixed(2)}%`,
+	        `[${this.state.delCount + 1}/${this.state.grandTotal}] `+
+	        `<sup>${new Date(message.timestamp).toLocaleString()}</sup> `+
+	        `<b>${redact(message.author.username + '#' + message.author.discriminator)}</b>`+
+	        `: <i>${redact(message.content).replace(/\n/g, '↵')}</i>`+
+	        (message.attachments.length ? redact(JSON.stringify(message.attachments)) : ''),
+	        `<sup>{ID:${redact(message.id)}}</sup>`
+	      );
+
+	      // Delete a single message (with retry)
+	      let attempt = 0;
+	      while (attempt < this.options.maxAttempt) {
+	        const result = await this.deleteMessage(message);
+
+	        if (result === 'RETRY') {
+	          attempt++;
+	          log.verb(`Retrying in ${this.options.deleteDelay}ms... (${attempt}/${this.options.maxAttempt})`);
+	          await wait(this.options.deleteDelay);
+	        }
+	        else break;
+	      }
+
+	      this.calcEtr();
+	      if (this.onProgress) this.onProgress(this.state, this.stats);
+
+	      await wait(this.options.deleteDelay);
+	    }
+	  }
+
+	  async deleteMessage(message) {
+	    const API_DELETE_URL = `https://discord.com/api/v9/channels/${message.channel_id}/messages/${message.id}`;
+	    let resp;
+	    try {
+	      this.beforeRequest();
+	      resp = await fetch(API_DELETE_URL, {
+	        method: 'DELETE',
+	        headers: {
+	          'Authorization': this.options.authToken,
+	        },
+	      });
+	      this.afterRequest();
+	    } catch (err) {
+	      // no response error (e.g. network error)
+	      log.error('Delete request throwed an error:', err);
+	      log.verb('Related object:', redact(JSON.stringify(message)));
+	      this.state.failCount++;
+	      return 'FAILED';
+	    }
+
+	    if (!resp.ok) {
+	      if (resp.status === 429) {
+	        // deleting messages too fast
+	        const w = (await resp.json()).retry_after * 1000;
+	        this.stats.throttledCount++;
+	        this.stats.throttledTotalTime += w;
+	        this.options.deleteDelay = w; // increase delay
+	        log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${this.options.deleteDelay}ms.`);
+	        this.printStats();
+	        log.verb(`Cooling down for ${w * 2}ms before retrying...`);
+	        await wait(w * 2);
+	        return 'RETRY';
+	      } else {
+	        // other error
+	        log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
+	        log.verb('Related object:', redact(JSON.stringify(message)));
+	        this.state.failCount++;
+	        return 'FAILED';
+	      }
+	    }
+
+	    this.state.delCount++;
+	    return 'OK';
+	  }
+
+	  #beforeTs = 0; // used to calculate latency
+	  beforeRequest() {
+	    this.#beforeTs = Date.now();
+	  }
+	  afterRequest() {
+	    this.stats.lastPing = (Date.now() - this.#beforeTs);
+	    this.stats.avgPing = this.stats.avgPing > 0 ? (this.stats.avgPing * 0.9) + (this.stats.lastPing * 0.1) : this.stats.lastPing;
+	  }
+
+	  printStats() {
+	    log.verb(
+	      `Delete delay: ${this.options.deleteDelay}ms, Search delay: ${this.options.searchDelay}ms`,
+	      `Last Ping: ${this.stats.lastPing}ms, Average Ping: ${this.stats.avgPing | 0}ms`,
+	    );
+	    log.verb(
+	      `Rate Limited: ${this.stats.throttledCount} times.`,
+	      `Total time throttled: ${msToHMS(this.stats.throttledTotalTime)}.`
+	    );
+	  }
+	}
+
+	class Drag {
+	  /**
+	     * Make an element draggable/resizable
+	     * @param {Element} targetElm The element that will be dragged/resized
+	     * @param {Element} handleElm The element that will listen to events (handdle/grabber)
+	     * @param {object} [options] Options
+	     * @param {string} [options.mode="move"] Define the type of operation (move/resize)
+	     * @param {number} [options.minWidth=200] Minimum width allowed to resize
+	     * @param {number} [options.maxWidth=Infinity] Maximum width allowed to resize
+	     * @param {number} [options.minHeight=100] Maximum height allowed to resize
+	     * @param {number} [options.maxHeight=Infinity] Maximum height allowed to resize
+	     * @param {string} [options.draggingClass="drag"] Class added to targetElm while being dragged
+	     * @param {boolean} [options.useMouseEvents=true] Use mouse events
+	     * @param {boolean} [options.useTouchEvents=true] Use touch events
+	     *
+	     * @author Victor N. wwww.vitim.us
+	     */
+	  constructor(targetElm, handleElm, options) {
+	    this.options = Object.assign({
+	      mode: 'move',
+
+	      minWidth: 200,
+	      maxWidth: Infinity,
+	      minHeight: 100,
+	      maxHeight: Infinity,
+	      xAxis: true,
+	      yAxis: true,
+
+	      draggingClass: 'drag',
+
+	      useMouseEvents: true,
+	      useTouchEvents: true,
+	    }, options);
+
+	    // Public properties
+	    this.minWidth = this.options.minWidth;
+	    this.maxWidth = this.options.maxWidth;
+	    this.minHeight = this.options.minHeight;
+	    this.maxHeight = this.options.maxHeight;
+	    this.xAxis = this.options.xAxis;
+	    this.yAxis = this.options.yAxis;
+	    this.draggingClass = this.options.draggingClass;
+
+	    /** @private */
+	    this._targetElm = targetElm;
+	    /** @private */
+	    this._handleElm = handleElm;
+
+	    const moveOp = (x, y) => {
+	      let l = x - offLeft;
+	      if (x - offLeft < 0) l = 0; //offscreen <-
+	      else if (x - offRight > vw) l = vw - this._targetElm.clientWidth; //offscreen ->
+	      let t = y - offTop;
+	      if (y - offTop < 0) t = 0; //offscreen /\
+	      else if (y - offBottom > vh) t = vh - this._targetElm.clientHeight; //offscreen \/
+
+	      if(this.xAxis) this._targetElm.style.left = `${l}px`;
+	      if(this.yAxis) this._targetElm.style.top = `${t}px`;
+	      // NOTE: profilling on chrome translate wasn't faster than top/left as expected. And it also permanently creates a new layer, increasing vram usage.
+	      // this._targetElm.style.transform = `translate(${l}px, ${t}px)`;
+	    };
+
+	    const resizeOp = (x, y) => {
+	      let w = x - this._targetElm.offsetLeft - offRight;
+	      if (x - offRight > vw) w = Math.min(vw - this._targetElm.offsetLeft, this.maxWidth); //offscreen ->
+	      else if (x - offRight - this._targetElm.offsetLeft > this.maxWidth) w = this.maxWidth; //max width
+	      else if (x - offRight - this._targetElm.offsetLeft < this.minWidth) w = this.minWidth; //min width
+	      let h = y - this._targetElm.offsetTop - offBottom;
+	      if (y - offBottom > vh) h = Math.min(vh - this._targetElm.offsetTop, this.maxHeight); //offscreen \/
+	      else if (y - offBottom - this._targetElm.offsetTop > this.maxHeight) h = this.maxHeight; //max height
+	      else if (y - offBottom - this._targetElm.offsetTop < this.minHeight) h = this.minHeight; //min height
+
+	      if(this.xAxis) this._targetElm.style.width = `${w}px`;
+	      if(this.yAxis) this._targetElm.style.height = `${h}px`;
+	    };
+
+	    // define which operation is performed on drag
+	    const operation = this.options.mode === 'move' ? moveOp : resizeOp;
+
+	    // offset from the initial click to the target boundaries
+	    let offTop, offLeft, offBottom, offRight;
+
+	    let vw = window.innerWidth;
+	    let vh = window.innerHeight;
 
 
-      if (messagesToDelete.length > 0 || skippedMessages.length > 0) {
+	    function dragStartHandler(e) {
+	      const touch = e.type === 'touchstart';
 
-        if (++iterations < 1) {
-          log.verb('Waiting for your confirmation...');
-          if (!await ask(`Do you want to delete ~${total} messages?\nEstimated time: ${etr}\n\n---- Preview ----\n` +
-                      messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n')))
-            return end(log.error('Aborted by you!'));
-          log.verb('OK');
-        }
+	      if ((e.buttons === 1 || e.which === 1) || touch) {
+	        e.preventDefault();
 
-        for (let i = 0; i < messagesToDelete.length; i++) {
-          const message = messagesToDelete[i];
-          if (stopHndl && stopHndl()) return end(log.error('Stopped by you!'));
+	        const x = touch ? e.touches[0].clientX : e.clientX;
+	        const y = touch ? e.touches[0].clientY : e.clientY;
 
-          log.debug(`${((delCount + 1) / grandTotal * 100).toFixed(2)}% (${delCount + 1}/${grandTotal})`,
-            `Deleting ID:${redact(message.id)} <b>${redact(message.author.username + '#' + message.author.discriminator)} <small>(${redact(new Date(message.timestamp).toLocaleString())})</small>:</b> <i>${redact(message.content).replace(/\n/g, '↵')}</i>`,
-            message.attachments.length ? redact(JSON.stringify(message.attachments)) : '');
-          if (onProgress) onProgress(delCount + 1, grandTotal);
+	        const targetOffset = this._targetElm.getBoundingClientRect();
 
-          let resp;
-          try {
-            const s = Date.now();
-            const API_DELETE_URL = `https://discord.com/api/v9/channels/${message.channel_id}/messages/${message.id}`;
-            resp = await fetch(API_DELETE_URL, {
-              headers,
-              method: 'DELETE'
-            });
-            lastPing = (Date.now() - s);
-            avgPing = (avgPing * 0.9) + (lastPing * 0.1);
-            delCount++;
-          } catch (err) {
-            log.error('Delete request throwed an error:', err);
-            log.verb('Related object:', redact(JSON.stringify(message)));
-            failCount++;
-          }
+	        //offset from the click to the top-left corner of the target (drag)
+	        offTop = y - targetOffset.y;
+	        offLeft = x - targetOffset.x;
+	        //offset from the click to the bottom-right corner of the target (resize)
+	        offBottom = y - (targetOffset.y + targetOffset.height);
+	        offRight = x - (targetOffset.x + targetOffset.width);
 
-          if (!resp.ok) {
-            // deleting messages too fast
-            if (resp.status === 429) {
-              const w = (await resp.json()).retry_after * 1000;
-              throttledCount++;
-              throttledTotalTime += w;
-              deleteDelay = w; // increase delay
-              log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${deleteDelay}ms.`);
-              printDelayStats();
-              log.verb(`Cooling down for ${w * 2}ms before retrying...`);
-              await wait(w * 2);
-              i--; // retry
-            } else {
-              log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
-              log.verb('Related object:', redact(JSON.stringify(message)));
-              failCount++;
-            }
-          }
+	        vw = window.innerWidth;
+	        vh = window.innerHeight;
 
-          await wait(deleteDelay);
-        }
+	        if (this.options.useMouseEvents) {
+	          document.addEventListener('mousemove', this._dragMoveHandler);
+	          document.addEventListener('mouseup', this._dragEndHandler);
+	        }
+	        if (this.options.useTouchEvents) {
+	          document.addEventListener('touchmove', this._dragMoveHandler, {
+	            passive: false,
+	          });
+	          document.addEventListener('touchend', this._dragEndHandler);
+	        }
 
-        if (skippedMessages.length > 0) {
-          grandTotal -= skippedMessages.length;
-          offset += skippedMessages.length;
-          log.verb(`Found ${skippedMessages.length} system messages! Decreasing grandTotal to ${grandTotal} and increasing offset to ${offset}.`);
-        }
+	        this._targetElm.classList.add(this.draggingClass);
+	      }
+	    }
 
-        log.verb(`Searching next messages in ${searchDelay}ms...`, (offset ? `(offset: ${offset})` : ''));
-        await wait(searchDelay);
+	    function dragMoveHandler(e) {
+	      e.preventDefault();
+	      let x, y;
 
-        if (stopHndl && stopHndl()) return end(log.error('Stopped by you!'));
+	      const touch = e.type === 'touchmove';
+	      if (touch) {
+	        const t = e.touches[0];
+	        x = t.clientX;
+	        y = t.clientY;
+	      } else { //mouse
 
-        return await recurse();
-      } else {
-        if (total - offset > 0) log.warn('Ended because API returned an empty page.');
-        return end();
-      }
-    }
+	        // If the button is not down, dispatch a "fake" mouse up event, to stop listening to mousemove
+	        // This happens when the mouseup is not captured (outside the browser)
+	        if ((e.buttons || e.which) !== 1) {
+	          this._dragEndHandler();
+	          return;
+	        }
 
-    log.success(`\nStarted at ${start.toLocaleString()}`);
-    log.debug(`authorId="${redact(authorId)}" guildId="${redact(guildId)}" channelId="${redact(channelId)}" minId="${redact(minId)}" maxId="${redact(maxId)}" hasLink=${!!hasLink} hasFile=${!!hasFile}`);
-    if (onProgress) onProgress(null, 1);
-    return await recurse();
-  }
+	        x = e.clientX;
+	        y = e.clientY;
+	      }
 
-  class Drag {
-    /**
-       * Make an element draggable/resizable
-       * @param {Element} targetElm The element that will be dragged/resized
-       * @param {Element} handleElm The element that will listen to events (handdle/grabber)
-       * @param {object} [options] Options
-       * @param {string} [options.mode="move"] Define the type of operation (move/resize)
-       * @param {number} [options.minWidth=200] Minimum width allowed to resize
-       * @param {number} [options.maxWidth=Infinity] Maximum width allowed to resize
-       * @param {number} [options.minHeight=100] Maximum height allowed to resize
-       * @param {number} [options.maxHeight=Infinity] Maximum height allowed to resize
-       * @param {string} [options.draggingClass="drag"] Class added to targetElm while being dragged
-       * @param {boolean} [options.useMouseEvents=true] Use mouse events
-       * @param {boolean} [options.useTouchEvents=true] Use touch events
-       *
-       * @author Victor N. wwww.vitim.us
-       */
-    constructor(targetElm, handleElm, options) {
-      this.options = Object.assign({
-        mode: 'move',
+	      operation(x, y);
+	    }
 
-        minWidth: 200,
-        maxWidth: Infinity,
-        minHeight: 100,
-        maxHeight: Infinity,
-        xAxis: true,
-        yAxis: true,
+	    function dragEndHandler(e) {
+	      if (this.options.useMouseEvents) {
+	        document.removeEventListener('mousemove', this._dragMoveHandler);
+	        document.removeEventListener('mouseup', this._dragEndHandler);
+	      }
+	      if (this.options.useTouchEvents) {
+	        document.removeEventListener('touchmove', this._dragMoveHandler);
+	        document.removeEventListener('touchend', this._dragEndHandler);
+	      }
+	      this._targetElm.classList.remove(this.draggingClass);
+	    }
 
-        draggingClass: 'drag',
+	    // We need to bind the handlers to this instance and expose them to methods enable and destroy
+	    /** @private */
+	    this._dragStartHandler = dragStartHandler.bind(this);
+	    /** @private */
+	    this._dragMoveHandler = dragMoveHandler.bind(this);
+	    /** @private */
+	    this._dragEndHandler = dragEndHandler.bind(this);
 
-        useMouseEvents: true,
-        useTouchEvents: true,
-      }, options);
+	    this.enable();
+	  }
 
-      // Public properties
-      this.minWidth = this.options.minWidth;
-      this.maxWidth = this.options.maxWidth;
-      this.minHeight = this.options.minHeight;
-      this.maxHeight = this.options.maxHeight;
-      this.xAxis = this.options.xAxis;
-      this.yAxis = this.options.yAxis;
-      this.draggingClass = this.options.draggingClass;
+	  /**
+	   * Turn on the drag and drop of the instancea
+	   * @memberOf Drag
+	   */
+	  enable() {
+	    // this.destroy(); // prevent events from getting binded twice
+	    if (this.options.useMouseEvents) this._handleElm.addEventListener('mousedown', this._dragStartHandler);
+	    if (this.options.useTouchEvents) this._handleElm.addEventListener('touchstart', this._dragStartHandler, { passive: false });
+	  }
+	  /**
+	   * Teardown all events bound to the document and elements
+	   * You can resurrect this instance by calling enable()
+	   * @memberOf Drag
+	   */
+	  destroy() {
+	    this._targetElm.classList.remove(this.draggingClass);
 
-      /** @private */
-      this._targetElm = targetElm;
-      /** @private */
-      this._handleElm = handleElm;
+	    if (this.options.useMouseEvents) {
+	      this._handleElm.removeEventListener('mousedown', this._dragStartHandler);
+	      document.removeEventListener('mousemove', this._dragMoveHandler);
+	      document.removeEventListener('mouseup', this._dragEndHandler);
+	    }
+	    if (this.options.useTouchEvents) {
+	      this._handleElm.removeEventListener('touchstart', this._dragStartHandler);
+	      document.removeEventListener('touchmove', this._dragMoveHandler);
+	      document.removeEventListener('touchend', this._dragEndHandler);
+	    }
+	  }
+	}
 
-      const moveOp = (x, y) => {
-        let l = x - offLeft;
-        if (x - offLeft < 0) l = 0; //offscreen <-
-        else if (x - offRight > vw) l = vw - this._targetElm.clientWidth; //offscreen ->
-        let t = y - offTop;
-        if (y - offTop < 0) t = 0; //offscreen /\
-        else if (y - offBottom > vh) t = vh - this._targetElm.clientHeight; //offscreen \/
+	function createElm(html) {
+	  const temp = document.createElement('div');
+	  temp.innerHTML = html;
+	  return temp.removeChild(temp.firstElementChild);
+	}
 
-        if(this.xAxis) this._targetElm.style.left = `${l}px`;
-        if(this.yAxis) this._targetElm.style.top = `${t}px`;
-        // NOTE: profilling on chrome translate wasn't faster than top/left as expected. And it also permanently creates a new layer, increasing vram usage.
-        // this._targetElm.style.transform = `translate(${l}px, ${t}px)`;
-      };
+	function insertCss(css) {
+	  const style = document.createElement('style');
+	  style.appendChild(document.createTextNode(css));
+	  document.head.appendChild(style);
+	  return style;
+	}
 
-      const resizeOp = (x, y) => {
-        let w = x - this._targetElm.offsetLeft - offRight;
-        if (x - offRight > vw) w = Math.min(vw - this._targetElm.offsetLeft, this.maxWidth); //offscreen ->
-        else if (x - offRight - this._targetElm.offsetLeft > this.maxWidth) w = this.maxWidth; //max width
-        else if (x - offRight - this._targetElm.offsetLeft < this.minWidth) w = this.minWidth; //min width
-        let h = y - this._targetElm.offsetTop - offBottom;
-        if (y - offBottom > vh) h = Math.min(vh - this._targetElm.offsetTop, this.maxHeight); //offscreen \/
-        else if (y - offBottom - this._targetElm.offsetTop > this.maxHeight) h = this.maxHeight; //max height
-        else if (y - offBottom - this._targetElm.offsetTop < this.minHeight) h = this.minHeight; //min height
-
-        if(this.xAxis) this._targetElm.style.width = `${w}px`;
-        if(this.yAxis) this._targetElm.style.height = `${h}px`;
-      };
-
-      // define which operation is performed on drag
-      const operation = this.options.mode === 'move' ? moveOp : resizeOp;
-
-      // offset from the initial click to the target boundaries
-      let offTop, offLeft, offBottom, offRight;
-
-      let vw = window.innerWidth;
-      let vh = window.innerHeight;
-
-
-      function dragStartHandler(e) {
-        const touch = e.type === 'touchstart';
-
-        if ((e.buttons === 1 || e.which === 1) || touch) {
-          e.preventDefault();
-
-          const x = touch ? e.touches[0].clientX : e.clientX;
-          const y = touch ? e.touches[0].clientY : e.clientY;
-
-          const targetOffset = this._targetElm.getBoundingClientRect();
-
-          //offset from the click to the top-left corner of the target (drag)
-          offTop = y - targetOffset.y;
-          offLeft = x - targetOffset.x;
-          //offset from the click to the bottom-right corner of the target (resize)
-          offBottom = y - (targetOffset.y + targetOffset.height);
-          offRight = x - (targetOffset.x + targetOffset.width);
-
-          vw = window.innerWidth;
-          vh = window.innerHeight;
-
-          if (this.options.useMouseEvents) {
-            document.addEventListener('mousemove', this._dragMoveHandler);
-            document.addEventListener('mouseup', this._dragEndHandler);
-          }
-          if (this.options.useTouchEvents) {
-            document.addEventListener('touchmove', this._dragMoveHandler, {
-              passive: false,
-            });
-            document.addEventListener('touchend', this._dragEndHandler);
-          }
-
-          this._targetElm.classList.add(this.draggingClass);
-        }
-      }
-
-      function dragMoveHandler(e) {
-        e.preventDefault();
-        let x, y;
-
-        const touch = e.type === 'touchmove';
-        if (touch) {
-          const t = e.touches[0];
-          x = t.clientX;
-          y = t.clientY;
-        } else { //mouse
-
-          // If the button is not down, dispatch a "fake" mouse up event, to stop listening to mousemove
-          // This happens when the mouseup is not captured (outside the browser)
-          if ((e.buttons || e.which) !== 1) {
-            this._dragEndHandler();
-            return;
-          }
-
-          x = e.clientX;
-          y = e.clientY;
-        }
-
-        operation(x, y);
-      }
-
-      function dragEndHandler(e) {
-        if (this.options.useMouseEvents) {
-          document.removeEventListener('mousemove', this._dragMoveHandler);
-          document.removeEventListener('mouseup', this._dragEndHandler);
-        }
-        if (this.options.useTouchEvents) {
-          document.removeEventListener('touchmove', this._dragMoveHandler);
-          document.removeEventListener('touchend', this._dragEndHandler);
-        }
-        this._targetElm.classList.remove(this.draggingClass);
-      }
-
-      // We need to bind the handlers to this instance and expose them to methods enable and destroy
-      /** @private */
-      this._dragStartHandler = dragStartHandler.bind(this);
-      /** @private */
-      this._dragMoveHandler = dragMoveHandler.bind(this);
-      /** @private */
-      this._dragEndHandler = dragEndHandler.bind(this);
-
-      this.enable();
-    }
-
-    /**
-     * Turn on the drag and drop of the instancea
-     * @memberOf Drag
-     */
-    enable() {
-      // this.destroy(); // prevent events from getting binded twice
-      if (this.options.useMouseEvents) this._handleElm.addEventListener('mousedown', this._dragStartHandler);
-      if (this.options.useTouchEvents) this._handleElm.addEventListener('touchstart', this._dragStartHandler, { passive: false });
-    }
-    /**
-     * Teardown all events bound to the document and elements
-     * You can resurrect this instance by calling enable()
-     * @memberOf Drag
-     */
-    destroy() {
-      this._targetElm.classList.remove(this.draggingClass);
-
-      if (this.options.useMouseEvents) {
-        this._handleElm.removeEventListener('mousedown', this._dragStartHandler);
-        document.removeEventListener('mousemove', this._dragMoveHandler);
-        document.removeEventListener('mouseup', this._dragEndHandler);
-      }
-      if (this.options.useTouchEvents) {
-        this._handleElm.removeEventListener('touchstart', this._dragStartHandler);
-        document.removeEventListener('touchmove', this._dragMoveHandler);
-        document.removeEventListener('touchend', this._dragEndHandler);
-      }
-    }
-  }
-
-  function createElm(html) {
-    const temp = document.createElement('div');
-    temp.innerHTML = html;
-    return temp.removeChild(temp.firstElementChild);
-  }
-
-  function insertCss(css) {
-    const style = document.createElement('style');
-    style.appendChild(document.createTextNode(css));
-    document.head.appendChild(style);
-    return style;
-  }
-
-  const messagePickerCss = `
+	const messagePickerCss = `
 body.undiscord-pick-message [data-list-id="chat-messages"] {
   background-color: var(--background-secondary-alt);
   box-shadow: inset 0 0 0px 2px var(--button-outline-brand-border);
@@ -1168,261 +1057,381 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 }
 `;
 
-  const messagePicker = {
-    init() {
-      insertCss(messagePickerCss);
-    },
-    grab(auxiliary) {
-      return new Promise((resolve, reject) => {
-        document.body.classList.add('undiscord-pick-message');
-        if (auxiliary) document.body.classList.add(auxiliary);
-        function clickHandler(e) {
-          const message = e.target.closest('[id^="message-content-"]');
-          if (message) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            if (auxiliary) document.body.classList.remove(auxiliary);
-            document.body.classList.remove('undiscord-pick-message');
-            document.removeEventListener('click', clickHandler);
-            try {
-              resolve(message.id.match(/message-content-(\d+)/)[1]);
-            } catch (e) {
-              resolve(null);
-            }
-          }
-        }
-        document.addEventListener('click', clickHandler);
-      });
-    }
-  };
+	const messagePicker = {
+	  init() {
+	    insertCss(messagePickerCss);
+	  },
+	  grab(auxiliary) {
+	    return new Promise((resolve, reject) => {
+	      document.body.classList.add('undiscord-pick-message');
+	      if (auxiliary) document.body.classList.add(auxiliary);
+	      function clickHandler(e) {
+	        const message = e.target.closest('[id^="message-content-"]');
+	        if (message) {
+	          e.preventDefault();
+	          e.stopPropagation();
+	          e.stopImmediatePropagation();
+	          if (auxiliary) document.body.classList.remove(auxiliary);
+	          document.body.classList.remove('undiscord-pick-message');
+	          document.removeEventListener('click', clickHandler);
+	          try {
+	            resolve(message.id.match(/message-content-(\d+)/)[1]);
+	          } catch (e) {
+	            resolve(null);
+	          }
+	        }
+	      }
+	      document.addEventListener('click', clickHandler);
+	    });
+	  }
+	};
+	window.messagePicker = messagePicker;
 
-  var messagePicker$1 = messagePicker;
-  window.messagePicker = messagePicker;
+	function getToken() {
+	  window.dispatchEvent(new Event('beforeunload'));
+	  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
+	  return JSON.parse(LS.token);
+	}
 
-  function getToken() {
-    window.dispatchEvent(new Event('beforeunload'));
-    const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-    return JSON.parse(LS.token);
-  }
+	function getAuthorId() {
+	  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
+	  return JSON.parse(LS.user_id_cache);
+	}
 
-  function getAuthorId() {
-    const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-    return JSON.parse(LS.user_id_cache);
-  }
+	function getGuildId() {
+	  const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
+	  if (m) return m[1];
+	  else alert('Could not the Guild ID!\nPlease make sure you are on a Server or DM.');
+	}
 
-  function getGuildId() {
-    const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
-    if (m) return m[1];
-    else alert('Could not the Guild ID!\nPlease make sure you are on a Server or DM.');
-  }
+	function getChannelId() {
+	  const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
+	  if (m) return m[2];
+	  else alert('Could not the Channel ID!\nPlease make sure you are on a Channel or DM.');
+	}
 
-  function getChannelId() {
-    const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
-    if (m) return m[2];
-    else alert('Could not the Channel ID!\nPlease make sure you are on a Channel or DM.');
-  }
+	const PREFIX = '[UNDISCORD]';
 
-  // ------------------------- User interface ------------------------------ //
+	// -------------------------- User interface ------------------------------- //
 
-  const HOME = 'https://github.com/victornpb/undiscord';
-  const WIKI = 'https://github.com/victornpb/undiscord/wiki';
+	// links
+	const HOME = 'https://github.com/victornpb/undiscord';
+	const WIKI = 'https://github.com/victornpb/undiscord/wiki';
 
-  const $ = s => undiscordWindow.querySelector(s);
+	const undiscordCore = new UndiscordCore();
+	messagePicker.init();
 
-  let undiscordWindow;
-  let undiscordBtn;
+	const ui = {
+	  undiscordWindow: null,
+	  undiscordBtn: null,
+	  logArea: null,
+	  autoScroll: null,
 
-  function initUI() {
+	  // progress handler
+	  progressMain: null,
+	  progressIcon: null,
+	  percent: null,
+	};
+	const $ = s => ui.undiscordWindow.querySelector(s);
 
-    insertCss(discordStyles);
-    insertCss(undiscordStyles);
+	function initUI() {
 
-    function replaceInterpolations(str, obj, removeMissing = false) {
-      return str.replace(/\{\{([\w_]+)\}\}/g, (m, key) => obj[key] || (removeMissing ? '' : m));
-    }
+	  insertCss(themeCss);
+	  insertCss(mainCss);
 
-    const templateVariables = {
-      VERSION: version,
-      HOME,
-      WIKI,
-    };
+	  // create undiscord window
+	  const undiscordUI = replaceInterpolations(undiscordTemplate, {
+	    VERSION,
+	    HOME,
+	    WIKI,
+	  });
+	  ui.undiscordWindow = createElm(undiscordUI);
+	  document.body.appendChild(ui.undiscordWindow);
 
-    // create undiscord window
-    const undiscordUI = replaceInterpolations(undiscordTemplate, templateVariables);
-    undiscordWindow = createElm(undiscordUI);
-    document.body.appendChild(undiscordWindow);
+	  // enable drag and resize on undiscord window
+	  new Drag(ui.undiscordWindow, $('.header'), { mode: 'move' });
+	  new Drag(ui.undiscordWindow, $('.footer'), { mode: 'resize' });
 
-    new Drag(undiscordWindow, $('.header'), { mode: 'move' });
-    new Drag(undiscordWindow, $('.footer'), { mode: 'resize' });
+	  // create undiscord Trash icon
+	  ui.undiscordBtn = createElm(buttonHtml);
+	  ui.undiscordBtn.onclick = toggleWindow;
+	  function mountBtn() {
+	    const toolbar = document.querySelector('#app-mount [class^=toolbar]');
+	    if (toolbar) toolbar.appendChild(ui.undiscordBtn);
+	  }
+	  mountBtn();
+	  // watch for changes and re-mount button if necessary
+	  const discordElm = document.querySelector('#app-mount');
+	  let observerThrottle = null;
+	  const observer = new MutationObserver((_mutationsList, _observer) => {
+	    if (observerThrottle) return;
+	    observerThrottle = setTimeout(() => {
+	      observerThrottle = null;
+	      if (!discordElm.contains(ui.undiscordBtn)) mountBtn(); // re-mount the button to the toolbar
+	    }, 3000);
+	  });
+	  observer.observe(discordElm, { attributes: false, childList: true, subtree: true });
 
-    // create undiscord button
-    undiscordBtn = createElm(buttonHtml);
-    undiscordBtn.onclick = toggleWindow;
-    function mountBtn() {
-      const toolbar = document.querySelector('#app-mount [class^=toolbar]');
-      if (toolbar) toolbar.appendChild(undiscordBtn);
-    }
-    mountBtn();
+	  function toggleWindow() {
+	    if (ui.undiscordWindow.style.display !== 'none') {
+	      ui.undiscordWindow.style.display = 'none';
+	      ui.undiscordBtn.style.color = 'var(--interactive-normal)';
+	    }
+	    else {
+	      ui.undiscordWindow.style.display = '';
+	      ui.undiscordBtn.style.color = 'var(--interactive-active)';
+	    }
+	  }
 
-    // watch for changes and re-mount button if necessary
-    const discordElm = document.querySelector('#app-mount');
-    let observerThrottle = null;
-    const observer = new MutationObserver((_mutationsList, _observer) => {
-      if (observerThrottle) return;
-      observerThrottle = setTimeout(() => {
-        observerThrottle = null;
-        if (!discordElm.contains(undiscordBtn)) mountBtn(); // re-mount the button to the toolbar
-      }, 3000);
-    });
-    observer.observe(discordElm, { attributes: false, childList: true, subtree: true });
+	  // cached elements
+	  ui.logArea = $('#logArea');
+	  ui.autoScroll = $('#autoScroll');
+	  ui.progressMain = $('#progressBar');
+	  ui.progressIcon = ui.undiscordBtn.querySelector('progress');
+	  ui.percent = $('#progressPercent');
 
-    function toggleWindow() {
-      if (undiscordWindow.style.display !== 'none') {
-        undiscordWindow.style.display = 'none';
-        undiscordBtn.style.color = 'var(--interactive-normal)';
-      }
-      else {
-        undiscordWindow.style.display = '';
-        undiscordBtn.style.color = 'var(--interactive-active)';
-      }
-    }
+	  // register event listeners
+	  $('#hide').onclick = toggleWindow;
+	  $('#toggleSidebar').onclick = ()=> ui.undiscordWindow.classList.toggle('hide-sidebar');
+	  $('button#start').onclick = startAction;
+	  $('button#stop').onclick = stopAction;
+	  $('button#clear').onclick = () => ui.logArea.innerHTML = '';
+	  $('button#getAuthor').onclick = () => $('input#authorId').value = getAuthorId();
+	  $('button#getGuild').onclick = () => {
+	    const guildId = $('input#guildId').value = getGuildId();
+	    if (guildId === '@me') $('input#channelId').value = getChannelId();
+	  };
+	  $('button#getChannel').onclick = () => {
+	    $('input#channelId').value = getChannelId();
+	    $('input#guildId').value = getGuildId();
+	  };
+	  $('#redact').onchange = () => {
+	    const b = ui.undiscordWindow.classList.toggle('redact');
+	    if (b) alert('This mode will attempt to hide personal information, so you can screen share / take screenshots.\nAlways double check you are not sharing sensitive information!');
+	  };
 
-    messagePicker$1.init();
-
-    // register event listeners
-    $('#hide').onclick = toggleWindow;
-    $('button#start').onclick = start;
-    $('button#stop').onclick = stop;
-    $('button#clear').onclick = () => $('#logArea').innerHTML = '';
-    $('button#getAuthor').onclick = () => $('input#authorId').value = getAuthorId();
-    $('button#getGuild').onclick = () => {
-      const guildId = $('input#guildId').value = getGuildId();
-      if (guildId === '@me') $('input#channelId').value = getChannelId();
-    };
-    $('button#getChannel').onclick = () => {
-      $('input#channelId').value = getChannelId();
-      $('input#guildId').value = getGuildId();
-    };
-    $('#redact').onchange = () => {
-      const b = undiscordWindow.classList.toggle('redact');
-      if (b) alert('This mode will attempt to hide personal information, so you can screen share / take screenshots.\nAlways double check you are not sharing sensitive information!');
-    };
-
-    $('#pickMessageAfter').onclick = async () => {
-      // alert('Select a message on the chat.\nThe message below it will be deleted.');
-      const id = await messagePicker$1.grab('after');
-      if (id) $('input#minId').value = id;
-    };
-    $('#pickMessageBefore').onclick = async () => {
-      // alert('Select a message on the chat.\nThe message above it will be deleted.');
-      const id = await messagePicker$1.grab('before');
-      if (id) $('input#maxId').value = id;
-    };
-
-    // const fileSelection = $('input#importJson');
-    // fileSelection.onchange = () => {
-    //   const files = fileSelection.files;
-    //   const channelIdField = $('input#channelId');
-    //   if (files.length > 0) {
-    //     const file = files[0];
-    //     file.text().then(text => {
-    //       let json = JSON.parse(text);
-    //       let channels = Object.keys(json);
-    //       channelIdField.value = channels.join(',');
-    //     });
-    //   }
-    // };
-
-  }
-
-  let _stopFlag = false;
-  const stopHndl = () => _stopFlag;
-
-  async function start() {
-    console.log('start');
-    _stopFlag = false;
-
-    // general
-    const authToken = getToken();
-    const authorId = $('input#authorId').value.trim();
-    const guildId = $('input#guildId').value.trim();
-    const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
-    const includeNsfw = $('input#includeNsfw').checked;
-    // filter
-    const content = $('input#search').value.trim();
-    const hasLink = $('input#hasLink').checked;
-    const hasFile = $('input#hasFile').checked;
-    const includePinned = $('input#includePinned').checked;
-    const pattern = $('input#pattern').value;
-    // message interval
-    const minId = $('input#minId').value.trim();
-    const maxId = $('input#maxId').value.trim();
-    // date range
-    const minDate = $('input#minDate').value.trim();
-    const maxDate = $('input#maxDate').value.trim();
-    //advanced
-    const searchDelay = parseInt($('input#searchDelay').value.trim());
-    const deleteDelay = parseInt($('input#deleteDelay').value.trim());
-
-    // progress handler
-    const progress = $('#progressBar');
-    const progress2 = undiscordBtn.querySelector('progress');
-    const percent = $('#progressPercent');
-    const onProg = (value, max) => {
-      if (value && max && value > max) max = value;
-      progress.setAttribute('max', max);
-      progress2.setAttribute('max', max);
-      progress.value = value;
-      progress2.value = value;
-      progress.style.display = max ? '' : 'none';
-      progress2.style.display = max ? '' : 'none';
-      percent.style.display = value && max ? '' : 'none';
-      percent.innerHTML = value >= 0 && max ? Math.round(value / max * 100) + '%' : '';
-      // indeterminate progress bar
-      if (value === -1) {
-        progress.removeAttribute('value');
-        progress2.removeAttribute('value');
-        percent.innerHTML = '...';
-      }
-    };
-
-    let logArea = $('#logArea');
-    let autoScroll = $('#autoScroll');
-    const logger = (type = '', args) => {
-      const style = { '': '', info: 'color:#00b0f4;', verb: 'color:#72767d;', warn: 'color:#faa61a;', error: 'color:#f04747;', success: 'color:#43b581;' }[type];
-      logArea.insertAdjacentHTML('beforeend', `<div style="${style}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
-      if (autoScroll.checked) logArea.querySelector('div:last-child').scrollIntoView(false);
-    };
-
-    logArea.innerHTML = '';
-
-    // validate input
-    if (!authToken) return logger('error', ['Could not detect the authorization token!']) || logger('info', ['Please make sure Undiscord is up to date']);
-    else if (!guildId) return logger('error', ['You must provide a Server ID!']);
-
-    for (let i = 0; i < channelIds.length; i++) {
-      $('#start').disabled = true;
-      $('#stop').disabled = false;
-      await deleteMessages(authToken, authorId, guildId, channelIds[i], minId || minDate, maxId || maxDate, content, hasLink, hasFile, includeNsfw, includePinned, pattern, searchDelay, deleteDelay, logger, stopHndl, onProg);
-      stop(); // clear the running state
-    }
-
-  }
-
-  function stop() {
-    _stopFlag = true;
-    $('#start').disabled = false;
-    $('#stop').disabled = true;
-
-    $('#progressBar').style.display = 'none';
-    $('#progressPercent').style.display = 'none';
-    undiscordBtn.querySelector('progress').style.display = 'none';
-  }
-
-  initUI();
+	  $('#pickMessageAfter').onclick = async () => {
+	    alert('Select a message on the chat.\nThe message below it will be deleted.');
+	    toggleWindow();
+	    const id = await messagePicker.grab('after');
+	    if (id) $('input#minId').value = id;
+	    toggleWindow();
+	  };
+	  $('#pickMessageBefore').onclick = async () => {
+	    alert('Select a message on the chat.\nThe message above it will be deleted.');
+	    toggleWindow();
+	    const id = await messagePicker.grab('before');
+	    if (id) $('input#maxId').value = id;
+	    toggleWindow();
+	  };
 
 
-  // ---- END Undiscord ----
+	  // sync delays
+	  $('input#searchDelay').onchange = (e) => {
+	    const v = parseInt(e.target.value);
+	    if (v) undiscordCore.options.searchDelay = v;
+	  };
+	  $('input#deleteDelay').onchange = (e) => {
+	    const v = parseInt(e.target.value);
+	    if (v) undiscordCore.options.deleteDelay = v;
+	  };
+
+	  $('input#searchDelay').addEventListener('input', (event) => {
+	    $('div#searchDelayValue').textContent = event.target.value + 'ms';
+	  });
+	  $('input#deleteDelay').addEventListener('input', (event) => {
+	    $('div#deleteDelayValue').textContent = event.target.value + 'ms';
+	  });
+
+
+	  // import json
+	  const fileSelection = $('input#importJsonInput');
+	  // $('button#importJsonBtn').onclick = () => {
+	  //   fileSelection.click();
+	  // };
+	  fileSelection.onchange = async () => {
+	    const files = fileSelection.files;
+
+	    // No files added
+	    if (files.length === 0) return log.warn('No file selected.');
+
+	    // Get channel id field to set it later
+	    const channelIdField = $('input#channelId');
+
+	    // Force the guild id to be ourself (@me)
+	    const guildIdField = $('input#guildId');
+	    guildIdField.value = '@me';
+
+	    // Set author id in case its not set already
+	    $('input#authorId').value = getAuthorId();
+	    try {
+	      const file = files[0];
+	      const text = await file.text();
+	      const json = JSON.parse(text);
+	      const channelIds = Object.keys(json);
+	      channelIdField.value = channelIds.join(',');
+	      log.info(`Loaded ${channelIds.length} channels.`);
+	    } catch(err) {
+	      log.error('Error parsing file!', err);
+	    }
+	  };
+
+	  // redirect console logs to inside the window after setting up the UI
+	  setLogFn(printLog);
+
+	  setupUndiscordCore();
+	}
+
+	function printLog(type = '', args) {
+	  ui.logArea.insertAdjacentHTML('beforeend', `<div class="log log-${type}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
+	  if (ui.autoScroll.checked) ui.logArea.querySelector('div:last-child').scrollIntoView(false);
+	}
+
+	function setupUndiscordCore() {
+
+	  undiscordCore.onStart = (state, stats) => {
+	    console.log(PREFIX, 'onStart', state, stats);
+	    $('#start').disabled = true;
+	    $('#stop').disabled = false;
+
+	    ui.undiscordBtn.classList.add('running');
+	    ui.progressMain.style.display = 'block';
+	    ui.percent.style.display = 'block';
+	  };
+
+	  undiscordCore.onProgress = (state, stats) => {
+	    console.log(PREFIX, 'onProgress', state, stats);
+	    let max = state.grandTotal;
+	    const value = state.delCount + state.failCount;
+	    max = Math.max(max, value, 0); // clamp max
+
+	    // status bar
+	    const percent = value >= 0 && max ? Math.round(value / max * 100) + '%' : '';
+	    const elapsed = msToHMS(Date.now() - stats.startTime.getTime());
+	    const remaining = msToHMS(stats.etr);
+	    ui.percent.innerHTML = `${percent} (${value}/${max}) Elapsed: ${elapsed} Remaining: ${remaining}`;
+
+	    ui.progressIcon.value = value;
+	    ui.progressMain.value = value;
+
+	    // indeterminate progress bar
+	    if (max) {
+	      ui.progressIcon.setAttribute('max', max);
+	      ui.progressMain.setAttribute('max', max);
+	    } else {
+	      ui.progressIcon.removeAttribute('value');
+	      ui.progressMain.removeAttribute('value');
+	      ui.percent.innerHTML = '...';
+	    }
+
+	    // update delays
+	    const searchDelayInput = $('input#searchDelay');
+	    searchDelayInput.value = undiscordCore.options.searchDelay;
+	    $('div#searchDelayValue').textContent = undiscordCore.options.searchDelay+'ms';
+
+	    const deleteDelayInput = $('input#deleteDelay');
+	    deleteDelayInput.value = undiscordCore.options.deleteDelay;
+	    $('div#deleteDelayValue').textContent = undiscordCore.options.deleteDelay+'ms';
+	  };
+
+	  undiscordCore.onStop = (state, stats) => {
+	    console.log(PREFIX, 'onStop', state, stats);
+	    $('#start').disabled = false;
+	    $('#stop').disabled = true;
+	    ui.undiscordBtn.classList.remove('running');
+	    ui.progressMain.style.display = 'none';
+	    ui.percent.style.display = 'none';
+	  };
+	}
+
+	async function startAction() {
+	  console.log(PREFIX, 'startAction');
+
+	  // general
+	  let authToken;
+	  try {
+	    authToken = getToken();
+	  } catch (err) {
+	    console.error(err);
+	    log.error(err);
+	  }
+	  const authorId = $('input#authorId').value.trim();
+	  const guildId = $('input#guildId').value.trim();
+	  const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
+	  const includeNsfw = $('input#includeNsfw').checked;
+	  // filter
+	  const content = $('input#search').value.trim();
+	  const hasLink = $('input#hasLink').checked;
+	  const hasFile = $('input#hasFile').checked;
+	  const includePinned = $('input#includePinned').checked;
+	  const pattern = $('input#pattern').value;
+	  // message interval
+	  const minId = $('input#minId').value.trim();
+	  const maxId = $('input#maxId').value.trim();
+	  // date range
+	  const minDate = $('input#minDate').value.trim();
+	  const maxDate = $('input#maxDate').value.trim();
+	  //advanced
+	  const searchDelay = parseInt($('input#searchDelay').value.trim());
+	  const deleteDelay = parseInt($('input#deleteDelay').value.trim());
+
+	  // clear logArea
+	  ui.logArea.innerHTML = '';
+
+	  // validate input
+	  if (!authToken) return log.error('Could not detect the authorization token!') || log.info('Please make sure Undiscord is up to date');
+	  else if (!guildId) return log.error('You must provide a Server ID!');
+
+	  undiscordCore.resetState();
+	  undiscordCore.options = {
+	    ...undiscordCore.options,
+	    authToken,
+	    authorId,
+	    guildId,
+	    channelId: channelIds.length === 1 ? channelIds[0] : undefined, // single or multiple channel
+	    minId: minId || minDate,
+	    maxId: maxId || maxDate,
+	    content,
+	    hasLink,
+	    hasFile,
+	    includeNsfw,
+	    includePinned,
+	    pattern,
+	    searchDelay,
+	    deleteDelay,
+	    // maxAttempt: 2,
+	  };
+	  if (channelIds.length > 1) {
+	    const jobs = channelIds.map(ch => ({
+	      guildId: guildId,
+	      channelId: ch,
+	    }));
+
+	    try {
+	      undiscordCore.runBatch(jobs);
+	    } catch (err) {
+	      console.error(err);
+	      log.error(err);
+	    }
+	  }
+	  // single channel
+	  else {
+	    try {
+	      undiscordCore.run();
+	    } catch (err) {
+	      console.error(err);
+	      log.error(err);
+	    }
+	  }
+	}
+
+	function stopAction() {
+	  console.log(PREFIX, 'stopAction');
+	  undiscordCore.stop();
+	}
+
+	// ---- END Undiscord ----
+
+	initUI();
 
 })();
