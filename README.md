@@ -36,7 +36,7 @@
 
 1. Click the <kbd>Start</kbd> button to begin wipping!
 
-![Screenshot](https://user-images.githubusercontent.com/3372598/86538983-b60c7980-becf-11ea-8cad-1a33950e77fc.gif)
+![Screenshot](https://user-images.githubusercontent.com/3372598/222977831-88eeb59a-186a-4947-8e33-0ac245c3af5c.gif)
 
 I made this tool just for you ❤️ , it would be awesome if you could just click the [⭐️ Star button](https://github.com/victornpb/undiscord) at the top!
 
