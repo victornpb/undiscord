@@ -32,9 +32,10 @@
 
 1. Click the <kbd>🗑️</kbd> button that was added in the top right corner.
 
-1. Click on the <kbd>get</kbd> buttons near **Authorization**, **Author** and **Guild/Channel**.  
+1. Click on the buttons near **Author ID** and **Server ID** and **Channel ID**.  
 
-1. Click the <kbd>Start</kbd> button to begin wipping!
+1. Click the ![Delete](https://user-images.githubusercontent.com/3372598/223744853-c0d4d9e3-1914-486b-bb4f-f27e40d0e3e7.png) button to begin wipping! 
+
 
 ![Screenshot](https://user-images.githubusercontent.com/3372598/222977831-88eeb59a-186a-4947-8e33-0ac245c3af5c.gif)
 
