@@ -29,8 +29,8 @@
 /**** Undiscord Interface ****/
 #undiscord {
     position: fixed;
-    z-index: 99;
-    top: 44px;
+    z-index: 100;
+    top: 58px;
     right: 10px;
     display: flex;
     flex-direction: column;
