@@ -1,8 +1,15 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Have questions or need help?
-    url: https://github.com/victornpb/undiscord/discussions
+
+  - name: 🤷‍♀️ Questions or need help?
+    url: https://github.com/victornpb/undiscord/discussions/categories/1-questions-answers
     about: Check existing questions or post a new one
-  - name: Have an ideas or want to suggest a feature?
+    
+  - name: 💬 Discussions
+    url: https://github.com/victornpb/undiscord/discussions/categories/2-discussions
+    about: Start an open ended discussion
+    
+  - name: 💡 Suggestions / Ideas
     url: https://github.com/victornpb/undiscord/discussions/categories/3-ideas
-    about: Check existing suggestions or post a new one
+    about: Check existing suggestions or share ideas for new features
+    
