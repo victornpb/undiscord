@@ -4,6 +4,7 @@ import { VERSION } from 'process.env';
 
 import themeCss from './ui/theme.css';
 import mainCss from './ui/main.css';
+import dragCss from './ui/drag.css';
 import buttonHtml from './ui/undiscord-button.html';
 import undiscordTemplate from './ui/undiscord.html';
 
@@ -43,6 +44,7 @@ function initUI() {
 
   insertCss(themeCss);
   insertCss(mainCss);
+  insertCss(dragCss);
 
   // create undiscord window
   const undiscordUI = replaceInterpolations(undiscordTemplate, {
@@ -54,8 +56,7 @@ function initUI() {
   document.body.appendChild(ui.undiscordWindow);
 
   // enable drag and resize on undiscord window
-  new Drag(ui.undiscordWindow, $('.header'), { mode: 'move' });
-  new Drag(ui.undiscordWindow, $('.footer'), { mode: 'resize' });
+  new Drag({ elm: ui.undiscordWindow, moveHandle: $('.header') });
 
   // create undiscord Trash icon
   ui.undiscordBtn = createElm(buttonHtml);
