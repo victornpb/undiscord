@@ -387,7 +387,6 @@
         </div>
     </div>
 </div>
-
 `);
 
 	const log = {
@@ -776,7 +775,7 @@
 	    }
 
 	    if (!resp.ok) {
-	      if (resp.status === 429) {
+          if (resp.status === 429) {
 	        // deleting messages too fast
 	        const w = (await resp.json()).retry_after * 1000;
 	        this.stats.throttledCount++;
@@ -787,7 +786,11 @@
 	        log.verb(`Cooling down for ${w * 2}ms before retrying...`);
 	        await wait(w * 2);
 	        return 'RETRY';
-	      } else {
+	      } else
+          if (resp.status === 400) {
+            // trying to delete a message that is in a locked or archived channel
+            log.warn('Message cannot be deleted as it is locked/archived!')
+          } else {
 	        // other error
 	        log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
 	        log.verb('Related object:', redact(JSON.stringify(message)));
@@ -1065,7 +1068,6 @@ body.undiscord-pick-message [data-list-id="chat-messages"] {
   background-color: var(--background-secondary-alt);
   box-shadow: inset 0 0 0px 2px var(--button-outline-brand-border);
 }
-
 body.undiscord-pick-message [id^="message-content-"]:hover {
   cursor: pointer;
   cursor: cell;
