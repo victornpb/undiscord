@@ -115,7 +115,6 @@ function initUI() {
     const b = ui.undiscordWindow.classList.toggle('redact');
     if (b) alert('This mode will attempt to hide personal information, so you can screen share / take screenshots.\nAlways double check you are not sharing sensitive information!');
   };
-
   $('#pickMessageAfter').onclick = async () => {
     alert('Select a message on the chat.\nThe message below it will be deleted.');
     toggleWindow();
@@ -149,12 +148,8 @@ function initUI() {
     $('div#deleteDelayValue').textContent = event.target.value + 'ms';
   });
 
-
   // import json
   const fileSelection = $('input#importJsonInput');
-  // $('button#importJsonBtn').onclick = () => {
-  //   fileSelection.click();
-  // };
   fileSelection.onchange = async () => {
     const files = fileSelection.files;
 
@@ -272,7 +267,7 @@ async function startAction() {
   //advanced
   const searchDelay = parseInt($('input#searchDelay').value.trim());
   const deleteDelay = parseInt($('input#deleteDelay').value.trim());
-
+ 
   // token
   const authToken = $('input#token').value.trim() || fillToken();
   if (!authToken) return; // get token already logs an error.
