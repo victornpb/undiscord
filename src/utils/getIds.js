@@ -27,6 +27,7 @@ export function fillToken() {
   try {
     return getToken();
   } catch (err) {
+    log.verb(err);
     log.error('Could not automatically detect Authorization Token!');
     log.info('Please make sure Undiscord is up to date');
     log.debug('Alternatively, you can try entering a Token manually in the "Advanced Settings" section.');

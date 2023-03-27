@@ -134,6 +134,7 @@ class UndiscordCore {
       log.verb('Fetching messages...');
       // Search messages
       await this.search();
+
       // Process results and find which messages should be deleted
       await this.filterResponse();
 
@@ -191,6 +192,7 @@ class UndiscordCore {
 
   stop() {
     this.state.running = false;
+    if (this.onStop) this.onStop(this.state, this.stats);
   }
 
   /** Calculate the estimated time remaining based on the current stats */
@@ -251,7 +253,8 @@ class UndiscordCore {
       this.afterRequest();
     } catch (err) {
       this.state.running = false;
-      return log.error('Search request threw an error:', err);
+      log.error('Search request threw an error:', err);
+      throw err;
     }
 
     // not indexed yet
@@ -281,9 +284,11 @@ class UndiscordCore {
 
         await wait(w * 2);
         return await this.search();
-      } else {
+      } 
+      else {
         this.state.running = false;
-        return log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
+        log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
+        throw resp;
       }
     }
     const data = await resp.json();

@@ -186,6 +186,7 @@ function initUI() {
 function printLog(type = '', args) {
   ui.logArea.insertAdjacentHTML('beforeend', `<div class="log log-${type}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
   if (ui.autoScroll.checked) ui.logArea.querySelector('div:last-child').scrollIntoView(false);
+  if (type==='error') console.error(PREFIX, ...Array.from(args));
 }
 
 function setupUndiscordCore() {
@@ -201,7 +202,7 @@ function setupUndiscordCore() {
   };
 
   undiscordCore.onProgress = (state, stats) => {
-    console.log(PREFIX, 'onProgress', state, stats);
+    // console.log(PREFIX, 'onProgress', state, stats);
     let max = state.grandTotal;
     const value = state.delCount + state.failCount;
     max = Math.max(max, value, 0); // clamp max
@@ -308,10 +309,9 @@ async function startAction() {
     }));
 
     try {
-      undiscordCore.runBatch(jobs);
+      await undiscordCore.runBatch(jobs);
     } catch (err) {
-      console.error(err);
-      log.error(err);
+      log.error('CoreException', err);
     }
   }
   // multiple channels
@@ -322,19 +322,18 @@ async function startAction() {
     }));
 
     try {
-      undiscordCore.runBatch(jobs);
+      await undiscordCore.runBatch(jobs);
     } catch (err) {
-      console.error(err);
-      log.error(err);
+      log.error('CoreException', err);
     }
   }
   // single channel
   else {
     try {
-      undiscordCore.run();
+      await undiscordCore.run();
     } catch (err) {
-      console.error(err);
-      log.error(err);
+      log.error('CoreException', err);
+      undiscordCore.stop();
     }
   }
 }
