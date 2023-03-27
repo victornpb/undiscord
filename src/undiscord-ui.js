@@ -13,7 +13,7 @@ import Drag from './utils/drag';
 import createElm from './utils/createElm';
 import insertCss from './utils/insertCss';
 import messagePicker from './utils/messagePicker';
-import { getToken, getAuthorId, getGuildId, getChannelId } from './utils/getIds';
+import { getAuthorId, getGuildId, getChannelId, fillToken } from './utils/getIds';
 
 import { log, setLogFn } from './utils/log.js';
 import { replaceInterpolations, msToHMS } from './utils/helpers';
@@ -130,7 +130,7 @@ function initUI() {
     if (id) $('input#maxId').value = id;
     toggleWindow();
   };
-
+  $('button#getToken').onclick = () => $('input#token').value = fillToken();
 
   // sync delays
   $('input#searchDelay').onchange = (e) => {
@@ -252,15 +252,7 @@ function setupUndiscordCore() {
 
 async function startAction() {
   console.log(PREFIX, 'startAction');
-
   // general
-  let authToken;
-  try {
-    authToken = getToken();
-  } catch (err) {
-    console.error(err);
-    log.error(err);
-  }
   const authorId = $('input#authorId').value.trim();
   const guildId = $('input#guildId').value.trim();
   const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
@@ -281,12 +273,15 @@ async function startAction() {
   const searchDelay = parseInt($('input#searchDelay').value.trim());
   const deleteDelay = parseInt($('input#deleteDelay').value.trim());
 
+  // token
+  const authToken = $('input#token').value.trim() || fillToken();
+  if (!authToken) return; // get token already logs an error.
+  
+  // validate input
+  if (!guildId) return log.error('You must fill the "Server ID" field!');
+ 
   // clear logArea
   ui.logArea.innerHTML = '';
-
-  // validate input
-  if (!authToken) return log.error('Could not detect the authorization token!') || log.info('Please make sure Undiscord is up to date');
-  else if (!guildId) return log.error('You must provide a Server ID!');
 
   undiscordCore.resetState();
   undiscordCore.options = {
