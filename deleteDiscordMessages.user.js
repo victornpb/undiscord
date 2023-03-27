@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.2.0
+// @version         5.2.1
 // @author          victornpb
 // @homepageURL     https://github.com/victornpb/undiscord
 // @supportURL      https://github.com/victornpb/undiscord/discussions
@@ -19,7 +19,7 @@
 	'use strict';
 
 	/* rollup-plugin-baked-env */
-	const VERSION = "5.2.0";
+	const VERSION = "5.2.1";
 
 	var themeCss = (`
 /* undiscord window */
@@ -72,7 +72,7 @@
 #undiscord .scroll:hover::-webkit-scrollbar-track { visibility: visible; }
 /**** functional classes ****/
 #undiscord.redact .priv { display: none !important; }
-#undiscord.redact x:not(:active) { color: transparent !important; background-color: var(--primary-700) !important; cursor: default; }
+#undiscord.redact x:not(:active) { color: transparent !important; background-color: var(--primary-700) !important; cursor: default; user-select: none; }
 #undiscord.redact x:hover { position: relative; }
 #undiscord.redact x:hover::after { content: "Redacted information (Streamer mode: ON)"; position: absolute; display: inline-block; top: -32px; left: -20px; padding: 4px; width: 150px; font-size: 8pt; text-align: center; white-space: pre-wrap; background-color: var(--background-floating); -webkit-box-shadow: var(--elevation-high); box-shadow: var(--elevation-high); color: var(--text-normal); border-radius: 5px; pointer-events: none; }
 #undiscord.redact [priv] { -webkit-text-security: disc !important; }
@@ -328,7 +328,7 @@
                         <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="searchDelay" type="range" value="1000" step="50" min="50" max="5000">
+                        <input id="searchDelay" type="range" value="30000" step="100" min="100" max="60000">
                         <div id="searchDelayValue"></div>
                     </div>
                 </fieldset>
@@ -338,13 +338,26 @@
                         <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="deleteDelay" type="range" value="1000" step="50" min="50" max="5000">
+                        <input id="deleteDelay" type="range" value="1000" step="50" min="50" max="10000">
                         <div id="deleteDelayValue"></div>
                     </div>
                     <br>
                     <div class="sectionDescription">
                         This will affect the speed in which the messages are deleted.
                         Use the help link for more information.
+                    </div>
+                </fieldset>
+                <hr>
+                <fieldset>
+                    <legend>
+                        Authorization Token
+                        <a href="{{WIKI}}/authToken" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                    </legend>
+                    <div class="multiInput">
+                        <div class="input-wrapper">
+                            <input class="input" id="token" type="password" autocomplete="dont" priv>
+                        </div>
+                        <button id="getToken">fill</button>
                     </div>
                 </fieldset>
             </details>
@@ -371,6 +384,7 @@
                 </div>
             </div>
             <pre id="logArea" class="logarea scroll">
+                <div class="" style="background: var(--background-mentioned); padding: .5em;">Notice: Undiscord may be working slower than usual and<wbr>require multiple attempts due to a recent Discord update.<br>We're working on a fix, and we thank you for your patience.</div>
                 <center>
                     <div>Star <a href="{{HOME}}" target="_blank" rel="noopener noreferrer">this project</a> on GitHub!</div>
                     <div><a href="{{HOME}}/discussions" target="_blank" rel="noopener noreferrer">Issues or help</a></div>
@@ -538,6 +552,7 @@
 	      log.verb('Fetching messages...');
 	      // Search messages
 	      await this.search();
+
 	      // Process results and find which messages should be deleted
 	      await this.filterResponse();
 
@@ -574,11 +589,15 @@
 	      }
 	      else {
 	        log.verb('Ended because API returned an empty page.');
-	        if (this.state.grandTotal - this.state.offset > 0) log.warn('[End condition A].', this.state); // I don't remember why this was here. (looks like messagesToDelete==0 && skippedMessages==0 is enough
-	        else log.warn('[End condition B] if you see this please report.', this.state);
+	        log.verb('[End state]', this.state);
 	        if (isJob) break; // break without stopping if this is part of a job
 	        this.state.running = false;
 	      }
+	      
+	      // wait before next page (fix search page not updating fast enough)
+	      log.verb(`Waiting ${(this.options.searchDelay/1000).toFixed(2)}s before next page...`);
+	      await wait(this.options.searchDelay);
+
 	    } while (this.state.running);
 
 	    this.stats.endTime = new Date();
@@ -591,6 +610,7 @@
 
 	  stop() {
 	    this.state.running = false;
+	    if (this.onStop) this.onStop(this.state, this.stats);
 	  }
 
 	  /** Calculate the estimated time remaining based on the current stats */
@@ -651,12 +671,14 @@
 	      this.afterRequest();
 	    } catch (err) {
 	      this.state.running = false;
-	      return log.error('Search request threw an error:', err);
+	      log.error('Search request threw an error:', err);
+	      throw err;
 	    }
 
 	    // not indexed yet
 	    if (resp.status === 202) {
-	      const w = (await resp.json()).retry_after * 1000;
+	      let w = (await resp.json()).retry_after * 1000;
+	      w = w || this.stats.searchDelay; // Fix retry_after 0
 	      this.stats.throttledCount++;
 	      this.stats.throttledTotalTime += w;
 	      log.warn(`This channel isn't indexed yet. Waiting ${w}ms for discord to index it...`);
@@ -667,19 +689,24 @@
 	    if (!resp.ok) {
 	      // searching messages too fast
 	      if (resp.status === 429) {
-	        const w = (await resp.json()).retry_after * 1000;
+	        let w = (await resp.json()).retry_after * 1000;
+	        w = w || this.stats.searchDelay; // Fix retry_after 0
+	        
 	        this.stats.throttledCount++;
 	        this.stats.throttledTotalTime += w;
 	        this.stats.searchDelay += w; // increase delay
+	        w = this.stats.searchDelay;
 	        log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
 	        this.printStats();
 	        log.verb(`Cooling down for ${w * 2}ms before retrying...`);
 
 	        await wait(w * 2);
 	        return await this.search();
-	      } else {
+	      } 
+	      else {
 	        this.state.running = false;
-	        return log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
+	        log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
+	        throw resp;
 	      }
 	    }
 	    const data = await resp.json();
@@ -1141,13 +1168,25 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	function getGuildId() {
 	  const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
 	  if (m) return m[1];
-	  else alert('Could not the Guild ID!\nPlease make sure you are on a Server or DM.');
+	  else alert('Could not find the Guild ID!\nPlease make sure you are on a Server or DM.');
 	}
 
 	function getChannelId() {
 	  const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
 	  if (m) return m[2];
-	  else alert('Could not the Channel ID!\nPlease make sure you are on a Channel or DM.');
+	  else alert('Could not find the Channel ID!\nPlease make sure you are on a Channel or DM.');
+	}
+
+	function fillToken() {
+	  try {
+	    return getToken();
+	  } catch (err) {
+	    log.verb(err);
+	    log.error('Could not automatically detect Authorization Token!');
+	    log.info('Please make sure Undiscord is up to date');
+	    log.debug('Alternatively, you can try entering a Token manually in the "Advanced Settings" section.');
+	  }
+	  return '';
 	}
 
 	const PREFIX = '[UNDISCORD]';
@@ -1249,7 +1288,6 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	    const b = ui.undiscordWindow.classList.toggle('redact');
 	    if (b) alert('This mode will attempt to hide personal information, so you can screen share / take screenshots.\nAlways double check you are not sharing sensitive information!');
 	  };
-
 	  $('#pickMessageAfter').onclick = async () => {
 	    alert('Select a message on the chat.\nThe message below it will be deleted.');
 	    toggleWindow();
@@ -1264,7 +1302,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	    if (id) $('input#maxId').value = id;
 	    toggleWindow();
 	  };
-
+	  $('button#getToken').onclick = () => $('input#token').value = fillToken();
 
 	  // sync delays
 	  $('input#searchDelay').onchange = (e) => {
@@ -1283,12 +1321,8 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	    $('div#deleteDelayValue').textContent = event.target.value + 'ms';
 	  });
 
-
 	  // import json
 	  const fileSelection = $('input#importJsonInput');
-	  // $('button#importJsonBtn').onclick = () => {
-	  //   fileSelection.click();
-	  // };
 	  fileSelection.onchange = async () => {
 	    const files = fileSelection.files;
 
@@ -1325,6 +1359,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	function printLog(type = '', args) {
 	  ui.logArea.insertAdjacentHTML('beforeend', `<div class="log log-${type}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
 	  if (ui.autoScroll.checked) ui.logArea.querySelector('div:last-child').scrollIntoView(false);
+	  if (type==='error') console.error(PREFIX, ...Array.from(args));
 	}
 
 	function setupUndiscordCore() {
@@ -1340,7 +1375,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  };
 
 	  undiscordCore.onProgress = (state, stats) => {
-	    console.log(PREFIX, 'onProgress', state, stats);
+	    // console.log(PREFIX, 'onProgress', state, stats);
 	    let max = state.grandTotal;
 	    const value = state.delCount + state.failCount;
 	    max = Math.max(max, value, 0); // clamp max
@@ -1386,15 +1421,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 
 	async function startAction() {
 	  console.log(PREFIX, 'startAction');
-
 	  // general
-	  let authToken;
-	  try {
-	    authToken = getToken();
-	  } catch (err) {
-	    console.error(err);
-	    log.error(err);
-	  }
 	  const authorId = $('input#authorId').value.trim();
 	  const guildId = $('input#guildId').value.trim();
 	  const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
@@ -1414,13 +1441,16 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  //advanced
 	  const searchDelay = parseInt($('input#searchDelay').value.trim());
 	  const deleteDelay = parseInt($('input#deleteDelay').value.trim());
-
+	 
+	  // token
+	  const authToken = $('input#token').value.trim() || fillToken();
+	  if (!authToken) return; // get token already logs an error.
+	  
+	  // validate input
+	  if (!guildId) return log.error('You must fill the "Server ID" field!');
+	 
 	  // clear logArea
 	  ui.logArea.innerHTML = '';
-
-	  // validate input
-	  if (!authToken) return log.error('Could not detect the authorization token!') || log.info('Please make sure Undiscord is up to date');
-	  else if (!guildId) return log.error('You must provide a Server ID!');
 
 	  undiscordCore.resetState();
 	  undiscordCore.options = {
@@ -1448,19 +1478,18 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	    }));
 
 	    try {
-	      undiscordCore.runBatch(jobs);
+	      await undiscordCore.runBatch(jobs);
 	    } catch (err) {
-	      console.error(err);
-	      log.error(err);
+	      log.error('CoreException', err);
 	    }
 	  }
 	  // single channel
 	  else {
 	    try {
-	      undiscordCore.run();
+	      await undiscordCore.run();
 	    } catch (err) {
-	      console.error(err);
-	      log.error(err);
+	      log.error('CoreException', err);
+	      undiscordCore.stop();
 	    }
 	  }
 	}
