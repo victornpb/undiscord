@@ -178,7 +178,7 @@
                         <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="searchDelay" type="range" value="1000" step="50" min="50" max="5000">
+                        <input id="searchDelay" type="range" value="30000" step="100" min="100" max="60000">
                         <div id="searchDelayValue"></div>
                     </div>
                 </fieldset>
@@ -188,13 +188,26 @@
                         <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="deleteDelay" type="range" value="1000" step="50" min="50" max="5000">
+                        <input id="deleteDelay" type="range" value="1000" step="50" min="50" max="10000">
                         <div id="deleteDelayValue"></div>
                     </div>
                     <br>
                     <div class="sectionDescription">
                         This will affect the speed in which the messages are deleted.
                         Use the help link for more information.
+                    </div>
+                </fieldset>
+                <hr>
+                <fieldset>
+                    <legend>
+                        Authorization Token
+                        <a href="{{WIKI}}/authToken" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                    </legend>
+                    <div class="multiInput">
+                        <div class="input-wrapper">
+                            <input class="input" id="token" type="password" autocomplete="dont" priv>
+                        </div>
+                        <button id="getToken">fill</button>
                     </div>
                 </fieldset>
             </details>
@@ -221,6 +234,7 @@
                 </div>
             </div>
             <pre id="logArea" class="logarea scroll">
+                <div class="" style="background: var(--background-mentioned); padding: .5em;">Notice: Undiscord may be working slower than usual and<wbr>require multiple attempts due to a recent Discord update.<br>We're working on a fix, and we thank you for your patience.</div>
                 <center>
                     <div>Star <a href="{{HOME}}" target="_blank" rel="noopener noreferrer">this project</a> on GitHub!</div>
                     <div><a href="{{HOME}}/discussions" target="_blank" rel="noopener noreferrer">Issues or help</a></div>

@@ -134,6 +134,7 @@ class UndiscordCore {
       log.verb('Fetching messages...');
       // Search messages
       await this.search();
+
       // Process results and find which messages should be deleted
       await this.filterResponse();
 
@@ -170,11 +171,15 @@ class UndiscordCore {
       }
       else {
         log.verb('Ended because API returned an empty page.');
-        if (this.state.grandTotal - this.state.offset > 0) log.warn('[End condition A].', this.state); // I don't remember why this was here. (looks like messagesToDelete==0 && skippedMessages==0 is enough
-        else log.warn('[End condition B] if you see this please report.', this.state);
+        log.verb('[End state]', this.state);
         if (isJob) break; // break without stopping if this is part of a job
         this.state.running = false;
       }
+      
+      // wait before next page (fix search page not updating fast enough)
+      log.verb(`Waiting ${(this.options.searchDelay/1000).toFixed(2)}s before next page...`);
+      await wait(this.options.searchDelay);
+
     } while (this.state.running);
 
     this.stats.endTime = new Date();
@@ -187,6 +192,7 @@ class UndiscordCore {
 
   stop() {
     this.state.running = false;
+    if (this.onStop) this.onStop(this.state, this.stats);
   }
 
   /** Calculate the estimated time remaining based on the current stats */
@@ -247,12 +253,14 @@ class UndiscordCore {
       this.afterRequest();
     } catch (err) {
       this.state.running = false;
-      return log.error('Search request threw an error:', err);
+      log.error('Search request threw an error:', err);
+      throw err;
     }
 
     // not indexed yet
     if (resp.status === 202) {
-      const w = (await resp.json()).retry_after * 1000;
+      let w = (await resp.json()).retry_after * 1000;
+      w = w || this.stats.searchDelay; // Fix retry_after 0
       this.stats.throttledCount++;
       this.stats.throttledTotalTime += w;
       log.warn(`This channel isn't indexed yet. Waiting ${w}ms for discord to index it...`);
@@ -263,19 +271,24 @@ class UndiscordCore {
     if (!resp.ok) {
       // searching messages too fast
       if (resp.status === 429) {
-        const w = (await resp.json()).retry_after * 1000;
+        let w = (await resp.json()).retry_after * 1000;
+        w = w || this.stats.searchDelay; // Fix retry_after 0
+        
         this.stats.throttledCount++;
         this.stats.throttledTotalTime += w;
         this.stats.searchDelay += w; // increase delay
+        w = this.stats.searchDelay;
         log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
         this.printStats();
         log.verb(`Cooling down for ${w * 2}ms before retrying...`);
 
         await wait(w * 2);
         return await this.search();
-      } else {
+      } 
+      else {
         this.state.running = false;
-        return log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
+        log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
+        throw resp;
       }
     }
     const data = await resp.json();
