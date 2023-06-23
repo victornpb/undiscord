@@ -3,7 +3,13 @@ import { log } from './log';
 export function getToken() {
   window.dispatchEvent(new Event('beforeunload'));
   const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-  return JSON.parse(LS.token);
+  try {
+    return JSON.parse(LS.token);
+  } catch {
+    log.info('Could not automatically detect Authorization Token in local storage!');
+    log.info('Attempting to grab token using webpack');
+    return (window.webpackChunkdiscord_app.push([[''], {}, e => { window.m = []; for (let c in e.c) window.m.push(e.c[c]); }]), window.m).find(m => m?.exports?.default?.getToken !== void 0).exports.default.getToken();
+  }
 }
 
 export function getAuthorId() {

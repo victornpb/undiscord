@@ -1,17 +1,17 @@
 {
-  "name": "undiscord",
-  "nameFull": "Undiscord",
+  "name": "undiscord-patched",
+  "nameFull": "Undiscord-Patched",
   "version": "5.2.1",
   "description": "Delete all messages in a Discord channel or DM (Bulk deletion)",
   "userScript": {
-    "namespace": "https://github.com/victornpb/deleteDiscordMessages",
+    "namespace": "https://github.com/titushm/undiscord-patched",
     "match": [
       "https://*.discord.com/app",
       "https://*.discord.com/channels/*",
       "https://*.discord.com/login"
     ],
     "icon": "https://victornpb.github.io/undiscord/images/icon128.png",
-    "downloadURL": "https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js",
+    "downloadURL": "https://github.com/titushm/undiscord-patched/raw/master/deleteDiscordMessages.user.js",
     "contributionURL": "https://www.buymeacoffee.com/vitim",
     "grant": "none"
   },
@@ -21,12 +21,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/victornpb/undiscord.git"
+    "url": "git+https://github.com/titushm/undiscord-patched.git"
   },
   "bugs": {
-    "url": "https://github.com/victornpb/undiscord/discussions"
+    "url": "https://github.com/titushm/undiscord-patched/discussions"
   },
-  "homepage": "https://github.com/victornpb/undiscord",
+  "homepage": "https://github.com/titushm/undiscord-patched",
   "author": "victornpb",
   "main": "deleteDiscordMessages.user.js",
   "scripts": {
@@ -53,6 +53,7 @@
   ],
   "devDependencies": {
     "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
     "eslint": "^8.36.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
