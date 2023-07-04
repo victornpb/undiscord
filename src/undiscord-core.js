@@ -403,8 +403,8 @@ class UndiscordCore {
           // 400 can happen if the thread is archived (code=50083)
           // in this case we need to "skip" this message from the next search
           // otherwise it will come up again in the next page (and fail to delete again)
-          log.warn(`Error deleting message (Thread is archived). Will increment offset so we don't search this in the next page...`);
-          this.state.offset ++;
+          log.warn('Error deleting message (Thread is archived). Will increment offset so we don\'t search this in the next page...');
+          this.state.offset++;
           this.state.failCount++;
           return 'FAIL_SKIP' ; // Failed but we will skip it next time
         }
