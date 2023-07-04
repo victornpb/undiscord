@@ -396,23 +396,19 @@ class UndiscordCore {
         log.verb(`Cooling down for ${w * 2}ms before retrying...`);
         await wait(w * 2);
         return 'RETRY';
-      } else if (resp.status === 400){
-        // 400 can happen if the thread is archived (code=50083)
-        // in this case we need to "skip" this message from the next search
-        // otherwise it will come up again in the next page (and fail to delete again)
-        const c = (await resp.json()).code;
-        if (code === 50083){
+      } else {
+        const r = await resp.json();
+
+        if (resp.status === 400 && r.code === 50083){
+          // 400 can happen if the thread is archived (code=50083)
+          // in this case we need to "skip" this message from the next search
+          // otherwise it will come up again in the next page (and fail to delete again)
           log.warn(`Error deleting message (Thread is archived). Will increment offset so we don't search this in the next page...`);
-          this.state.offset +=1 ;
+          this.state.offset ++;
+          this.state.failCount++;
           return 'FAIL_SKIP' ; // Failed but we will skip it next time
         }
 
-        log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
-        log.verb('Related object:', redact(JSON.stringify(message)));
-        this.state.failCount++;
-        return 'FAILED';
-      } else {
-        // other error
         log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
         log.verb('Related object:', redact(JSON.stringify(message)));
         this.state.failCount++;
