@@ -412,7 +412,7 @@ class UndiscordCore {
             return 'FAIL_SKIP'; // Failed but we will skip it next time
           }
 
-          log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
+          log.error(`Error deleting message, API responded with status ${resp.status}!`, r);
           log.verb('Related object:', redact(JSON.stringify(message)));
           this.state.failCount++;
           return 'FAILED';
