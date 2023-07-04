@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.2.1
+// @version         5.2.2
 // @author          victornpb
 // @homepageURL     https://github.com/victornpb/undiscord
 // @supportURL      https://github.com/victornpb/undiscord/discussions
@@ -19,7 +19,7 @@
 	'use strict';
 
 	/* rollup-plugin-baked-env */
-	const VERSION = "5.2.1";
+	const VERSION = "5.2.2";
 
 	var themeCss = (`
 /* undiscord window */
@@ -1174,7 +1174,13 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	function getToken() {
 	  window.dispatchEvent(new Event('beforeunload'));
 	  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-	  return JSON.parse(LS.token);
+	  try {
+	    return JSON.parse(LS.token);
+	  } catch {
+	    log.info('Could not automatically detect Authorization Token in local storage!');
+	    log.info('Attempting to grab token using webpack');
+	    return (window.webpackChunkdiscord_app.push([[''], {}, e => { window.m = []; for (let c in e.c) window.m.push(e.c[c]); }]), window.m).find(m => m?.exports?.default?.getToken !== void 0).exports.default.getToken();
+	  }
 	}
 
 	function getAuthorId() {
