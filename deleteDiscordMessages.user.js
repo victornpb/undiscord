@@ -593,9 +593,9 @@
 	        if (isJob) break; // break without stopping if this is part of a job
 	        this.state.running = false;
 	      }
-	      
+
 	      // wait before next page (fix search page not updating fast enough)
-	      log.verb(`Waiting ${(this.options.searchDelay/1000).toFixed(2)}s before next page...`);
+	      log.verb(`Waiting ${(this.options.searchDelay / 1000).toFixed(2)}s before next page...`);
 	      await wait(this.options.searchDelay);
 
 	    } while (this.state.running);
@@ -691,7 +691,7 @@
 	      if (resp.status === 429) {
 	        let w = (await resp.json()).retry_after * 1000;
 	        w = w || this.stats.searchDelay; // Fix retry_after 0
-	        
+
 	        this.stats.throttledCount++;
 	        this.stats.throttledTotalTime += w;
 	        this.stats.searchDelay += w; // increase delay
@@ -702,7 +702,7 @@
 
 	        await wait(w * 2);
 	        return await this.search();
-	      } 
+	      }
 	      else {
 	        this.state.running = false;
 	        log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
@@ -728,7 +728,7 @@
 	    // we can only delete some types of messages, system messages are not deletable.
 	    let messagesToDelete = discoveredMessages;
 	    messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
-	    messagesToDelete = messagesToDelete.filter(msg =>  msg.pinned ? this.options.includePinned : true);
+	    messagesToDelete = messagesToDelete.filter(msg => msg.pinned ? this.options.includePinned : true);
 
 	    // custom filter of messages
 	    try {
@@ -754,10 +754,10 @@
 
 	      log.debug(
 	        // `${((this.state.delCount + 1) / this.state.grandTotal * 100).toFixed(2)}%`,
-	        `[${this.state.delCount + 1}/${this.state.grandTotal}] `+
-	        `<sup>${new Date(message.timestamp).toLocaleString()}</sup> `+
-	        `<b>${redact(message.author.username + '#' + message.author.discriminator)}</b>`+
-	        `: <i>${redact(message.content).replace(/\n/g, '↵')}</i>`+
+	        `[${this.state.delCount + 1}/${this.state.grandTotal}] ` +
+	        `<sup>${new Date(message.timestamp).toLocaleString()}</sup> ` +
+	        `<b>${redact(message.author.username + '#' + message.author.discriminator)}</b>` +
+	        `: <i>${redact(message.content).replace(/\n/g, '↵')}</i>` +
 	        (message.attachments.length ? redact(JSON.stringify(message.attachments)) : ''),
 	        `<sup>{ID:${redact(message.id)}}</sup>`
 	      );
@@ -815,29 +815,28 @@
 	        await wait(w * 2);
 	        return 'RETRY';
 	      } else {
+	        const body = await resp.text();
 
-			const body = await resp.text();
+	        try {
+	          const r = JSON.parse(body);
 
-			try {
-				const r = JSON.parse(body);
+	          if (resp.status === 400 && r.code === 50083) {
+	            // 400 can happen if the thread is archived (code=50083)
+	            // in this case we need to "skip" this message from the next search
+	            // otherwise it will come up again in the next page (and fail to delete again)
+	            log.warn('Error deleting message (Thread is archived). Will increment offset so we don\'t search this in the next page...');
+	            this.state.offset++;
+	            this.state.failCount++;
+	            return 'FAIL_SKIP'; // Failed but we will skip it next time
+	          }
 
-				if (resp.status === 400 && r.code === 50083){
-				  // 400 can happen if the thread is archived (code=50083)
-				  // in this case we need to "skip" this message from the next search
-				  // otherwise it will come up again in the next page (and fail to delete again)
-				  log.warn('Error deleting message (Thread is archived). Will increment offset so we don\'t search this in the next page...');
-				  this.state.offset++;
-				  this.state.failCount++;
-				  return 'FAIL_SKIP' ; // Failed but we will skip it next time
-				}
-	
-				log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
-				log.verb('Related object:', redact(JSON.stringify(message)));
-				this.state.failCount++;
-				return 'FAILED';
-			} catch (e){
-				log.error(`Fail to parse JSON. API responded with status ${resp.status}!`, body);
-			}
+	          log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
+	          log.verb('Related object:', redact(JSON.stringify(message)));
+	          this.state.failCount++;
+	          return 'FAILED';
+	        } catch (e) {
+	          log.error(`Fail to parse JSON. API responded with status ${resp.status}!`, body);
+	        }
 	      }
 	    }
 
