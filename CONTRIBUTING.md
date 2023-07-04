@@ -29,11 +29,6 @@ Do not alter the version, because I may have to change this depending on the ord
 # Building the project
 # Now that you read that, this is what you do
 
-#### Click to watch video (45 seconds):
-[![Video Instructions](https://img.youtube.com/vi/AKTCvzvcPig/0.jpg)](https://www.youtube.com/watch?v=AKTCvzvcPig)
-https://www.youtube.com/watch?v=AKTCvzvcPig
-
-
 If you're unfamilliar with compiled Javascript, this is how you do it:
 
 1. Clone the repository to your computer
@@ -41,7 +36,11 @@ If you're unfamilliar with compiled Javascript, this is how you do it:
 3. Run `npm i` to download the project dependencies 
 4. Run `npm start` it will automatically compile the project, when you make changes
 
-## Testing locally
+## Testing your changes locally
+
+#### Click to watch video (45 seconds):
+[![Video Instructions](https://img.youtube.com/vi/AKTCvzvcPig/0.jpg)](https://www.youtube.com/watch?v=AKTCvzvcPig)
+https://www.youtube.com/watch?v=AKTCvzvcPig
 
 Open the URL that shows up in your console when you run `npm start` it will ask you to install a development version of Undiscord.
 You need to click the update button every time you make changes in TamperMonkey, or reinstall it by opening the URL again.
@@ -52,4 +51,3 @@ Copy the contents of the `deleteDiscordMessages.user.js` at the top of the repos
 and paste it directly into your browser console.
 
 ----------------------------------------------------------------
-
