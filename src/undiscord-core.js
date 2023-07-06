@@ -445,6 +445,7 @@ class UndiscordCore {
         },
         method: 'PATCH',
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': this.options.authToken,
         },
       });
