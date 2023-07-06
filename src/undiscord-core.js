@@ -440,9 +440,9 @@ class UndiscordCore {
     try {
       this.beforeRequest();
       resp = await fetch(THREAD_UNARCHIVE_URL, {
-        body: {
+        body: JSON.stringify({
           archived: false
-        },
+        }),
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
