@@ -727,7 +727,7 @@
 
 	    // we can only delete some types of messages, system messages are not deletable.
 	    let messagesToDelete = discoveredMessages;
-	    messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
+	    messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 20));
 	    messagesToDelete = messagesToDelete.filter(msg => msg.pinned ? this.options.includePinned : true);
 
 	    // custom filter of messages
