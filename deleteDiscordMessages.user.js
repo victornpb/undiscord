@@ -883,8 +883,8 @@
 	        if (resp.status === 403 && r.code === 160005){
 	          // 403 happens if the thread is locked, i.e. we don't have permission
 	          // to unarchive it
-	          log.warn(`Error unarchiving thread: Thread is locked`);
-	          return `THREAD_LOCKED`;
+	          log.warn('Error unarchiving thread: Thread is locked');
+	          return 'THREAD_LOCKED';
 	        }
 
 	        log.error(`Error unarchiving thread. API responded with status ${resp.status}!`, r);
@@ -892,11 +892,11 @@
 	        log.error(`Failed to parse JSON. API responses with status ${resp.status}!`, body);
 	      }
 
-	      return `UNARCHIVE_FAILED`;
+	      return 'UNARCHIVE_FAILED';
 	    }
 
-	    log.info(`Unarchived thread successfully!`);
-	    return `UNARCHIVE_SUCCESS`;
+	    log.info('Unarchived thread successfully!');
+	    return 'UNARCHIVE_SUCCESS';
 	  }
 
 	  #beforeTs = 0; // used to calculate latency
