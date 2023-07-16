@@ -50,7 +50,7 @@ Check out the [wiki](https://github.com/victornpb/undiscord/wiki) for helpful ar
 Check out the [Ideas][ideas] section, if your idea _hasn't been posted before_, please post a new one.
 
 ### Found a bug?
-Is prefered that _issues_ follow a certain format. If you're not familiar with bug reports, please use the [discussions][discussions] tab instead.
+It's prefered that _issues_ follow a certain format. If you're not familiar with bug reports, please use the [discussions][discussions] tab instead.
 
 If you believe you found a bug please file an [issue](https://github.com/victornpb/undiscord/issues), but please fill the issue template.
 
