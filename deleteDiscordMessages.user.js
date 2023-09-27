@@ -796,7 +796,7 @@
 	      this.afterRequest();
 	    } catch (err) {
 	      // no response error (e.g. network error)
-	      log.error('Delete request throwed an error:', err);
+	      log.error('Delete request threw an error:', err);
 	      log.verb('Related object:', redact(JSON.stringify(message)));
 	      this.state.failCount++;
 	      return 'FAILED';
