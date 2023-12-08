@@ -18,7 +18,7 @@
 	'use strict';
 
 	/* rollup-plugin-baked-env */
-	const VERSION = "5.2.1";
+	const VERSION = "5.2.2 BetterUndiscord";
 
 	var themeCss = (`
 /* undiscord window */
