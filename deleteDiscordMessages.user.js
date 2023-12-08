@@ -11,6 +11,7 @@
 // @license         MIT
 // @namespace       https://github.com/victornpb/deleteDiscordMessages
 // @icon            https://victornpb.github.io/undiscord/images/icon128.png
+// @downloadURL     https://raw.githubusercontent.com/ImguRandom/BetterUndiscord/master/deleteDiscordMessages.user.js
 // @contributionURL https://www.buymeacoffee.com/vitim
 // @grant           none
 // ==/UserScript==
