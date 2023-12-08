@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name            Undiscord
+// @name            BetterUndiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.2.3
-// @author          victornpb
-// @homepageURL     https://github.com/victornpb/undiscord
+// @version         5.2.2
+// @author          Original by victornpb, updated by ImguRandom
+// @homepageURL     https://github.com/ImguRandom/BetterUndiscord
 // @supportURL      https://github.com/victornpb/undiscord/discussions
 // @match           https://*.discord.com/app
 // @match           https://*.discord.com/channels/*
@@ -11,7 +11,6 @@
 // @license         MIT
 // @namespace       https://github.com/victornpb/deleteDiscordMessages
 // @icon            https://victornpb.github.io/undiscord/images/icon128.png
-// @downloadURL     https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
 // @contributionURL https://www.buymeacoffee.com/vitim
 // @grant           none
 // ==/UserScript==
@@ -19,7 +18,7 @@
 	'use strict';
 
 	/* rollup-plugin-baked-env */
-	const VERSION = "5.2.3";
+	const VERSION = "5.2.1";
 
 	var themeCss = (`
 /* undiscord window */
@@ -500,31 +499,36 @@
 
 	  /** Automate the deletion process of multiple channels */
 	  async runBatch(queue) {
-	    if (this.state.running) return log.error('Already running!');
+  if (this.state.running) return log.error('Already running!');
 
-	    log.info(`Runnning batch with queue of ${queue.length} jobs`);
-	    for (let i = 0; i < queue.length; i++) {
-	      const job = queue[i];
-	      log.info('Starting job...', `(${i + 1}/${queue.length})`);
+  log.info(`Runnning batch with queue of ${queue.length} jobs`);
+  for (let i = 0; i < queue.length; i++) {
+    const job = queue[i];
+    log.info('Starting job...', `(${i + 1}/${queue.length})`);
 
-	      // set options
-	      this.options = {
-	        ...this.options, // keep current options
-	        ...job, // override with options for that job
-	      };
+    // set options
+    this.options = {
+      ...this.options, // keep current options
+      ...job, // override with options for that job
+    };
 
-	      await this.run(true);
-	      if (!this.state.running) break;
+    try {
+      await this.run(true);
+    } catch (error) {
+      log.error('Error in job', `(${i + 1}/${queue.length})`, error);
+    }
 
-	      log.info('Job ended.', `(${i + 1}/${queue.length})`);
-	      this.resetState();
-	      this.options.askForConfirmation = false;
-	      this.state.running = true; // continue running
-	    }
+    if (!this.state.running) break;
 
-	    log.info('Batch finished.');
-	    this.state.running = false;
-	  }
+    log.info('Job ended.', `(${i + 1}/${queue.length})`);
+    this.resetState();
+    this.options.askForConfirmation = false;
+    this.state.running = true; // continue running
+  }
+
+  log.info('Batch finished.');
+  this.state.running = false;
+}
 
 	  /** Start the deletion process */
 	  async run(isJob = false) {
@@ -585,17 +589,20 @@
 	        const oldOffset = this.state.offset;
 	        this.state.offset += this.state._skippedMessages.length;
 	        log.verb('There\'s nothing we can delete on this page, checking next page...');
-	        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, ajusted to ${this.state.offset})`);
+	        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, adjusted to ${this.state.offset})`);
 	      }
 	      else {
-	        log.verb('Ended because API returned an empty page.');
-	        log.verb('[End state]', this.state);
-	        if (isJob) break; // break without stopping if this is part of a job
-	        this.state.running = false;
+                const oldOffset = this.state.offset;
+	        this.state.offset += this.state._skippedMessages.length;
+	        log.verb('There\'s still nothing we can delete, and the original script would have stopped the deletion here, but we are going to continue.');
+	        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, adjusted to ${this.state.offset})`);
+		// disabled these because they were causing the script to stop
+	        //if (isJob) break; // break without stopping if this is part of a job
+	        //this.state.running = false;
 	      }
-
+	      
 	      // wait before next page (fix search page not updating fast enough)
-	      log.verb(`Waiting ${(this.options.searchDelay / 1000).toFixed(2)}s before next page...`);
+	      log.verb(`Waiting ${(this.options.searchDelay/1000).toFixed(2)}s before next page...`);
 	      await wait(this.options.searchDelay);
 
 	    } while (this.state.running);
@@ -689,25 +696,28 @@
 	    if (!resp.ok) {
 	      // searching messages too fast
 	      if (resp.status === 429) {
-	        let w = (await resp.json()).retry_after * 1000;
-	        w = w || this.stats.searchDelay; // Fix retry_after 0
-
-	        this.stats.throttledCount++;
-	        this.stats.throttledTotalTime += w;
-	        this.stats.searchDelay += w; // increase delay
-	        w = this.stats.searchDelay;
-	        log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
-	        this.printStats();
-	        log.verb(`Cooling down for ${w * 2}ms before retrying...`);
-
-	        await wait(w * 2);
-	        return await this.search();
+			// existing error handling code...
 	      }
-	      else {
-	        this.state.running = false;
-	        log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
-	        throw resp;
-	      }
+		  // Replace only this current else block
+		  else {
+			const body = await resp.text();
+			try {
+			  const r = JSON.parse(body);
+			  if (resp.status === 400 && r.code === 50083) {
+				// existing error handling code...
+			  } else {
+				log.error(`Error deleting message, API responded with status ${resp.status}!`, r);
+				log.verb('Related object:', redact(JSON.stringify(message)));
+				this.state.failCount++;
+				// Instead of throwing an error, just return a failure status
+				return 'FAILED';
+			  }
+			} catch (e) {
+			  log.error(`Fail to parse JSON. API responded with status ${resp.status}!`, body);
+			  // Again, instead of throwing an error, just return a failure status
+			  return 'FAILED';
+			}
+		  }
 	    }
 	    const data = await resp.json();
 	    this.state._seachResponse = data;
@@ -728,7 +738,7 @@
 	    // we can only delete some types of messages, system messages are not deletable.
 	    let messagesToDelete = discoveredMessages;
 	    messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
-	    messagesToDelete = messagesToDelete.filter(msg => msg.pinned ? this.options.includePinned : true);
+	    messagesToDelete = messagesToDelete.filter(msg =>  msg.pinned ? this.options.includePinned : true);
 
 	    // custom filter of messages
 	    try {
@@ -754,10 +764,10 @@
 
 	      log.debug(
 	        // `${((this.state.delCount + 1) / this.state.grandTotal * 100).toFixed(2)}%`,
-	        `[${this.state.delCount + 1}/${this.state.grandTotal}] ` +
-	        `<sup>${new Date(message.timestamp).toLocaleString()}</sup> ` +
-	        `<b>${redact(message.author.username + '#' + message.author.discriminator)}</b>` +
-	        `: <i>${redact(message.content).replace(/\n/g, '↵')}</i>` +
+	        `[${this.state.delCount + 1}/${this.state.grandTotal}] `+
+	        `<sup>${new Date(message.timestamp).toLocaleString()}</sup> `+
+	        `<b>${redact(message.author.username + '#' + message.author.discriminator)}</b>`+
+	        `: <i>${redact(message.content).replace(/\n/g, '↵')}</i>`+
 	        (message.attachments.length ? redact(JSON.stringify(message.attachments)) : ''),
 	        `<sup>{ID:${redact(message.id)}}</sup>`
 	      );
@@ -815,28 +825,11 @@
 	        await wait(w * 2);
 	        return 'RETRY';
 	      } else {
-	        const body = await resp.text();
-
-	        try {
-	          const r = JSON.parse(body);
-
-	          if (resp.status === 400 && r.code === 50083) {
-	            // 400 can happen if the thread is archived (code=50083)
-	            // in this case we need to "skip" this message from the next search
-	            // otherwise it will come up again in the next page (and fail to delete again)
-	            log.warn('Error deleting message (Thread is archived). Will increment offset so we don\'t search this in the next page...');
-	            this.state.offset++;
-	            this.state.failCount++;
-	            return 'FAIL_SKIP'; // Failed but we will skip it next time
-	          }
-
-	          log.error(`Error deleting message, API responded with status ${resp.status}!`, r);
-	          log.verb('Related object:', redact(JSON.stringify(message)));
-	          this.state.failCount++;
-	          return 'FAILED';
-	        } catch (e) {
-	          log.error(`Fail to parse JSON. API responded with status ${resp.status}!`, body);
-	        }
+	        // other error
+	        log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
+	        log.verb('Related object:', redact(JSON.stringify(message)));
+	        this.state.failCount++;
+	        return 'FAILED';
 	      }
 	    }
 
@@ -1174,13 +1167,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	function getToken() {
 	  window.dispatchEvent(new Event('beforeunload'));
 	  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-	  try {
-	    return JSON.parse(LS.token);
-	  } catch {
-	    log.info('Could not automatically detect Authorization Token in local storage!');
-	    log.info('Attempting to grab token using webpack');
-	    return (window.webpackChunkdiscord_app.push([[''], {}, e => { window.m = []; for (let c in e.c) window.m.push(e.c[c]); }]), window.m).find(m => m?.exports?.default?.getToken !== void 0).exports.default.getToken();
-	  }
+	  return JSON.parse(LS.token);
 	}
 
 	function getAuthorId() {
