@@ -593,6 +593,18 @@
 	        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, adjusted to ${this.state.offset})`);
 	      }
 	      else {
+		// the following chunk is untested
+		// this is my shitty solution to fix the new issue
+		// where it just keeps running endlessly after all
+		// messages in a chosen channel are deleted
+		const endMyLife = 0;
+		endMyLife++
+		if (endMyLife == 50 && isJob)
+		{
+			break;
+			this.state.running = false;
+		}
+		// end new untested chunk
                 const oldOffset = this.state.offset;
 	        this.state.offset += this.state._skippedMessages.length;
 	        log.verb('There\'s still nothing we can delete, and the original script would have stopped the deletion here, but we are going to continue.');
