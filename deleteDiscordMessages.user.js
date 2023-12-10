@@ -427,7 +427,6 @@
 	const replaceInterpolations = (str, obj, removeMissing = false) => str.replace(/\{\{([\w_]+)\}\}/g, (m, key) => obj[key] || (removeMissing ? '' : m));
 
 	const PREFIX$1 = '[UNDISCORD]';
-	const endMyLife = 0; // next page timeout
 
 	/**
 	 * Delete all messages in a Discord channel or DM
@@ -594,18 +593,6 @@
 	        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, adjusted to ${this.state.offset})`);
 	      }
 	      else {
-		// the following chunk is untested
-		// this is my shitty solution to fix the new issue
-		// where it just keeps running endlessly after all
-		// messages in a chosen channel are deleted
-		endMyLife++
-		if (endMyLife == 50 && isJob)
-		{
-			endMyLife = 0;
-			this.state.running = false;
-			break;
-		}
-		// end new untested chunk
                 const oldOffset = this.state.offset;
 	        this.state.offset += this.state._skippedMessages.length;
 	        log.verb('There\'s still nothing we can delete, continuing check.');
