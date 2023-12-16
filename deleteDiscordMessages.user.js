@@ -600,9 +600,9 @@ async runBatch(queue) {
 	        this.state.offset += this.state._skippedMessages.length;
 	        log.verb('There\'s still nothing we can delete, continuing check.');
 	        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, adjusted to ${this.state.offset})`);
-          // Gonna force this to go through 100 page repeats before we skip to the next job in the batch.
+          // Gonna force this to go through 20 page repeats before we skip to the next job in the batch.
           // This is to ensure completion of the job.
-          if (endMyLife == 100) {
+          if (endMyLife == 20) {
             endMyLife = 0;
             log.verb('Ended because API returned an empty page.');
             log.verb('[End state]', this.state);
