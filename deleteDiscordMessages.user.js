@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name            BetterUndiscord
+// @name            Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.2.3.better
-// @author          Original by victornpb, updated by ImguRandom, with code from yazanzaid00
-// @homepageURL     https://github.com/ImguRandom/BetterUndiscord
+// @version         5.2.3
+// @author          victornpb
+// @homepageURL     https://github.com/victornpb/undiscord
 // @supportURL      https://github.com/victornpb/undiscord/discussions
 // @match           https://*.discord.com/app
 // @match           https://*.discord.com/channels/*
@@ -11,7 +11,7 @@
 // @license         MIT
 // @namespace       https://github.com/victornpb/deleteDiscordMessages
 // @icon            https://victornpb.github.io/undiscord/images/icon128.png
-// @downloadURL     https://raw.githubusercontent.com/ImguRandom/BetterUndiscord/master/deleteDiscordMessages.user.js
+// @downloadURL     https://raw.githubusercontent.com/victornpb/deleteDiscordMessages/master/deleteDiscordMessages.user.js
 // @contributionURL https://www.buymeacoffee.com/vitim
 // @grant           none
 // ==/UserScript==
@@ -19,7 +19,7 @@
 	'use strict';
 
 	/* rollup-plugin-baked-env */
-	const VERSION = "5.2.3.better";
+	const VERSION = "5.2.3";
 
 	var themeCss = (`
 /* undiscord window */
@@ -127,7 +127,7 @@
 [name^="grab-"] { position: absolute; --size: 6px; --corner-size: 16px; --offset: -1px; z-index: 9; }
 [name^="grab-"]:hover{ background: rgba(128,128,128,0.1); }
 [name="grab-t"] { top: 0px; left: var(--corner-size); right: var(--corner-size); height: var(--size); margin-top: var(--offset); cursor: ns-resize; }
-[name="grab-r"] { top: var(--corner-size); bottom: var(--corner-size); right: 0px; width: var(--size); margin-right: var(--offset); 
+[name="grab-r"] { top: var(--corner-size); bottom: var(--corner-size); right: 0px; width: var(--size); margin-right: var(--offset);
   cursor: ew-resize; }
 [name="grab-b"] { bottom: 0px; left: var(--corner-size); right: var(--corner-size); height: var(--size); margin-bottom: var(--offset); cursor: ns-resize; }
 [name="grab-l"] { top: var(--corner-size); bottom: var(--corner-size); left: 0px; width: var(--size); margin-left: var(--offset); cursor: ew-resize; }
@@ -328,7 +328,7 @@
                         <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="searchDelay" type="range" value="1000" step="100" min="100" max="60000">
+                        <input id="searchDelay" type="range" value="5000" step="100" min="100" max="60000">
                         <div id="searchDelayValue"></div>
                     </div>
                 </fieldset>
@@ -338,7 +338,7 @@
                         <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="deleteDelay" type="range" value="2400" step="50" min="50" max="10000">
+                        <input id="deleteDelay" type="range" value="5000" step="50" min="50" max="10000">
                         <div id="deleteDelayValue"></div>
                     </div>
                     <br>
@@ -426,6 +426,8 @@
 	const toSnowflake = (date) => /:/.test(date) ? ((new Date(date).getTime() - 1420070400000) * Math.pow(2, 22)) : date;
 	const replaceInterpolations = (str, obj, removeMissing = false) => str.replace(/\{\{([\w_]+)\}\}/g, (m, key) => obj[key] || (removeMissing ? '' : m));
 
+  var endMyLife = 0;
+
 	const PREFIX$1 = '[UNDISCORD]';
 
 	/**
@@ -499,7 +501,7 @@
 	  }
 
 	  /** Automate the deletion process of multiple channels */
-	  async runBatch(queue) {
+async runBatch(queue) {
   if (this.state.running) return log.error('Already running!');
 
   log.info(`Runnning batch with queue of ${queue.length} jobs`);
@@ -590,17 +592,27 @@
 	        const oldOffset = this.state.offset;
 	        this.state.offset += this.state._skippedMessages.length;
 	        log.verb('There\'s nothing we can delete on this page, checking next page...');
-	        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, adjusted to ${this.state.offset})`);
+	        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, ajusted to ${this.state.offset})`);
 	      }
 	      else {
-                const oldOffset = this.state.offset;
+          endMyLife += 1;
+          const oldOffset = this.state.offset;
 	        this.state.offset += this.state._skippedMessages.length;
 	        log.verb('There\'s still nothing we can delete, continuing check.');
 	        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, adjusted to ${this.state.offset})`);
+          // Gonna force this to go through 100 page repeats before we skip to the next job in the batch.
+          // This is to ensure completion of the job.
+          if (endMyLife == 100) {
+            endMyLife = 0;
+            log.verb('Ended because API returned an empty page.');
+            log.verb('[End state]', this.state);
+            if (isJob) break; // break without stopping if this is part of a job
+            this.state.running = false;
+          }
 	      }
-	      
+
 	      // wait before next page (fix search page not updating fast enough)
-	      log.verb(`Waiting ${(this.options.searchDelay/1000).toFixed(2)}s before next page...`);
+	      log.verb(`Waiting ${(this.options.searchDelay / 1000).toFixed(2)}s before next page...`);
 	      await wait(this.options.searchDelay);
 
 	    } while (this.state.running);
@@ -694,27 +706,38 @@
 	    if (!resp.ok) {
 	      // searching messages too fast
 	      if (resp.status === 429) {
-			// existing error handling code...
+	        let w = (await resp.json()).retry_after * 1000;
+	        w = w || this.stats.searchDelay; // Fix retry_after 0
+
+	        this.stats.throttledCount++;
+	        this.stats.throttledTotalTime += w;
+	        this.stats.searchDelay += w; // increase delay
+	        w = this.stats.searchDelay;
+	        log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
+	        this.printStats();
+	        log.verb(`Cooling down for ${w * 2}ms before retrying...`);
+
+	        await wait(w * 2);
+	        return await this.search();
 	      }
-		  // Replace only this current else block
-		  else {
-			const body = await resp.text();
-			try {
-			  const r = JSON.parse(body);
-			  if (resp.status === 400 && r.code === 50083) {
-				// existing error handling code...
-			  } else {
-				log.error(`Error deleting message, API responded with status ${resp.status}!`, r);
-				log.verb('Related object:', redact(JSON.stringify(message)));
-				this.state.failCount++;
-				// Instead of throwing an error, just return a failure status
-				return 'FAILED';
-			  }
-			} catch (e) {
-			  log.error(`Fail to parse JSON. API responded with status ${resp.status}!`, body);
-			  // Again, instead of throwing an error, just return a failure status
-			  return 'FAILED';
-			}
+	      else {
+          const body = await resp.text();
+          try {
+            const r = JSON.parse(body);
+            if (resp.status === 400 && r.code === 50083) {
+            // existing error handling code...
+            } else {
+            log.error(`Error deleting message, API responded with status ${resp.status}!`, r);
+            log.verb('Related object:', redact(JSON.stringify(message)));
+            this.state.failCount++;
+            // Instead of throwing an error, just return a failure status
+            return 'FAILED';
+            }
+          } catch (e) {
+            log.error(`Fail to parse JSON. API responded with status ${resp.status}!`, body);
+            // Again, instead of throwing an error, just return a failure status
+            return 'FAILED';
+          }
 		  }
 	    }
 	    const data = await resp.json();
@@ -736,7 +759,7 @@
 	    // we can only delete some types of messages, system messages are not deletable.
 	    let messagesToDelete = discoveredMessages;
 	    messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
-	    messagesToDelete = messagesToDelete.filter(msg =>  msg.pinned ? this.options.includePinned : true);
+	    messagesToDelete = messagesToDelete.filter(msg => msg.pinned ? this.options.includePinned : true);
 
 	    // custom filter of messages
 	    try {
@@ -762,10 +785,10 @@
 
 	      log.debug(
 	        // `${((this.state.delCount + 1) / this.state.grandTotal * 100).toFixed(2)}%`,
-	        `[${this.state.delCount + 1}/${this.state.grandTotal}] `+
-	        `<sup>${new Date(message.timestamp).toLocaleString()}</sup> `+
-	        `<b>${redact(message.author.username + '#' + message.author.discriminator)}</b>`+
-	        `: <i>${redact(message.content).replace(/\n/g, '↵')}</i>`+
+	        `[${this.state.delCount + 1}/${this.state.grandTotal}] ` +
+	        `<sup>${new Date(message.timestamp).toLocaleString()}</sup> ` +
+	        `<b>${redact(message.author.username + '#' + message.author.discriminator)}</b>` +
+	        `: <i>${redact(message.content).replace(/\n/g, '↵')}</i>` +
 	        (message.attachments.length ? redact(JSON.stringify(message.attachments)) : ''),
 	        `<sup>{ID:${redact(message.id)}}</sup>`
 	      );
@@ -823,11 +846,28 @@
 	        await wait(w * 2);
 	        return 'RETRY';
 	      } else {
-	        // other error
-	        log.error(`Error deleting message, API responded with status ${resp.status}!`, await resp.json());
-	        log.verb('Related object:', redact(JSON.stringify(message)));
-	        this.state.failCount++;
-	        return 'FAILED';
+	        const body = await resp.text();
+
+	        try {
+	          const r = JSON.parse(body);
+
+	          if (resp.status === 400 && r.code === 50083) {
+	            // 400 can happen if the thread is archived (code=50083)
+	            // in this case we need to "skip" this message from the next search
+	            // otherwise it will come up again in the next page (and fail to delete again)
+	            log.warn('Error deleting message (Thread is archived). Will increment offset so we don\'t search this in the next page...');
+	            this.state.offset++;
+	            this.state.failCount++;
+	            return 'FAIL_SKIP'; // Failed but we will skip it next time
+	          }
+
+	          log.error(`Error deleting message, API responded with status ${resp.status}!`, r);
+	          log.verb('Related object:', redact(JSON.stringify(message)));
+	          this.state.failCount++;
+	          return 'FAILED';
+	        } catch (e) {
+	          log.error(`Fail to parse JSON. API responded with status ${resp.status}!`, body);
+	        }
 	      }
 	    }
 
@@ -1165,7 +1205,13 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	function getToken() {
 	  window.dispatchEvent(new Event('beforeunload'));
 	  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-	  return JSON.parse(LS.token);
+	  try {
+	    return JSON.parse(LS.token);
+	  } catch {
+	    log.info('Could not automatically detect Authorization Token in local storage!');
+	    log.info('Attempting to grab token using webpack');
+	    return (window.webpackChunkdiscord_app.push([[''], {}, e => { window.m = []; for (let c in e.c) window.m.push(e.c[c]); }]), window.m).find(m => m?.exports?.default?.getToken !== void 0).exports.default.getToken();
+	  }
 	}
 
 	function getAuthorId() {
@@ -1449,14 +1495,14 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  //advanced
 	  const searchDelay = parseInt($('input#searchDelay').value.trim());
 	  const deleteDelay = parseInt($('input#deleteDelay').value.trim());
-	 
+
 	  // token
 	  const authToken = $('input#token').value.trim() || fillToken();
 	  if (!authToken) return; // get token already logs an error.
-	  
+
 	  // validate input
 	  if (!guildId) return log.error('You must fill the "Server ID" field!');
-	 
+
 	  // clear logArea
 	  ui.logArea.innerHTML = '';
 
@@ -1494,7 +1540,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  // single channel
 	  else {
 	    try {
-	      await undiscordCore.run();
+	      await undiscordCore.run(true);
 	    } catch (err) {
 	      log.error('CoreException', err);
 	      undiscordCore.stop();
