@@ -41,8 +41,9 @@ class UndiscordCore {
     delCount: 0,
     failCount: 0,
     grandTotal: 0,
-    offset: 0,
+    offset: {'asc': 0, 'desc': 0},
     iterations: 0,
+    sortOrder: 'asc',
 
     _seachResponse: null,
     _messagesToDelete: [],
@@ -69,8 +70,9 @@ class UndiscordCore {
       delCount: 0,
       failCount: 0,
       grandTotal: 0,
-      offset: 0,
+      offset: {'asc': 0, 'desc': 0},
       iterations: 0,
+      sortOrder: 'asc',
 
       _seachResponse: null,
       _messagesToDelete: [],
@@ -133,6 +135,8 @@ class UndiscordCore {
 
       log.verb('Fetching messages...');
       // Search messages
+      this.state.sortOrder = this.state.sortOrder == 'desc' ? 'asc' : 'desc';
+      log.verb(`Set sort order to ${this.state.sortOrder} for this search.`);
       await this.search();
 
       // Process results and find which messages should be deleted
@@ -143,7 +147,8 @@ class UndiscordCore {
         `(Messages in current page: ${this.state._seachResponse.messages.length}`,
         `To be deleted: ${this.state._messagesToDelete.length}`,
         `Skipped: ${this.state._skippedMessages.length})`,
-        `offset: ${this.state.offset}`
+        `offset (asc): ${this.state.offset['asc']}`,
+        `offset (desc): ${this.state.offset['desc']}`
       );
       this.printStats();
 
@@ -164,10 +169,10 @@ class UndiscordCore {
       else if (this.state._skippedMessages.length > 0) {
         // There are stuff, but nothing to delete (example a page full of system messages)
         // check next page until we see a page with nothing in it (end of results).
-        const oldOffset = this.state.offset;
-        this.state.offset += this.state._skippedMessages.length;
+        const oldOffset = this.state.offset[this.state.sortOrder];
+        this.state.offset[this.state.sortOrder] += this.state._skippedMessages.length;
         log.verb('There\'s nothing we can delete on this page, checking next page...');
-        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, ajusted to ${this.state.offset})`);
+        log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset for ${this.state.sortOrder} was ${oldOffset}, ajusted to ${this.state.offset[this.state.sortOrder]})`);
       }
       else {
         log.verb('Ended because API returned an empty page.');
@@ -239,8 +244,8 @@ class UndiscordCore {
         ['min_id', this.options.minId ? toSnowflake(this.options.minId) : undefined],
         ['max_id', this.options.maxId ? toSnowflake(this.options.maxId) : undefined],
         ['sort_by', 'timestamp'],
-        ['sort_order', 'desc'],
-        ['offset', this.state.offset],
+        ['sort_order', this.state.sortOrder],
+        ['offset', this.state.offset[this.state.sortOrder]],
         ['has', this.options.hasLink ? 'link' : undefined],
         ['has', this.options.hasFile ? 'file' : undefined],
         ['content', this.options.content || undefined],
@@ -407,7 +412,7 @@ class UndiscordCore {
             // in this case we need to "skip" this message from the next search
             // otherwise it will come up again in the next page (and fail to delete again)
             log.warn('Error deleting message (Thread is archived). Will increment offset so we don\'t search this in the next page...');
-            this.state.offset++;
+            this.state.offset[this.state.sortOrder]++;
             this.state.failCount++;
             return 'FAIL_SKIP'; // Failed but we will skip it next time
           }
