@@ -12,7 +12,7 @@ const blob = new Blob([workerScript], { type: 'application/javascript' });
 const workerUrl = URL.createObjectURL(blob);
 
 // Helpers
-const wait = ms => {
+export const wait = ms => {
   return new Promise((resolve, reject) => {
     const worker = new Worker(workerUrl);
     let start = Date.now();
@@ -20,7 +20,7 @@ const wait = ms => {
     worker.addEventListener('message', function(e) {
       if (e.data === 'done') {
         let delay = Date.now() - start - ms;
-        if(delay > 100) log.warn(`This action was delayed ${delay}ms more than it should've, make sure you don't have too many tabs open!`);
+        if(delay > 100) console.warn(`This action was delayed ${delay}ms more than it should've, make sure you don't have too many tabs open!`);
         resolve();
         worker.terminate();
       }

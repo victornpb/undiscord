@@ -444,7 +444,7 @@
 	    worker.addEventListener('message', function(e) {
 	      if (e.data === 'done') {
 	        let delay = Date.now() - start - ms;
-	        if(delay > 100) log.warn(`This action was delayed ${delay}ms more than it should've, make sure you don't have too many tabs open!`);
+	        if(delay > 100) console.warn(`This action was delayed ${delay}ms more than it should've, make sure you don't have too many tabs open!`);
 	        resolve();
 	        worker.terminate();
 	      }
