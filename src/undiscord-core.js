@@ -44,6 +44,9 @@ class UndiscordCore {
     offset: {'asc': 0, 'desc': 0},
     iterations: 0,
     sortOrder: 'asc',
+    searchedPages: 0,
+    totalSkippedMessages: 0,
+    startEmptyPages: -1,
 
     _seachResponse: null,
     _messagesToDelete: [],
@@ -73,6 +76,9 @@ class UndiscordCore {
       offset: {'asc': 0, 'desc': 0},
       iterations: 0,
       sortOrder: 'asc',
+      searchedPages: 0,
+      totalSkippedMessages: 0,
+      startEmptyPages: -1,
 
       _seachResponse: null,
       _messagesToDelete: [],
@@ -138,6 +144,7 @@ class UndiscordCore {
       this.state.sortOrder = this.state.sortOrder == 'desc' ? 'asc' : 'desc';
       log.verb(`Set sort order to ${this.state.sortOrder} for this search.`);
       await this.search();
+      this.state.searchedPages++;
 
       // Process results and find which messages should be deleted
       await this.filterResponse();
@@ -151,6 +158,7 @@ class UndiscordCore {
         `offset (desc): ${this.state.offset['desc']}`
       );
       this.printStats();
+      this.state.totalSkippedMessages += this.state._skippedMessages.length;
 
       // Calculate estimated time
       this.calcEtr();
@@ -158,6 +166,7 @@ class UndiscordCore {
 
       // if there are messages to delete, delete them
       if (this.state._messagesToDelete.length > 0) {
+        this.state.startEmptyPages = -1;
 
         if (await this.confirm() === false) {
           this.state.running = false; // break out of a job
@@ -169,16 +178,30 @@ class UndiscordCore {
       else if (this.state._skippedMessages.length > 0) {
         // There are stuff, but nothing to delete (example a page full of system messages)
         // check next page until we see a page with nothing in it (end of results).
+        this.state.startEmptyPages = -1;
+
         const oldOffset = this.state.offset[this.state.sortOrder];
         this.state.offset[this.state.sortOrder] += this.state._skippedMessages.length;
         log.verb('There\'s nothing we can delete on this page, checking next page...');
         log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset for ${this.state.sortOrder} was ${oldOffset}, ajusted to ${this.state.offset[this.state.sortOrder]})`);
       }
       else {
-        log.verb('Ended because API returned an empty page.');
-        log.verb('[End state]', this.state);
-        if (isJob) break; // break without stopping if this is part of a job
-        this.state.running = false;
+        if (this.state.startEmptyPages == -1) this.state.startEmptyPages = Date.now();
+        // if the first page we are searching is empty
+        // or we've been getting empty page responses for the past 30 seconds (enough for Discord to re-index the pages)
+        // or (deleted messages + failed to delete + total skipped) >= total messages
+        // ONLY THEN proceed with ending the job
+        if (this.state.searchedPages == 1 || (Date.now() - this.state.startEmptyPages) > 30 * 1000 || (this.state.delCount + this.state.failCount + this.state.totalSkippedMessages) >= this.state.grandTotal) {
+          log.verb('Ended because API returned an empty page.');
+          log.verb('[End state]', this.state);
+          if (isJob) break; // break without stopping if this is part of a job
+          this.state.running = false;
+        } else {
+          // wait 10 seconds for Discord to re-index the search page before retrying
+          const waitingTime = 10 * 1000;
+          log.verb(`API returned an empty page, waiting an extra ${(waitingTime / 1000).toFixed(2)}s before searching again...`);
+          await wait(waitingTime);
+        }
       }
 
       // wait before next page (fix search page not updating fast enough)
