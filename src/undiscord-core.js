@@ -260,7 +260,7 @@ class UndiscordCore {
 
     let resp;
     try {
-      this.beforeRequest();
+      await this.beforeRequest();
       resp = await fetch(API_SEARCH_URL + 'search?' + queryString([
         ['author_id', this.options.authorId || undefined],
         ['channel_id', (this.options.guildId !== '@me' ? this.options.channelId : undefined) || undefined],
@@ -394,7 +394,7 @@ class UndiscordCore {
     const API_DELETE_URL = `https://discord.com/api/v9/channels/${message.channel_id}/messages/${message.id}`;
     let resp;
     try {
-      this.beforeRequest();
+      await this.beforeRequest();
       resp = await fetch(API_DELETE_URL, {
         method: 'DELETE',
         headers: {
@@ -453,7 +453,20 @@ class UndiscordCore {
   }
 
   #beforeTs = 0; // used to calculate latency
-  beforeRequest() {
+  #requestLog = []; // used to add any extra delay
+  async beforeRequest() {
+    this.#requestLog.push(Date.now());
+    this.#requestLog = this.#requestLog.filter(timestamp => (Date.now() - timestamp) < 60 * 1000);
+    let rateLimits = [[45, 60], [4, 5]]; // todo: confirm, testing shows these are right
+    for(let [maxRequests, timePeriod] of rateLimits){
+      if (this.#requestLog.length >= maxRequests && (Date.now() - this.#requestLog[this.#requestLog.length - maxRequests]) < timePeriod * 1000) {
+        let delay = timePeriod * 1000 - (Date.now() - this.#requestLog[this.#requestLog.length - maxRequests]);
+        delay = delay * 1.15 + 300; // adding a buffer and additional wait time
+        log.verb(`Delaying for an extra ${(delay / 1000).toFixed(2)}s to avoid rate limits...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        break;
+      }
+    }
     this.#beforeTs = Date.now();
   }
   afterRequest() {
