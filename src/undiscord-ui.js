@@ -32,6 +32,7 @@ const ui = {
   undiscordBtn: null,
   logArea: null,
   autoScroll: null,
+  trimLog: null,
 
   // progress handler
   progressMain: null,
@@ -92,6 +93,7 @@ function initUI() {
   // cached elements
   ui.logArea = $('#logArea');
   ui.autoScroll = $('#autoScroll');
+  ui.trimLog = $('#trimLog');
   ui.progressMain = $('#progressBar');
   ui.progressIcon = ui.undiscordBtn.querySelector('progress');
   ui.percent = $('#progressPercent');
@@ -185,6 +187,17 @@ function initUI() {
 
 function printLog(type = '', args) {
   ui.logArea.insertAdjacentHTML('beforeend', `<div class="log log-${type}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
+
+  if (ui.trimLog.checked) {
+    const maxLogEntries = 500;
+    const logEntries = ui.logArea.querySelectorAll('.log');
+    if (logEntries.length > maxLogEntries) {
+      for (let i = 0; i < (logEntries.length - maxLogEntries); i++) {
+        logEntries[i].remove();
+      }
+    }
+  }
+
   if (ui.autoScroll.checked) ui.logArea.querySelector('div:last-child').scrollIntoView(false);
   if (type==='error') console.error(PREFIX, ...Array.from(args));
 }
