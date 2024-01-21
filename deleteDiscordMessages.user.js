@@ -228,6 +228,9 @@
                         After requesting your data from discord, you can import it here.<br>
                         Select the "messages/index.json" file from the discord archive.
                     </div>
+                    <div class="sectionDescription">
+                        <label><input id="includeServers" type="checkbox">Include servers</label>
+                    </div>
                 </fieldset>
             </details>
             <hr>
@@ -446,6 +449,7 @@
 	    hasLink: null, // Filter messages that contains link
 	    hasFile: null, // Filter messages that contains file
 	    includeNsfw: null, // Search in NSFW channels
+	    includeServers: null, // Search in server channels
 	    includePinned: null, // Delete messages that are pinned
 	    pattern: null, // Only delete messages that match the regex (insensitive)
 	    searchDelay: null, // Delay each time we fetch for more messages
@@ -520,9 +524,12 @@
 	        ...this.options, // keep current options
 	        ...job, // override with options for that job
 	      };
-
-	      await this.run(true);
-	      if (!this.state.running) break;
+	      if (this.options.guildId !== '@me' && !this.options.includeServers) {
+	        log.verb(`Skipping the channel ${this.options.channelId} as it's a server channel.`);
+	      } else {
+	        await this.run(true);
+	        if (!this.state.running) break;
+	      }
 
 	      log.info('Job ended.', `(${i + 1}/${queue.length})`);
 	      this.resetState();
@@ -730,9 +737,10 @@
 	        return await this.search();
 	      }
 	      else {
-	        this.state.running = false;
 	        log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
-	        throw resp;
+	        const data = {messages: []};
+	        this.state._seachResponse = data;
+	        return data;
 	      }
 	    }
 	    const data = await resp.json();
@@ -1488,6 +1496,8 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  const guildId = $('input#guildId').value.trim();
 	  const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
 	  const includeNsfw = $('input#includeNsfw').checked;
+	  // wipe archive
+	  const includeServers = $('input#includeServers').checked;
 	  // filter
 	  const content = $('input#search').value.trim();
 	  const hasLink = $('input#hasLink').checked;
@@ -1527,6 +1537,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	    hasLink,
 	    hasFile,
 	    includeNsfw,
+	    includeServers,
 	    includePinned,
 	    pattern,
 	    searchDelay,

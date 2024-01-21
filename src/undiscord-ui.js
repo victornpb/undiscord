@@ -253,6 +253,8 @@ async function startAction() {
   const guildId = $('input#guildId').value.trim();
   const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
   const includeNsfw = $('input#includeNsfw').checked;
+  // wipe archive
+  const includeServers = $('input#includeServers').checked;
   // filter
   const content = $('input#search').value.trim();
   const hasLink = $('input#hasLink').checked;
@@ -292,6 +294,7 @@ async function startAction() {
     hasLink,
     hasFile,
     includeNsfw,
+    includeServers,
     includePinned,
     pattern,
     searchDelay,
