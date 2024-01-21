@@ -398,6 +398,8 @@
                 <span class="spacer"></span>
                 <label>
                     <input id="trimLog" type="checkbox" checked> Trim log
+                </label>
+                <label>
                     <input id="autoScroll" type="checkbox" checked> Auto scroll
                 </label>
                 <div class="resize-handle"></div>
