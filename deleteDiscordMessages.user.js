@@ -681,7 +681,7 @@
 
 	  /** Calculate the estimated time remaining based on the current stats */
 	  calcEtr() {
-	    this.stats.etr = (this.options.searchDelay * Math.round(this.state.grandTotal / 25)) + ((this.options.deleteDelay + this.stats.avgPing) * this.state.grandTotal);
+	    this.stats.etr = (this.options.searchDelay + this.stats.avgPing) * Math.round((this.state.grandTotal - this.state.delCount) / 25) + (this.options.deleteDelay + this.stats.avgPing) * (this.state.grandTotal - this.state.delCount);
 	  }
 
 	  /** As for confirmation in the beggining process */
