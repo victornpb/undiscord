@@ -161,9 +161,9 @@ function initUI() {
     // Get channel id field to set it later
     const channelIdField = $('input#channelId');
 
-    // Force the guild id to be ourself (@me)
+    // Force the guild id to be 'null' (placeholder value)
     const guildIdField = $('input#guildId');
-    guildIdField.value = '@me';
+    guildIdField.value = 'null';
 
     // Set author id in case its not set already
     $('input#authorId').value = getAuthorId();
@@ -333,7 +333,7 @@ async function startAction() {
   // multiple channels
   else if (channelIds.length > 1) {
     const jobs = channelIds.map(ch => ({
-      guildId: guildId,
+      guildId: null,
       channelId: ch,
     }));
 

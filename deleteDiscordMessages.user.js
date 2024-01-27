@@ -555,12 +555,9 @@
 	        ...this.options, // keep current options
 	        ...job, // override with options for that job
 	      };
-	      if (this.options.guildId !== '@me' && !this.options.includeServers) {
-	        log.verb(`Skipping the channel ${this.options.channelId} as it's a server channel.`);
-	      } else {
-	        await this.run(true);
-	        if (!this.state.running) break;
-	      }
+
+	      await this.run(true);
+	      if (!this.state.running) break;
 
 	      log.info('Job ended.', `(${i + 1}/${queue.length})`);
 	      this.resetState();
@@ -580,6 +577,18 @@
 	    this.stats.startTime = new Date();
 
 	    log.success(`\nStarted at ${this.stats.startTime.toLocaleString()}`);
+	    if (this.onStart) this.onStart(this.state, this.stats);
+
+	    if (!this.options.guildId) {
+	      log.verb('Fetching channel info...');
+	      await this.fetchChannelInfo();
+	    }
+	    if (!this.options.guildId) return; // message is handled in fetchChannelInfo
+	    if (isJob && this.options.guildId !== '@me' && !this.options.includeServers) {
+	      log.warn(`Skipping the channel ${this.options.channelId} as it's a server channel.`);
+	      return;
+	    }
+
 	    log.debug(
 	      `authorId = "${redact(this.options.authorId)}"`,
 	      `guildId = "${redact(this.options.guildId)}"`,
@@ -589,8 +598,6 @@
 	      `hasLink = ${!!this.options.hasLink}`,
 	      `hasFile = ${!!this.options.hasFile}`,
 	    );
-
-	    if (this.onStart) this.onStart(this.state, this.stats);
 
 	    do {
 	      this.state.iterations++;
@@ -707,6 +714,60 @@
 	      this.options.askForConfirmation = false; // do not ask for confirmation again on the next request
 	      return true;
 	    }
+	  }
+
+	  async fetchChannelInfo() {
+	    let API_CHANNEL_URL = `https://discord.com/api/v9/channels/${this.options.channelId}`;
+
+	    let resp;
+	    try {
+	      await this.beforeRequest();
+	      resp = await fetch(API_CHANNEL_URL, {
+	        headers: {
+	          'Authorization': this.options.authToken,
+	        }
+	      });
+	      this.afterRequest();
+	    } catch (err) {
+	      this.state.running = false;
+	      log.error('Channel request threw an error:', err);
+	      throw err;
+	    }
+
+	    // not indexed yet
+	    if (resp.status === 202) {
+	      let w = (await resp.json()).retry_after;
+	      w = !isNaN(w) ? w * 1000 : this.stats.searchDelay; // Fix retry_after 0
+	      this.stats.throttledCount++;
+	      this.stats.throttledTotalTime += w;
+	      log.warn(`This channel isn't indexed yet. Waiting ${w}ms for discord to index it...`);
+	      await wait(w);
+	      return await this.fetchChannelInfo();
+	    }
+
+	    if (!resp.ok) {
+	      // rate limit
+	      if (resp.status === 429) {
+	        let w = (await resp.json()).retry_after;
+	        w = !isNaN(w) ? w * 1000 : this.stats.searchDelay; // Fix retry_after 0
+
+	        this.stats.throttledCount++;
+	        this.stats.throttledTotalTime += w;
+	        log.warn(`Being rate limited by the API for ${w}ms!`);
+	        this.printStats();
+	        log.verb(`Cooling down for ${w * 2}ms before retrying...`);
+
+	        await wait(w * 2);
+	        return await this.fetchChannelInfo();
+	      }
+	      else {
+	        log.error(`Error fetching the channel, API responded with status ${resp.status}!\n`, await resp.json());
+	        return {};
+	      }
+	    }
+	    const data = await resp.json();
+	    this.options.guildId = data.guild_id ?? '@me';
+	    return data;
 	  }
 
 	  async search() {
@@ -915,7 +976,7 @@
 	    this.#requestLog.push(Date.now());
 	    this.#requestLog = this.#requestLog.filter(timestamp => (Date.now() - timestamp) < 60 * 1000);
 	    let rateLimits = [[45, 60], [4, 5]]; // todo: confirm, testing shows these are right
-	    for(let [maxRequests, timePeriod] of rateLimits){
+	    for (let [maxRequests, timePeriod] of rateLimits) {
 	      if (this.#requestLog.length >= maxRequests && (Date.now() - this.#requestLog[this.#requestLog.length - maxRequests]) < timePeriod * 1000) {
 	        let delay = timePeriod * 1000 - (Date.now() - this.#requestLog[this.#requestLog.length - maxRequests]);
 	        delay = delay * 1.15 + 300; // adding a buffer and additional wait time
@@ -1435,9 +1496,9 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	    // Get channel id field to set it later
 	    const channelIdField = $('input#channelId');
 
-	    // Force the guild id to be ourself (@me)
+	    // Force the guild id to be 'null' (placeholder value)
 	    const guildIdField = $('input#guildId');
-	    guildIdField.value = '@me';
+	    guildIdField.value = 'null';
 
 	    // Set author id in case its not set already
 	    $('input#authorId').value = getAuthorId();
@@ -1590,7 +1651,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  };
 	  if (channelIds.length > 1) {
 	    const jobs = channelIds.map(ch => ({
-	      guildId: guildId,
+	      guildId: null,
 	      channelId: ch,
 	    }));
 
