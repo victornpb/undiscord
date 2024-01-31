@@ -350,6 +350,7 @@
                         Use the help link for more information.
                     </div>
                 </fieldset>
+                <label><input id="rateLimitPrevention" type="checkbox" checked>Rate limit prevention</label>
                 <hr>
                 <fieldset>
                     <legend>
@@ -975,14 +976,16 @@
 	  async beforeRequest() {
 	    this.#requestLog.push(Date.now());
 	    this.#requestLog = this.#requestLog.filter(timestamp => (Date.now() - timestamp) < 60 * 1000);
-	    let rateLimits = [[45, 60], [4, 5]]; // todo: confirm, testing shows these are right
-	    for (let [maxRequests, timePeriod] of rateLimits) {
-	      if (this.#requestLog.length >= maxRequests && (Date.now() - this.#requestLog[this.#requestLog.length - maxRequests]) < timePeriod * 1000) {
-	        let delay = timePeriod * 1000 - (Date.now() - this.#requestLog[this.#requestLog.length - maxRequests]);
-	        delay = delay * 1.15 + 300; // adding a buffer and additional wait time
-	        log.verb(`Delaying for an extra ${(delay / 1000).toFixed(2)}s to avoid rate limits...`);
-	        await new Promise(resolve => setTimeout(resolve, delay));
-	        break;
+	    if (ui.rateLimitPrevention.checked) {
+	      let rateLimits = [[45, 60], [4, 5]]; // todo: confirm, testing shows these are right
+	      for (let [maxRequests, timePeriod] of rateLimits) {
+	        if (this.#requestLog.length >= maxRequests && (Date.now() - this.#requestLog[this.#requestLog.length - maxRequests]) < timePeriod * 1000) {
+	          let delay = timePeriod * 1000 - (Date.now() - this.#requestLog[this.#requestLog.length - maxRequests]);
+	          delay = delay * 1.15 + 300; // adding a buffer and additional wait time
+	          log.verb(`Delaying for an extra ${(delay / 1000).toFixed(2)}s to avoid rate limits...`);
+	          await new Promise(resolve => setTimeout(resolve, delay));
+	          break;
+	        }
 	      }
 	    }
 	    this.#beforeTs = Date.now();
@@ -1368,6 +1371,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  logArea: null,
 	  autoScroll: null,
 	  trimLog: null,
+	  rateLimitPrevention: null,
 
 	  // progress handler
 	  progressMain: null,
@@ -1432,6 +1436,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  ui.progressMain = $('#progressBar');
 	  ui.progressIcon = ui.undiscordBtn.querySelector('progress');
 	  ui.percent = $('#progressPercent');
+	  ui.rateLimitPrevention = $('#rateLimitPrevention');
 
 	  // register event listeners
 	  $('#hide').onclick = toggleWindow;

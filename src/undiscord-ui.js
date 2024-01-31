@@ -33,6 +33,7 @@ const ui = {
   logArea: null,
   autoScroll: null,
   trimLog: null,
+  rateLimitPrevention: null,
 
   // progress handler
   progressMain: null,
@@ -97,6 +98,7 @@ function initUI() {
   ui.progressMain = $('#progressBar');
   ui.progressIcon = ui.undiscordBtn.querySelector('progress');
   ui.percent = $('#progressPercent');
+  ui.rateLimitPrevention = $('#rateLimitPrevention');
 
   // register event listeners
   $('#hide').onclick = toggleWindow;
