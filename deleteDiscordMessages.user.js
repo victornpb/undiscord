@@ -486,6 +486,7 @@
 	    pattern: null, // Only delete messages that match the regex (insensitive)
 	    searchDelay: null, // Delay each time we fetch for more messages
 	    deleteDelay: null, // Delay between each delete operation
+	    rateLimitPrevention: null, // Whether rate limit prevention is enabled or not
 	    maxAttempt: 2, // Attempts to delete a single message if it fails
 	    askForConfirmation: true,
 	  };
@@ -976,7 +977,7 @@
 	  async beforeRequest() {
 	    this.#requestLog.push(Date.now());
 	    this.#requestLog = this.#requestLog.filter(timestamp => (Date.now() - timestamp) < 60 * 1000);
-	    if (ui.rateLimitPrevention.checked) {
+	    if (this.options.rateLimitPrevention) {
 	      let rateLimits = [[45, 60], [4, 5]]; // todo: confirm, testing shows these are right
 	      for (let [maxRequests, timePeriod] of rateLimits) {
 	        if (this.#requestLog.length >= maxRequests && (Date.now() - this.#requestLog[this.#requestLog.length - maxRequests]) < timePeriod * 1000) {
@@ -1371,7 +1372,6 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  logArea: null,
 	  autoScroll: null,
 	  trimLog: null,
-	  rateLimitPrevention: null,
 
 	  // progress handler
 	  progressMain: null,
@@ -1436,7 +1436,6 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  ui.progressMain = $('#progressBar');
 	  ui.progressIcon = ui.undiscordBtn.querySelector('progress');
 	  ui.percent = $('#progressPercent');
-	  ui.rateLimitPrevention = $('#rateLimitPrevention');
 
 	  // register event listeners
 	  $('#hide').onclick = toggleWindow;
@@ -1473,7 +1472,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  };
 	  $('button#getToken').onclick = () => $('input#token').value = fillToken();
 
-	  // sync delays
+	  // sync advanced settings
 	  $('input#searchDelay').onchange = (e) => {
 	    const v = parseInt(e.target.value);
 	    if (v) undiscordCore.options.searchDelay = v;
@@ -1481,6 +1480,9 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  $('input#deleteDelay').onchange = (e) => {
 	    const v = parseInt(e.target.value);
 	    if (v) undiscordCore.options.deleteDelay = v;
+	  };
+	  $('input#rateLimitPrevention').onchange = (e) => {
+	    undiscordCore.options.rateLimitPrevention = e.target.checked ?? false;
 	  };
 
 	  $('input#searchDelay').addEventListener('input', (event) => {
@@ -1623,6 +1625,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  //advanced
 	  const searchDelay = parseInt($('input#searchDelay').value.trim());
 	  const deleteDelay = parseInt($('input#deleteDelay').value.trim());
+	  const rateLimitPrevention = $('input#rateLimitPrevention').checked;
 	 
 	  // token
 	  const authToken = $('input#token').value.trim() || fillToken();
@@ -1652,6 +1655,7 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	    pattern,
 	    searchDelay,
 	    deleteDelay,
+	    rateLimitPrevention,
 	    // maxAttempt: 2,
 	  };
 	  if (channelIds.length > 1) {
