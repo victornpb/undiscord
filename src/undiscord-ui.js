@@ -32,6 +32,7 @@ const ui = {
   undiscordBtn: null,
   logArea: null,
   autoScroll: null,
+  trimLog: null,
 
   // progress handler
   progressMain: null,
@@ -92,6 +93,7 @@ function initUI() {
   // cached elements
   ui.logArea = $('#logArea');
   ui.autoScroll = $('#autoScroll');
+  ui.trimLog = $('#trimLog');
   ui.progressMain = $('#progressBar');
   ui.progressIcon = ui.undiscordBtn.querySelector('progress');
   ui.percent = $('#progressPercent');
@@ -131,7 +133,7 @@ function initUI() {
   };
   $('button#getToken').onclick = () => $('input#token').value = fillToken();
 
-  // sync delays
+  // sync advanced settings
   $('input#searchDelay').onchange = (e) => {
     const v = parseInt(e.target.value);
     if (v) undiscordCore.options.searchDelay = v;
@@ -139,6 +141,9 @@ function initUI() {
   $('input#deleteDelay').onchange = (e) => {
     const v = parseInt(e.target.value);
     if (v) undiscordCore.options.deleteDelay = v;
+  };
+  $('input#rateLimitPrevention').onchange = (e) => {
+    undiscordCore.options.rateLimitPrevention = e.target.checked ?? false;
   };
 
   $('input#searchDelay').addEventListener('input', (event) => {
@@ -159,9 +164,9 @@ function initUI() {
     // Get channel id field to set it later
     const channelIdField = $('input#channelId');
 
-    // Force the guild id to be ourself (@me)
+    // Force the guild id to be 'null' (placeholder value)
     const guildIdField = $('input#guildId');
-    guildIdField.value = '@me';
+    guildIdField.value = 'null';
 
     // Set author id in case its not set already
     $('input#authorId').value = getAuthorId();
@@ -185,6 +190,17 @@ function initUI() {
 
 function printLog(type = '', args) {
   ui.logArea.insertAdjacentHTML('beforeend', `<div class="log log-${type}">${Array.from(args).map(o => typeof o === 'object' ? JSON.stringify(o, o instanceof Error && Object.getOwnPropertyNames(o)) : o).join('\t')}</div>`);
+
+  if (ui.trimLog.checked) {
+    const maxLogEntries = 500;
+    const logEntries = ui.logArea.querySelectorAll('.log');
+    if (logEntries.length > maxLogEntries) {
+      for (let i = 0; i < (logEntries.length - maxLogEntries); i++) {
+        logEntries[i].remove();
+      }
+    }
+  }
+
   if (ui.autoScroll.checked) ui.logArea.querySelector('div:last-child').scrollIntoView(false);
   if (type==='error') console.error(PREFIX, ...Array.from(args));
 }
@@ -253,6 +269,8 @@ async function startAction() {
   const guildId = $('input#guildId').value.trim();
   const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
   const includeNsfw = $('input#includeNsfw').checked;
+  // wipe archive
+  const includeServers = $('input#includeServers').checked;
   // filter
   const content = $('input#search').value.trim();
   const hasLink = $('input#hasLink').checked;
@@ -268,6 +286,7 @@ async function startAction() {
   //advanced
   const searchDelay = parseInt($('input#searchDelay').value.trim());
   const deleteDelay = parseInt($('input#deleteDelay').value.trim());
+  const rateLimitPrevention = $('input#rateLimitPrevention').checked;
  
   // token
   const authToken = $('input#token').value.trim() || fillToken();
@@ -292,10 +311,12 @@ async function startAction() {
     hasLink,
     hasFile,
     includeNsfw,
+    includeServers,
     includePinned,
     pattern,
     searchDelay,
     deleteDelay,
+    rateLimitPrevention,
     // maxAttempt: 2,
   };
 
@@ -317,7 +338,7 @@ async function startAction() {
   // multiple channels
   else if (channelIds.length > 1) {
     const jobs = channelIds.map(ch => ({
-      guildId: guildId,
+      guildId: null,
       channelId: ch,
     }));
 

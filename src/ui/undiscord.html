@@ -78,6 +78,9 @@
                         After requesting your data from discord, you can import it here.<br>
                         Select the "messages/index.json" file from the discord archive.
                     </div>
+                    <div class="sectionDescription">
+                        <label><input id="includeServers" type="checkbox">Include servers</label>
+                    </div>
                 </fieldset>
             </details>
             <hr>
@@ -101,7 +104,7 @@
                         <label><input id="hasFile" type="checkbox">has: file</label>
                     </div>
                     <div class="sectionDescription">
-                        <label><input id="includePinned" type="checkbox">Include pinned</label>
+                        <label><input id="includePinned" type="checkbox" checked>Include pinned</label>
                     </div>
                 </fieldset>
                 <hr>
@@ -178,7 +181,7 @@
                         <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="searchDelay" type="range" value="30000" step="100" min="100" max="60000">
+                        <input id="searchDelay" type="range" value="1400" step="100" min="100" max="60000">
                         <div id="searchDelayValue"></div>
                     </div>
                 </fieldset>
@@ -188,7 +191,7 @@
                         <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="deleteDelay" type="range" value="1000" step="50" min="50" max="10000">
+                        <input id="deleteDelay" type="range" value="1400" step="50" min="50" max="10000">
                         <div id="deleteDelayValue"></div>
                     </div>
                     <br>
@@ -197,6 +200,7 @@
                         Use the help link for more information.
                     </div>
                 </fieldset>
+                <label><input id="rateLimitPrevention" type="checkbox" checked>Rate limit prevention</label>
                 <hr>
                 <fieldset>
                     <legend>
@@ -245,6 +249,9 @@
                 <span class="spacer"></span>
                 <label>
                     <input id="autoScroll" type="checkbox" checked> Auto scroll
+                </label>
+                <label>
+                    <input id="trimLog" type="checkbox" checked> Trim log
                 </label>
                 <div class="resize-handle"></div>
             </div>
