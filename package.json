@@ -52,12 +52,12 @@
     "bulk"
   ],
   "devDependencies": {
-    "@rollup/plugin-json": "^6.0.0",
-    "eslint": "^8.36.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.2.0",
-    "rimraf": "^4.4.1",
-    "rollup": "^3.20.2",
+    "@rollup/plugin-json": "^6.1.0",
+    "eslint": "^8.57.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.12.0",
     "rollup-plugin-baked-env": "^1.0.1",
     "rollup-plugin-banner2": "^1.2.2",
     "rollup-plugin-commonjs": "^10.1.0",
