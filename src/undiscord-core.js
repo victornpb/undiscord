@@ -131,8 +131,6 @@ class UndiscordCore {
     do {
       this.state.iterations++;
 
-      console.log(this)
-
       log.verb('Fetching messages...');
       // Search messages
       await this.search();
