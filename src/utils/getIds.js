@@ -29,7 +29,7 @@ export async function getChannelId() {
     try {
       const response=await fetch(`https://discord.com/api/v9/channels/${m[2]}`,{headers:{Authorization:getToken()}});
       const data = await response.json();
-      if ([10, 11, 12].includes(data.type)) {log.info('selecting parent channel'); return [data.parent_id,false,m[2]];}
+      if ([10, 11, 12].includes(data.type)) {log.info('selecting parent channel'); return [data.parent_id,true,m[2]];}
       else {return [m[2],false,null];}
     } catch (err) {
       log.info('Could not get channel type, assuming not thread.');
