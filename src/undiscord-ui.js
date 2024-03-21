@@ -107,8 +107,8 @@ function initUI() {
     const guildId = $('input#guildId').value = getGuildId();
     if (guildId === '@me') $('input#channelId').value = getChannelId();
   };
-  $('button#getChannel').onclick = () => {
-    $('input#channelId').value = getChannelId();
+  $('button#getChannel').onclick = async () => {
+    $('input#channelId').value = await getChannelId();
     $('input#guildId').value = getGuildId();
   };
   $('#redact').onchange = () => {
