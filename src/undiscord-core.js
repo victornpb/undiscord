@@ -151,6 +151,7 @@ class UndiscordCore {
       this.calcEtr();
       log.verb(`Estimated time remaining: ${msToHMS(this.stats.etr)}`);
 
+      const messagesRemaining = this.state.grandTotal - this.state.offset;
       // if there are messages to delete, delete them
       if (this.state._messagesToDelete.length > 0) {
 
@@ -169,6 +170,9 @@ class UndiscordCore {
         log.verb('There\'s nothing we can delete on this page, checking next page...');
         log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, ajusted to ${this.state.offset})`);
       }
+      else if (messagesRemaining === this.state.delCount) {
+	        log.verb('There\'s messages remaining, checking next page...');
+	    }
       else {
         log.verb('Ended because API returned an empty page.');
         log.verb('[End state]', this.state);
