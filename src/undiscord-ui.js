@@ -259,6 +259,7 @@ async function startAction() {
   const hasFile = $('input#hasFile').checked;
   const includePinned = $('input#includePinned').checked;
   const pattern = $('input#pattern').value;
+  const includeApplications = $('input#includeApplications').value;
   // message interval
   const minId = $('input#minId').value.trim();
   const maxId = $('input#maxId').value.trim();
@@ -268,7 +269,7 @@ async function startAction() {
   //advanced
   const searchDelay = parseInt($('input#searchDelay').value.trim());
   const deleteDelay = parseInt($('input#deleteDelay').value.trim());
- 
+   
   // token
   const authToken = $('input#token').value.trim() || fillToken();
   if (!authToken) return; // get token already logs an error.
