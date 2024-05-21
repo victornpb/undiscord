@@ -316,7 +316,7 @@ class UndiscordCore {
     // if the user provided an author.Id and doesn't wish to include applications, skip all messages that aren't created by the author.Id.
     // fixes issues with bots & applications hanging the deletion
     if (this.options.includeApplications == false) {
-      log.verb("Include Applications is false. Skipping bots and applications...")
+      log.verb("Include Applications is false. Skipping bots and applications...");
       messagesToDelete = messagesToDelete.filter(msg => !msg.author.bot);
     }
      // custom filter of messages
