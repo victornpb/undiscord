@@ -313,7 +313,7 @@ class UndiscordCore {
     messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
     messagesToDelete = messagesToDelete.filter(msg => msg.pinned ? this.options.includePinned : true);
     
-    // if the user provided an author.Id and doesn't wish to include applications, skip all messages that aren't created by the author.Id.
+    // if the user hasn't checked the include applications option, filter out all bots
     // fixes issues with bots & applications hanging the deletion
     if (this.options.includeApplications == false) {
       log.verb("Include Applications is false. Skipping bots and applications...");
