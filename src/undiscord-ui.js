@@ -141,10 +141,10 @@ function initUI() {
   $('button#getToken').onclick = () => $('input#token').value = fillToken();
   $('input#hasFile').onclick = function() {
     validateHasFileFilter(this);
-  }
+  };
   $('input#hasNoFile').onclick = function() {
     validateHasFileFilter(this);
-  }
+  };
 
   // sync delays
   $('input#searchDelay').onchange = (e) => {
