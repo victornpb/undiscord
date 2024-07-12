@@ -27,6 +27,7 @@ class UndiscordCore {
     content: null, // Filter messages that contains this text content
     hasLink: null, // Filter messages that contains link
     hasFile: null, // Filter messages that contains file
+    hasNoFile: null, // Filter messages that contains no file (opposite of hasFile)
     includeNsfw: null, // Search in NSFW channels
     includePinned: null, // Delete messages that are pinned
     pattern: null, // Only delete messages that match the regex (insensitive)
@@ -124,6 +125,7 @@ class UndiscordCore {
       `maxId = "${redact(this.options.maxId)}"`,
       `hasLink = ${!!this.options.hasLink}`,
       `hasFile = ${!!this.options.hasFile}`,
+      `hasNoFile = ${!!this.options.hasNoFile}`,
     );
 
     if (this.onStart) this.onStart(this.state, this.stats);
@@ -311,6 +313,12 @@ class UndiscordCore {
     let messagesToDelete = discoveredMessages;
     messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
     messagesToDelete = messagesToDelete.filter(msg => msg.pinned ? this.options.includePinned : true);
+
+    // if the user picked hasNoFile, we need to filter out messages with attachments
+		// this has to be done after the search because the search API doesn't have a filter for this
+		if (this.options.hasNoFile) {
+			messagesToDelete = messagesToDelete.filter(msg => !msg.attachments.length);
+		}
 
     // custom filter of messages
     try {

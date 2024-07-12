@@ -89,6 +89,15 @@ function initUI() {
     }
   }
 
+  function validateHasFileFilter(clickedElement) {
+    const hasFile = $('input#hasFile');
+    const hasNoFile = $('input#hasNoFile');
+    if (hasFile.checked && hasNoFile.checked) {
+      clickedElement.checked = false;
+      alert('You cannot have both "Has File" and "Has No File" checked at the same time. Please uncheck one of them.');
+    }
+  }
+
   // cached elements
   ui.logArea = $('#logArea');
   ui.autoScroll = $('#autoScroll');
@@ -130,6 +139,12 @@ function initUI() {
     toggleWindow();
   };
   $('button#getToken').onclick = () => $('input#token').value = fillToken();
+  $('input#hasFile').onclick = function() {
+    validateHasFileFilter(this);
+  }
+  $('input#hasNoFile').onclick = function() {
+    validateHasFileFilter(this);
+  }
 
   // sync delays
   $('input#searchDelay').onchange = (e) => {
@@ -257,6 +272,7 @@ async function startAction() {
   const content = $('input#search').value.trim();
   const hasLink = $('input#hasLink').checked;
   const hasFile = $('input#hasFile').checked;
+  const hasNoFile = $('input#hasNoFile').checked;
   const includePinned = $('input#includePinned').checked;
   const pattern = $('input#pattern').value;
   // message interval
@@ -291,6 +307,7 @@ async function startAction() {
     content,
     hasLink,
     hasFile,
+    hasNoFile,
     includeNsfw,
     includePinned,
     pattern,
