@@ -101,8 +101,8 @@ function initUI() {
   $('#toggleSidebar').onclick = ()=> ui.undiscordWindow.classList.toggle('hide-sidebar');
   $('button#start').onclick = startAction;
   $('button#stop').onclick = stopAction;
-  $('button#clear').onclick = () => ui.logArea.innerHTML = '';
-  $('button#getAuthor').onclick = () => $('input#authorId').value = getAuthorId();
+  $('button#clear').onclick = () => { ui.logArea.innerHTML = '' };
+  $('button#getAuthor').onclick = () => { $('input#authorId').value = getAuthorId() };
   $('button#getGuild').onclick = () => {
     const guildId = $('input#guildId').value = getGuildId();
     if (guildId === '@me') $('input#channelId').value = getChannelId();
@@ -129,7 +129,7 @@ function initUI() {
     if (id) $('input#maxId').value = id;
     toggleWindow();
   };
-  $('button#getToken').onclick = () => $('input#token').value = fillToken();
+  $('button#getToken').onclick = () => { $('input#token').value = fillToken() };
 
   // sync delays
   $('input#searchDelay').onchange = (e) => {

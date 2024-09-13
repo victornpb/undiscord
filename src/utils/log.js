@@ -9,4 +9,4 @@ export const log = {
 };
 
 var logFn; // custom console.log function
-export const setLogFn = (fn) => logFn = fn;
+export const setLogFn = (fn) => {logFn = fn};
