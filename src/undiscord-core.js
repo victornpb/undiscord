@@ -80,34 +80,39 @@ class UndiscordCore {
     this.options.askForConfirmation = true;
   }
 
-  /** Automate the deletion process of multiple channels */
-  async runBatch(queue) {
-    if (this.state.running) return log.error('Already running!');
+/** Automate the deletion process of multiple channels */
+async runBatch(queue) {
+  if (this.state.running) return log.error('Already running!');
 
-    log.info(`Runnning batch with queue of ${queue.length} jobs`);
-    for (let i = 0; i < queue.length; i++) {
-      const job = queue[i];
-      log.info('Starting job...', `(${i + 1}/${queue.length})`);
+  log.info(`Running batch with queue of ${queue.length} jobs`);
+  for (let i = 0; i < queue.length; i++) {
+    const job = queue[i];
+    log.info('Starting job...', `(${i + 1}/${queue.length})`);
 
-      // set options
-      this.options = {
-        ...this.options, // keep current options
-        ...job, // override with options for that job
-      };
+    // set options
+    this.options = {
+      ...this.options, // keep current options
+      ...job, // override with options for that job
+    };
 
+    try {
       await this.run(true);
-      if (!this.state.running) break;
-
-      log.info('Job ended.', `(${i + 1}/${queue.length})`);
-      this.resetState();
-      this.options.askForConfirmation = false;
-      this.state.running = true; // continue running
+    } catch (err) {
+      log.error(`Error in job ${i + 1} for channel ${job.channelId}. Skipping to next channel...`);
     }
+    
+    if (!this.state.running) break;
 
-    log.info('Batch finished.');
-    this.state.running = false;
+    log.info('Job ended.', `(${i + 1}/${queue.length})`);
+    this.resetState();
+    this.options.askForConfirmation = false;
+    this.state.running = true; // continue running
   }
 
+  log.info('Batch finished.');
+  this.state.running = false;
+}
+  
   /** Start the deletion process */
   async run(isJob = false) {
     if (this.state.running && !isJob) return log.error('Already running!');
