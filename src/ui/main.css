@@ -63,7 +63,7 @@
     height: 100%;
     max-height: 100%;
     padding: 8px;
-    background: var(--background-secondary);
+    background: var(--bg-overlay-4, var(--background-base-lowest));
 }
 
 #undiscord .sidebar legend,
@@ -75,7 +75,7 @@
 #undiscord .main {
     display: flex;
     max-width: calc(100% - 250px);
-    background-color: var(--background-primary);
+    background-color: var(--bg-overlay-chat, var(--background-base-lower));
     flex-grow: 1;
 }
 
@@ -100,7 +100,7 @@
 
 #undiscord .tbar {
     padding: 8px;
-    background-color: var(--background-secondary-alt);
+    background-color: var(--bg-overlay-2, var(--__header-bar-background));
 }
 
 #undiscord .tbar button {

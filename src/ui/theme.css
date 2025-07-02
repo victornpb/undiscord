@@ -1,12 +1,13 @@
 /* undiscord window */
 #undiscord.browser {
-    box-shadow: var(--elevation-stroke), var(--elevation-high);
+    box-shadow: var(--shadow-border), var(--shadow-high);
+        border: 1px solid var(--border-subtle);
     overflow: hidden;
 }
 
 #undiscord.container,
 #undiscord .container {
-    background-color: var(--background-secondary);
+    background-color: var(--background-surface-high);
     border-radius: 8px;
     box-sizing: border-box;
     cursor: default;
@@ -77,7 +78,7 @@
     box-sizing: border-box;
     width: 100%;
     border-radius: 3px;
-    color: var(--text-normal);
+    color: var(--text-default);
     background-color: var(--input-background);
     border: none;
     transition: border-color 0.2s ease-in-out 0s;
@@ -93,15 +94,16 @@
 
 #undiscord .input {
     font-size: 16px;
-    box-sizing: border-box;
     width: 100%;
-    border-radius: 3px;
-    color: var(--text-normal);
-    background-color: var(--input-background);
-    border: none;
     transition: border-color 0.2s ease-in-out 0s;
     padding: 10px;
-    height: 40px;
+    height: 44px;
+    
+    background-color: var(--input-background);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: var(--text-default);
 }
 
 #undiscord fieldset {
@@ -115,7 +117,7 @@
     box-sizing: border-box;
     width: 100%;
     border-radius: 3px;
-    color: var(--text-normal);
+    color: var(--text-default);
     background-color: var(--input-background);
     border: none;
     transition: border-color 0.2s ease-in-out 0s;
@@ -127,16 +129,16 @@
 #undiscord input[type="datetime-local"],
 #undiscord input[type="number"],
 #undiscord input[type="range"] {
-    font-size: 16px;
-    box-sizing: border-box;
-    width: 100%;
-    border-radius: 3px;
-    color: var(--text-normal);
     background-color: var(--input-background);
-    border: none;
-    transition: border-color 0.2s ease-in-out 0s;
-    padding: 10px;
-    height: 40px;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: var(--text-default);
+    font-size: 16px;
+    height: 44px;
+    padding: 12px 10px;
+    transition: border-color .2s ease-in-out;
+    width: 100%;
 }
 
 #undiscord .divider,
@@ -290,7 +292,7 @@
     background-color: var(--background-floating);
     -webkit-box-shadow: var(--elevation-high);
     box-shadow: var(--elevation-high);
-    color: var(--text-normal);
+    color: var(--text-default);
     border-radius: 5px;
     pointer-events: none;
 }
