@@ -172,3 +172,7 @@
     margin-left: 5px;
     width: fit-content;
 }
+
+#undiscord #token {
+-webkit-text-security: disc;
+}
