@@ -94,11 +94,7 @@
 
 #undiscord .input {
     font-size: 16px;
-    box-sizing: border-box;
     width: 100%;
-    border-radius: 3px;
-    
-    border: none;
     transition: border-color 0.2s ease-in-out 0s;
     padding: 10px;
     height: 44px;
