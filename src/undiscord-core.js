@@ -285,6 +285,30 @@ class UndiscordCore {
         await wait(w * 2);
         return await this.search();
       }
+      if (resp.status === 400 ) {
+        const data = await resp.json();
+        if (data.code === 50024) {
+          // 400 can happen if the channel is not found (code=50024)
+          log.error('Error searching messages, channel not found!');
+          // return fake empty messages data to skip the next channel
+          const data = { total_results: 0, messages: [] };
+          this.state._seachResponse = data;
+          return data;
+  
+        }
+
+      }
+      if (resp.status === 403) {
+        const data = await resp.json();
+        if (data.code === 50001) {
+          // 403 can happen if the bot is not in the guild (code=50001)
+          log.error('Error searching messages, user is not in the guild!');
+          // return fake empty messages data to skip the next channel
+          const data = { total_results: 0, messages: [] };
+          this.state._seachResponse = data;
+          return data;
+        }
+      }
       else {
         this.state.running = false;
         log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
