@@ -127,7 +127,7 @@
 [name^="grab-"] { position: absolute; --size: 6px; --corner-size: 16px; --offset: -1px; z-index: 9; }
 [name^="grab-"]:hover{ background: rgba(128,128,128,0.1); }
 [name="grab-t"] { top: 0px; left: var(--corner-size); right: var(--corner-size); height: var(--size); margin-top: var(--offset); cursor: ns-resize; }
-[name="grab-r"] { top: var(--corner-size); bottom: var(--corner-size); right: 0px; width: var(--size); margin-right: var(--offset); 
+[name="grab-r"] { top: var(--corner-size); bottom: var(--corner-size); right: 0px; width: var(--size); margin-right: var(--offset);
   cursor: ew-resize; }
 [name="grab-b"] { bottom: 0px; left: var(--corner-size); right: var(--corner-size); height: var(--size); margin-bottom: var(--offset); cursor: ns-resize; }
 [name="grab-l"] { top: var(--corner-size); bottom: var(--corner-size); left: 0px; width: var(--size); margin-left: var(--offset); cursor: ew-resize; }
@@ -272,27 +272,29 @@
             </details>
             <details>
                 <summary>Messages interval</summary>
-                <fieldset>
-                    <legend>
-                        Interval of messages
-                        <a href="{{WIKI}}/messageId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
-                    <div class="multiInput mb1">
-                        <div class="input-wrapper">
-                            <input id="minId" type="text" placeholder="After a message" priv>
-                        </div>
-                        <button id="pickMessageAfter">Pick</button>
-                    </div>
-                    <div class="multiInput">
-                        <div class="input-wrapper">
-                            <input id="maxId" type="text" placeholder="Before a message" priv>
-                        </div>
-                        <button id="pickMessageBefore">Pick</button>
-                    </div>
-                    <div class="sectionDescription">
-                        Specify an interval to delete messages.
-                    </div>
-                </fieldset>
+				<fieldset>
+				    <legend>
+				        Interval of messages
+				        <a href="{{WIKI}}/messageId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+				    </legend>
+				    <div class="multiInput mb1">
+				        <div class="input-wrapper">
+				            <input id="minId" type="text" autocomplete="off" placeholder="After a message" priv readonly
+				                onfocus="this.removeAttribute('readonly');">
+				        </div>
+				        <button id="pickMessageAfter">Pick</button>
+				    </div>
+				    <div class="multiInput">
+				        <div class="input-wrapper">
+				            <input id="maxId" name="message_max_id" type="text" autocomplete="off" placeholder="Before a message" priv readonly
+				                onfocus="this.removeAttribute('readonly');">
+				        </div>
+				        <button id="pickMessageBefore">Pick</button>
+				    </div>
+				    <div class="sectionDescription">
+				        Specify an interval to delete messages.
+				    </div>
+				</fieldset>
             </details>
             <details>
                 <summary>Date interval</summary>
@@ -1464,14 +1466,14 @@ body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
 	  //advanced
 	  const searchDelay = parseInt($('input#searchDelay').value.trim());
 	  const deleteDelay = parseInt($('input#deleteDelay').value.trim());
-	 
+
 	  // token
 	  const authToken = $('input#token').value.trim() || fillToken();
 	  if (!authToken) return; // get token already logs an error.
-	  
+
 	  // validate input
 	  if (!guildId) return log.error('You must fill the "Server ID" field!');
-	 
+
 	  // clear logArea
 	  ui.logArea.innerHTML = '';
 
