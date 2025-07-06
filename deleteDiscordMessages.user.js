@@ -272,28 +272,31 @@
             </details>
             <details>
                 <summary>Messages interval</summary>
+				
+				<!-- Hidden dummy inputs to trap autofill -->
+				<input type="text" name="nope_fake_username" style="position:absolute; top:-9999px; left:-9999px;">
+				<input type="password" name="nope_fake_password" style="position:absolute; top:-9999px; left:-9999px;">
+				
 				<fieldset>
-				    <legend>
-				        Interval of messages
-				        <a href="{{WIKI}}/messageId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-				    </legend>
-				    <div class="multiInput mb1">
-				        <div class="input-wrapper">
-				            <input id="minId" type="text" autocomplete="off" placeholder="After a message" priv readonly
-				                onfocus="this.removeAttribute('readonly');">
-				        </div>
-				        <button id="pickMessageAfter">Pick</button>
+				  <legend>
+				    Interval of messages
+				    <a href="{{WIKI}}/messageId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+				  </legend>
+				  <div class="multiInput mb1">
+				    <div class="input-wrapper">
+				      <input id="minId" type="text" name="msg_min_random_123" autocomplete="off" placeholder="After a message" priv>
 				    </div>
-				    <div class="multiInput">
-				        <div class="input-wrapper">
-				            <input id="maxId" name="message_max_id" type="text" autocomplete="off" placeholder="Before a message" priv readonly
-				                onfocus="this.removeAttribute('readonly');">
-				        </div>
-				        <button id="pickMessageBefore">Pick</button>
+				    <button id="pickMessageAfter" type="button">Pick</button>
+				  </div>
+				  <div class="multiInput">
+				    <div class="input-wrapper">
+				      <input id="maxId" type="text" name="msg_max_random_456" autocomplete="off" placeholder="Before a message" priv>
 				    </div>
-				    <div class="sectionDescription">
-				        Specify an interval to delete messages.
-				    </div>
+				    <button id="pickMessageBefore" type="button">Pick</button>
+				  </div>
+				  <div class="sectionDescription">
+				    Specify an interval to delete messages.
+				  </div>
 				</fieldset>
             </details>
             <details>
