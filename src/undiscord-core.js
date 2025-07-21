@@ -31,6 +31,7 @@ class UndiscordCore {
     includePinned: null, // Delete messages that are pinned
     pattern: null, // Only delete messages that match the regex (insensitive)
     searchDelay: null, // Delay each time we fetch for more messages
+    includeApplications: null, //Include application/bot messages
     deleteDelay: null, // Delay between each delete operation
     maxAttempt: 2, // Attempts to delete a single message if it fails
     askForConfirmation: true,
@@ -311,8 +312,14 @@ class UndiscordCore {
     let messagesToDelete = discoveredMessages;
     messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
     messagesToDelete = messagesToDelete.filter(msg => msg.pinned ? this.options.includePinned : true);
-
-    // custom filter of messages
+    
+    // if the user hasn't checked the include applications option, filter out all bots
+    // fixes issues with bots & applications hanging the deletion
+    if (this.options.includeApplications == false) {
+      log.verb("Include Applications is false. Skipping bots and applications...");
+      messagesToDelete = messagesToDelete.filter(msg => !msg.author.bot);
+    }
+     // custom filter of messages
     try {
       const regex = new RegExp(this.options.pattern, 'i');
       messagesToDelete = messagesToDelete.filter(msg => regex.test(msg.content));
