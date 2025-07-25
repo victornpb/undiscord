@@ -43,7 +43,7 @@
 #undiscord .input-wrapper { display: flex; align-items: center; font-size: 16px; box-sizing: border-box; width: 100%; border-radius: 3px; color: var(--text-default); background-color: var(--input-background); border: none; transition: border-color 0.2s ease-in-out 0s; }
 #undiscord input[type="text"],
 #undiscord input[type="search"],
-#undiscord input[type="password"],
+#undiscord input[type="text"],
 #undiscord input[type="datetime-local"],
 #undiscord input[type="number"],
 #undiscord input[type="range"] { background-color: var(--input-background); border: 1px solid var(--input-border); border-radius: 8px; box-sizing: border-box; color: var(--text-default); font-size: 16px; height: 44px; padding: 12px 10px; transition: border-color .2s ease-in-out; width: 100%; }
@@ -356,7 +356,7 @@
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input class="input" id="token" type="password" autocomplete="dont" priv>
+                            <input class="input" id="token" type="text" priv>
                         </div>
                         <button id="getToken">fill</button>
                     </div>
