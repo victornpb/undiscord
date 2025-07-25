@@ -28,10 +28,10 @@
 
 /**** Undiscord Interface ****/
 #undiscord {
-    position: fixed;
+    position: right;
     z-index: 100;
     top: 58px;
-    right: 10px;
+    right: 44px;
     display: flex;
     flex-direction: column;
     width: 800px;
