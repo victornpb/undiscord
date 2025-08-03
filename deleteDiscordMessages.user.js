@@ -525,6 +525,9 @@
 				log.info('Job ended.', `(${i + 1}/${queue.length})`);
 				this.resetState();
 				this.options.askForConfirmation = false;
+				// Adds a delay between each run to prevent further rate limitng errors
+				log.verb(`Waiting ${(this.options.searchDelay / 1000).toFixed(2)}s before next run...`);
+				await wait(this.options.searchDelay);
 				this.state.running = true; // continue running
 			}
 
