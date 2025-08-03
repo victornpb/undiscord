@@ -2,7 +2,7 @@
   // "editor.formatOnSave": true, // causes problems with eslint
   // "prettier.eslintIntegration": true // causes problems with eslint
     "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": "explicit"
+      "source.fixAll.eslint": true
     },
     "eslint.validate": ["javascript"]
   }
