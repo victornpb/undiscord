@@ -15,11 +15,13 @@
 > ⚠️ **Any tool that automates actions on user accounts, including this one, could result in account termination.** (see [self-bots][self-bots]).  
 > Use at your own risk! ([discussion](https://github.com/victornpb/undiscord/discussions/273)).
 
-1. First you need a Browser Extension for managing UserScripts[[1]][userscrips_faq] (skip if you already have one):  
+(Due to changes in chrome manifest V3, [Brave browser][brave_browser] is recommended)
+
+1. First you need a Browser Extension for managing UserScripts[[1]][userscrips_faq] (skip if you already have one): '
+   * Brave: [Violentmonkey][chrome_violentmonkey] or [Tampermonkey][chrome_tampermonkey]
    * Chrome: [Violentmonkey][chrome_violentmonkey] or [Tampermonkey][chrome_tampermonkey]
    * Firefox: [Greasemonkey][firefox_greasemonkey], [Tampermonkey][firefox_tampermonkey], or [Violentmonkey][firefox_violentmonkey]  
    * Opera: [Tampermonkey][opera_tampermonkey] or [Violentmonkey][opera_violentmonkey]
-   * Brave: [Violentmonkey][chrome_violentmonkey] or [Tampermonkey][chrome_tampermonkey]
    * Edge: [Tampermonkey][edge_tampermonkey]  
    * Safari: ~[Tampermonkey][safari_tampermonkey]~ 
     
@@ -123,3 +125,5 @@ Please read: [what I'm doing to ensure this is safe for users][security_policy].
 <!-- Download links -->
   [greasyfork_url]: <https://greasyfork.org/en/scripts/406540-undiscord-delete-all-messages-in-a-discord-channel-or-dm-bulk-deletion> "Get Undiscord from GreasyFork"
   [openuserjs_url]: <https://openuserjs.org/scripts/victornpb/Undiscord_-_Delete_all_messages_in_a_Discord_channel_or_DM_(Bulk_deletion)> "Get Undiscord from OpenUserJS"
+
+  [brave_browser]: https://brave.com/download/
