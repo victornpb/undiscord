@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Undiscord
 // @description     Delete all messages in a Discord channel or DM (Bulk deletion)
-// @version         5.2.4
+// @version         5.2.5
 // @author          victornpb
 // @homepageURL     https://github.com/victornpb/undiscord
 // @supportURL      https://github.com/victornpb/undiscord/discussions
@@ -20,7 +20,7 @@
 	'use strict';
 
 	/* rollup-plugin-baked-env */
-	const VERSION = "5.2.4";
+	const VERSION = "5.2.5";
 
 	var themeCss = (`
 /* undiscord window */
@@ -356,7 +356,7 @@
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input class="input" id="token" type="password" autocomplete="dont" priv>
+                            <input class="input" id="token" type="text" autocomplete="dont" priv>
                         </div>
                         <button id="getToken">fill</button>
                     </div>
