@@ -32,6 +32,7 @@ class UndiscordCore {
     pattern: null, // Only delete messages that match the regex (insensitive)
     searchDelay: null, // Delay each time we fetch for more messages
     deleteDelay: null, // Delay between each delete operation
+    emptyPageRetries: 2, // Number of retries on API returned an empty page
     maxAttempt: 2, // Attempts to delete a single message if it fails
     askForConfirmation: true,
   };
@@ -43,6 +44,7 @@ class UndiscordCore {
     grandTotal: 0,
     offset: 0,
     iterations: 0,
+    emptyPageRetryCount: 0,
 
     _seachResponse: null,
     _messagesToDelete: [],
@@ -71,6 +73,7 @@ class UndiscordCore {
       grandTotal: 0,
       offset: 0,
       iterations: 0,
+      emptyPageRetryCount: 0,
 
       _seachResponse: null,
       _messagesToDelete: [],
@@ -160,6 +163,7 @@ class UndiscordCore {
         }
 
         await this.deleteMessagesFromList();
+        this.state.emptyPageRetryCount = 0; // Reset retry count on successful deletion
       }
       else if (this.state._skippedMessages.length > 0) {
         // There are stuff, but nothing to delete (example a page full of system messages)
@@ -168,12 +172,22 @@ class UndiscordCore {
         this.state.offset += this.state._skippedMessages.length;
         log.verb('There\'s nothing we can delete on this page, checking next page...');
         log.verb(`Skipped ${this.state._skippedMessages.length} out of ${this.state._seachResponse.messages.length} in this page.`, `(Offset was ${oldOffset}, ajusted to ${this.state.offset})`);
+        this.state.emptyPageRetryCount = 0; // Reset retry count when we have messages but skip them
       }
       else {
-        log.verb('Ended because API returned an empty page.');
-        log.verb('[End state]', this.state);
-        if (isJob) break; // break without stopping if this is part of a job
-        this.state.running = false;
+        // Empty page - implement retry logic
+        this.state.emptyPageRetryCount++;
+        log.verb(`API returned an empty page. Retry ${this.state.emptyPageRetryCount}/${this.options.emptyPageRetries}`);
+        
+        if (this.state.emptyPageRetryCount >= this.options.emptyPageRetries) {
+          log.verb('Ended because API returned empty pages after maximum retries.');
+          log.verb('[End state]', this.state);
+          if (isJob) break; // break without stopping if this is part of a job
+          this.state.running = false;
+        } else {
+          log.verb(`Retrying empty page search in ${(this.options.searchDelay / 1000).toFixed(2)}s...`);
+          // Continue the loop to retry
+        }
       }
 
       // wait before next page (fix search page not updating fast enough)
