@@ -500,32 +500,40 @@
 	  }
 
 	  /** Automate the deletion process of multiple channels */
-	  async runBatch(queue) {
-	    if (this.state.running) return log.error('Already running!');
+		async runBatch(queue) {
+			if (this.state.running) return log.error('Already running!');
 
-	    log.info(`Runnning batch with queue of ${queue.length} jobs`);
-	    for (let i = 0; i < queue.length; i++) {
-	      const job = queue[i];
-	      log.info('Starting job...', `(${i + 1}/${queue.length})`);
+			log.info(`Runnning batch with queue of ${queue.length} jobs`);
+			for (let i = 0; i < queue.length; i++) {
+				const job = queue[i];
+				log.info('Starting job...', `(${i + 1}/${queue.length})`);
 
-	      // set options
-	      this.options = {
-	        ...this.options, // keep current options
-	        ...job, // override with options for that job
-	      };
+				// set options
+				this.options = {
+					...this.options, // keep current options
+					...job, // override with options for that job
+				};
 
-	      await this.run(true);
-	      if (!this.state.running) break;
+				try {
+					await this.run(true);
+				} catch (error) {
+					log.error('Error in job', `(${i + 1}/${queue.length})`, error);
+				}
 
-	      log.info('Job ended.', `(${i + 1}/${queue.length})`);
-	      this.resetState();
-	      this.options.askForConfirmation = false;
-	      this.state.running = true; // continue running
-	    }
+				if (!this.state.running) break;
 
-	    log.info('Batch finished.');
-	    this.state.running = false;
-	  }
+				log.info('Job ended.', `(${i + 1}/${queue.length})`);
+				this.resetState();
+				this.options.askForConfirmation = false;
+				// Adds a delay between each run to prevent further rate limitng errors
+				log.verb(`Waiting ${(this.options.searchDelay / 1000).toFixed(2)}s before next run...`);
+				await wait(this.options.searchDelay);
+				this.state.running = true; // continue running
+			}
+
+			log.info('Batch finished.');
+			this.state.running = false;
+		}
 
 	  /** Start the deletion process */
 	  async run(isJob = false) {
@@ -704,11 +712,25 @@
 	        await wait(w * 2);
 	        return await this.search();
 	      }
-	      else {
-	        this.state.running = false;
-	        log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
-	        throw resp;
-	      }
+		  else {
+			  const body = await resp.text();
+			  try {
+				  const r = JSON.parse(body);
+				  if (resp.status === 400 && r.code === 50083) {
+					  // existing error handling code...
+				  } else {
+					  log.error(`Error deleting message, API responded with status ${resp.status}!`, r);
+					  log.verb('Related object:', redact(JSON.stringify(message)));
+					  this.state.failCount++;
+					  // Instead of throwing an error, just return a failure status
+					  return 'FAILED';
+				  }
+			  } catch (e) {
+				  log.error(`Fail to parse JSON. API responded with status ${resp.status}!`, body);
+				  // Again, instead of throwing an error, just return a failure status
+				  return 'FAILED';
+			  }
+		  }
 	    }
 	    const data = await resp.json();
 	    this.state._seachResponse = data;
