@@ -284,8 +284,12 @@ class UndiscordCore {
 
         await wait(w * 2);
         return await this.search();
-      }
-      else {
+      } else if (resp.status === 403) {
+        // insufficient permissions -- guild is empty or specific channel isn't accessible
+        log.warn(`API responded with 403 - Insufficient Permissions when searching for messages:\n`, await resp.json());
+        this.state._seachResponse = {messages:[]};
+        return this.state._seachResponse;
+      } else {
         this.state.running = false;
         log.error(`Error searching messages, API responded with status ${resp.status}!\n`, await resp.json());
         throw resp;
