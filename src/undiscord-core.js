@@ -276,7 +276,7 @@ class UndiscordCore {
 
         this.stats.throttledCount++;
         this.stats.throttledTotalTime += w;
-        this.stats.searchDelay += w; // increase delay
+        this.stats.searchDelay += this.stats.searchDelay + w; // increase delay
         w = this.stats.searchDelay;
         log.warn(`Being rate limited by the API for ${w}ms! Increasing search delay...`);
         this.printStats();
@@ -309,7 +309,7 @@ class UndiscordCore {
 
     // we can only delete some types of messages, system messages are not deletable.
     let messagesToDelete = discoveredMessages;
-    messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
+    messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 19) || msg.type === 21);
     messagesToDelete = messagesToDelete.filter(msg => msg.pinned ? this.options.includePinned : true);
 
     // custom filter of messages
