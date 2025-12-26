@@ -140,6 +140,10 @@ function initUI() {
     const v = parseInt(e.target.value);
     if (v) undiscordCore.options.deleteDelay = v;
   };
+  $('input#emptyPageRetries').onchange = (e) => {
+    const v = parseInt(e.target.value);
+    if (v) undiscordCore.options.emptyPageRetries = v;
+  };
 
   $('input#searchDelay').addEventListener('input', (event) => {
     $('div#searchDelayValue').textContent = event.target.value + 'ms';
@@ -268,6 +272,7 @@ async function startAction() {
   //advanced
   const searchDelay = parseInt($('input#searchDelay').value.trim());
   const deleteDelay = parseInt($('input#deleteDelay').value.trim());
+  const emptyPageRetries = parseInt($('input#emptyPageRetries').value.trim());
  
   // token
   const authToken = $('input#token').value.trim() || fillToken();
@@ -296,6 +301,7 @@ async function startAction() {
     pattern,
     searchDelay,
     deleteDelay,
+    emptyPageRetries,
     // maxAttempt: 2,
   };
 
