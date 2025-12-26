@@ -404,12 +404,8 @@ class UndiscordCore {
 
           if (resp.status === 400 && r.code === 50083) {
             // 400 can happen if the thread is archived (code=50083)
-            // in this case we need to "skip" this message from the next search
-            // otherwise it will come up again in the next page (and fail to delete again)
-            log.warn('Error deleting message (Thread is archived). Will increment offset so we don\'t search this in the next page...');
-            this.state.offset++;
-            this.state.failCount++;
-            return 'FAIL_SKIP'; // Failed but we will skip it next time
+            log.warn('Error deleting message (Thread is archived). Attempting to unarchive...');
+            return await this.unarchiveThread(message.channel_id);
           }
 
           log.error(`Error deleting message, API responded with status ${resp.status}!`, r);
@@ -424,6 +420,43 @@ class UndiscordCore {
 
     this.state.delCount++;
     return 'OK';
+  }
+
+  async unarchiveThread(channel_id) {
+    // attempts to unarchive the thread located at the provided channel_id.
+    // this method is meant to be run inside of deleteMessage(), as the response
+    // indicates how retries should behave (⌒ω⌒)ﾉ
+    const API_CHANNELS_URL = `https://discord.com/api/v9/channels/${channel_id}`;
+    let resp;
+    try {
+      this.beforeRequest();
+      resp = await fetch(API_CHANNELS_URL, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': this.options.authToken,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({'archived': false}),
+      });
+      this.afterRequest();
+    } catch (err) {
+      // no response error (e.g. network error)
+      log.error(`Unarchive request for channel id ${channel_id} threw an error:`, err);
+      this.state.failCount++;
+      return 'FAILED';
+    }
+
+    if (!resp.ok) {
+      log.error('Unarchive request returned not-okay response:', resp);
+      log.warn('This message will be skipped');
+      this.state.offset++;
+      this.state.failCount++;
+      return 'FAIL_SKIP';
+    }
+
+    log.verb('Thread successfully unarchived');
+    return 'RETRY';
   }
 
   #beforeTs = 0; // used to calculate latency
