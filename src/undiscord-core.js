@@ -32,6 +32,7 @@ class UndiscordCore {
     pattern: null, // Only delete messages that match the regex (insensitive)
     searchDelay: null, // Delay each time we fetch for more messages
     deleteDelay: null, // Delay between each delete operation
+    jobDelay: 30000, // Delay between each job during batches
     maxAttempt: 2, // Attempts to delete a single message if it fails
     askForConfirmation: true,
   };
@@ -86,6 +87,11 @@ class UndiscordCore {
 
     log.info(`Runnning batch with queue of ${queue.length} jobs`);
     for (let i = 0; i < queue.length; i++) {
+      if (i > 0) {
+        log.verb(`Waiting ${(this.options.jobDelay / 1000).toFixed(2)}s before next job...`);
+        await wait(this.options.jobDelay);
+      }
+
       const job = queue[i];
       log.info('Starting job...', `(${i + 1}/${queue.length})`);
 
