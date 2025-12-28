@@ -348,13 +348,21 @@ class UndiscordCore {
       let attempt = 0;
       while (attempt < this.options.maxAttempt) {
         const result = await this.deleteMessage(message);
-
-        if (result === 'RETRY') {
-          attempt++;
+        attempt++;
+        if (result === 'RETRY' || result === 'FAILED') {
+          if (attempt >= this.options.maxAttempt) {
+            this.state.offset++;
+            this.state.failCount++;
+            break;
+          }
           log.verb(`Retrying in ${this.options.deleteDelay}ms... (${attempt}/${this.options.maxAttempt})`);
           await wait(this.options.deleteDelay);
+          continue;
+        } else if (result === 'FAIL_SKIP') {
+          this.state.offset++;
+          this.state.failCount++;
         }
-        else break;
+        break;
       }
 
       this.calcEtr();
@@ -380,7 +388,6 @@ class UndiscordCore {
       // no response error (e.g. network error)
       log.error('Delete request throwed an error:', err);
       log.verb('Related object:', redact(JSON.stringify(message)));
-      this.state.failCount++;
       return 'FAILED';
     }
 
@@ -407,14 +414,11 @@ class UndiscordCore {
             // in this case we need to "skip" this message from the next search
             // otherwise it will come up again in the next page (and fail to delete again)
             log.warn('Error deleting message (Thread is archived). Will increment offset so we don\'t search this in the next page...');
-            this.state.offset++;
-            this.state.failCount++;
             return 'FAIL_SKIP'; // Failed but we will skip it next time
           }
 
           log.error(`Error deleting message, API responded with status ${resp.status}!`, r);
           log.verb('Related object:', redact(JSON.stringify(message)));
-          this.state.failCount++;
           return 'FAILED';
         } catch (e) {
           log.error(`Fail to parse JSON. API responded with status ${resp.status}!`, body);
