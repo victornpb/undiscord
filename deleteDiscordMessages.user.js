@@ -728,7 +728,7 @@
 
 	    // we can only delete some types of messages, system messages are not deletable.
 	    let messagesToDelete = discoveredMessages;
-	    messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 21));
+	    messagesToDelete = messagesToDelete.filter(msg => msg.type === 0 || (msg.type >= 6 && msg.type <= 20));
 	    messagesToDelete = messagesToDelete.filter(msg => msg.pinned ? this.options.includePinned : true);
 
 	    // custom filter of messages
@@ -823,9 +823,17 @@
 
 	          if (resp.status === 400 && r.code === 50083) {
 	            // 400 can happen if the thread is archived (code=50083)
+	            // we can try and unarchive the thread, if we unarchive successfully,
+	            // we can retry the delete.
+	            const unarchiveResult = await this.unarchiveThread(message.channel_id);
+	            if (unarchiveResult === 'UNARCHIVE_SUCCESS'){
+	              return 'RETRY';
+	            }
+
+	            // Failed to unarchive, so we cannot delete this message.
 	            // in this case we need to "skip" this message from the next search
 	            // otherwise it will come up again in the next page (and fail to delete again)
-	            log.warn('Error deleting message (Thread is archived). Will increment offset so we don\'t search this in the next page...');
+	            log.warn('Error deleting message (Thread is archived - failed to unarchive). Will increment offset so we don\'t search this in the next page...');
 	            this.state.offset++;
 	            this.state.failCount++;
 	            return 'FAIL_SKIP'; // Failed but we will skip it next time
@@ -843,6 +851,53 @@
 
 	    this.state.delCount++;
 	    return 'OK';
+	  }
+
+	  async unarchiveThread(threadId){
+	    const THREAD_UNARCHIVE_URL = `https://discord.com/api/v9/channels/${threadId}`;
+	    let resp;
+	    try {
+	      this.beforeRequest();
+	      resp = await fetch(THREAD_UNARCHIVE_URL, {
+	        body: JSON.stringify({
+	          archived: false
+	        }),
+	        method: 'PATCH',
+	        headers: {
+	          'Content-Type': 'application/json',
+	          'Authorization': this.options.authToken,
+	        },
+	      });
+	      this.afterRequest();
+	    } catch (err) {
+	      // no response error (e.g. network error)
+	      log.error('Unarchive request throwed an error:', err);
+	      return 'UNARCHIVE_FAILED';
+	    }
+
+	    if(!resp.ok){
+	      const body = await resp.text();
+
+	      try {
+	        const r = JSON.parse(body);
+
+	        if (resp.status === 403 && r.code === 160005){
+	          // 403 happens if the thread is locked, i.e. we don't have permission
+	          // to unarchive it
+	          log.warn('Error unarchiving thread: Thread is locked');
+	          return 'THREAD_LOCKED';
+	        }
+
+	        log.error(`Error unarchiving thread. API responded with status ${resp.status}!`, r);
+	      } catch (e){
+	        log.error(`Failed to parse JSON. API responses with status ${resp.status}!`, body);
+	      }
+
+	      return 'UNARCHIVE_FAILED';
+	    }
+
+	    log.info('Unarchived thread successfully!');
+	    return 'UNARCHIVE_SUCCESS';
 	  }
 
 	  #beforeTs = 0; // used to calculate latency
