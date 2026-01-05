@@ -390,8 +390,11 @@ class UndiscordCore {
         const w = (await resp.json()).retry_after * 1000;
         this.stats.throttledCount++;
         this.stats.throttledTotalTime += w;
-        this.options.deleteDelay = w; // increase delay
-        log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${this.options.deleteDelay}ms.`);
+        log.warn(`Being rate limited by the API for ${w}ms!`);
+        if (this.options.deleteDelay < w) {
+          this.options.deleteDelay = w; // increase delay
+          log.warn(`Adjusted delete delay to ${this.options.deleteDelay}ms.`);
+        }
         this.printStats();
         log.verb(`Cooling down for ${w * 2}ms before retrying...`);
         await wait(w * 2);
