@@ -396,6 +396,11 @@ class UndiscordCore {
         log.verb(`Cooling down for ${w * 2}ms before retrying...`);
         await wait(w * 2);
         return 'RETRY';
+      } else if (resp.status === 403) {
+        log.warn('Insufficient permissions to delete message. Skipping...');
+        this.state.offset++;
+        this.state.failCount++;
+        return 'FAIL_SKIP';
       } else {
         const body = await resp.text();
 
