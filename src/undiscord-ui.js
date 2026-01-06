@@ -27,6 +27,10 @@ const WIKI = 'https://github.com/victornpb/undiscord/wiki';
 const undiscordCore = new UndiscordCore();
 messagePicker.init();
 
+const state = {
+  threadId: null,
+  isThread: false,
+};
 const ui = {
   undiscordWindow: null,
   undiscordBtn: null,
@@ -103,12 +107,15 @@ function initUI() {
   $('button#stop').onclick = stopAction;
   $('button#clear').onclick = () => ui.logArea.innerHTML = '';
   $('button#getAuthor').onclick = () => $('input#authorId').value = getAuthorId();
-  $('button#getGuild').onclick = () => {
+  $('button#getGuild').onclick = async () => {
     const guildId = $('input#guildId').value = getGuildId();
-    if (guildId === '@me') $('input#channelId').value = getChannelId();
+    if (guildId === '@me') { state.isThread = 0; $('input#channelId').value = await getChannelId()[0]; }
   };
-  $('button#getChannel').onclick = () => {
-    $('input#channelId').value = getChannelId();
+  $('button#getChannel').onclick = async () => {
+    const id = await getChannelId();
+    state.isThread = id[1];
+    state.threadId = id[2];
+    $('input#channelId').value = id[0];
     $('input#guildId').value = getGuildId();
   };
   $('#redact').onchange = () => {
@@ -252,6 +259,8 @@ async function startAction() {
   const authorId = $('input#authorId').value.trim();
   const guildId = $('input#guildId').value.trim();
   const channelIds = $('input#channelId').value.trim().split(/\s*,\s*/);
+  const isThread = state.isThread;
+  const threadId = state.threadId;
   const includeNsfw = $('input#includeNsfw').checked;
   // filter
   const content = $('input#search').value.trim();
@@ -286,6 +295,8 @@ async function startAction() {
     authorId,
     guildId,
     channelId: channelIds.length === 1 ? channelIds[0] : undefined, // single or multiple channel
+    isThread,
+    threadId,
     minId: minId || minDate,
     maxId: maxId || maxDate,
     content,
