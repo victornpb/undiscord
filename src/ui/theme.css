@@ -1,356 +1,230 @@
+
 /* undiscord window */
-#undiscord.browser {
-    box-shadow: var(--shadow-border), var(--shadow-high);
-        border: 1px solid var(--border-subtle);
-    overflow: hidden;
+#undiscord {
+  --uc-bg: #0b1020;
+  --uc-surface: #11182b;
+  --uc-panel: #141d36;
+  --uc-panel-strong: #1a2442;
+  --uc-accent: #7c5cff;
+  --uc-accent-2: #2de2a6;
+  --uc-danger: #ff5c7a;
+  --uc-border: rgba(255, 255, 255, 0.08);
+  --uc-text: #e7ecff;
+  --uc-muted: #98a4c8;
+  --uc-shadow: 0 24px 60px rgba(4, 8, 18, 0.6);
+  --uc-window-bg: radial-gradient(1200px 600px at 10% -10%, rgba(124, 92, 255, 0.18), transparent 40%), linear-gradient(180deg, #0b1020, #0a0f1f);
+  --uc-header-bg: linear-gradient(90deg, #101833, #141b35 60%, #101833);
+  --uc-tbar-bg: linear-gradient(180deg, rgba(20, 29, 54, 0.9), rgba(14, 20, 40, 0.9));
+  --uc-log-bg: linear-gradient(180deg, rgba(10, 15, 31, 0.6), rgba(10, 15, 31, 0.2));
+  --uc-summary-bg: rgba(124, 92, 255, 0.08);
+  --uc-summary-hover: rgba(124, 92, 255, 0.16);
+  --uc-fieldset-bg: rgba(20, 29, 54, 0.6);
+  --uc-option-bg: #11182b;
+  --uc-option-text: #e7ecff;
 }
 
+#undiscord.theme-dark {
+  --uc-bg: #050505;
+  --uc-surface: #0b0b0b;
+  --uc-panel: #121212;
+  --uc-panel-strong: #1c1c1c;
+  --uc-accent: #7c5cff;
+  --uc-accent-2: #2de2a6;
+  --uc-danger: #ff5c7a;
+  --uc-border: rgba(255, 255, 255, 0.08);
+  --uc-text: #f2f4ff;
+  --uc-muted: #9aa3c0;
+  --uc-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+  --uc-window-bg: radial-gradient(1200px 600px at 10% -10%, rgba(124, 92, 255, 0.16), transparent 45%), linear-gradient(180deg, #050505, #000000);
+  --uc-header-bg: linear-gradient(90deg, #0b0b0b, #121212 60%, #0b0b0b);
+  --uc-tbar-bg: linear-gradient(180deg, rgba(12, 12, 12, 0.95), rgba(8, 8, 8, 0.95));
+  --uc-log-bg: linear-gradient(180deg, rgba(8, 8, 8, 0.75), rgba(5, 5, 5, 0.45));
+  --uc-summary-bg: rgba(124, 92, 255, 0.12);
+  --uc-summary-hover: rgba(124, 92, 255, 0.2);
+  --uc-fieldset-bg: rgba(14, 14, 14, 0.9);
+  --uc-option-bg: #0b0b0b;
+  --uc-option-text: #f2f4ff;
+}
+
+#undiscord.theme-light {
+  --uc-bg: #f4f6ff;
+  --uc-surface: #f8f9ff;
+  --uc-panel: #ffffff;
+  --uc-panel-strong: #eef1ff;
+  --uc-accent: #6c4eff;
+  --uc-accent-2: #24c997;
+  --uc-danger: #e24f6a;
+  --uc-border: rgba(15, 23, 42, 0.12);
+  --uc-text: #1f2433;
+  --uc-muted: #5b6680;
+  --uc-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+  --uc-window-bg: radial-gradient(1200px 600px at 10% -10%, rgba(108, 78, 255, 0.12), transparent 45%), linear-gradient(180deg, #f7f8ff, #eef2ff);
+  --uc-header-bg: linear-gradient(90deg, #eef1ff, #e4e9ff 60%, #eef1ff);
+  --uc-tbar-bg: linear-gradient(180deg, rgba(238, 241, 255, 0.95), rgba(225, 231, 255, 0.9));
+  --uc-log-bg: linear-gradient(180deg, rgba(245, 247, 255, 0.9), rgba(235, 239, 255, 0.7));
+  --uc-summary-bg: rgba(108, 78, 255, 0.12);
+  --uc-summary-hover: rgba(108, 78, 255, 0.2);
+  --uc-fieldset-bg: rgba(255, 255, 255, 0.9);
+  --uc-option-bg: #ffffff;
+  --uc-option-text: #1f2433;
+}
+
+#undiscord.theme-glass-default {
+  --uc-surface: rgba(17, 24, 43, 0.14);
+  --uc-panel: rgba(20, 29, 54, 0.12);
+  --uc-panel-strong: rgba(26, 36, 66, 0.18);
+  --uc-border: rgba(255, 255, 255, 0.38);
+  --uc-shadow: 0 30px 70px rgba(4, 8, 18, 0.65);
+  --uc-window-bg: radial-gradient(1200px 600px at 10% -10%, rgba(124, 92, 255, 0.2), transparent 45%), linear-gradient(180deg, rgba(11, 16, 32, 0.75), rgba(10, 15, 31, 0.6));
+  --uc-header-bg: linear-gradient(90deg, rgba(16, 24, 51, 0.6), rgba(20, 27, 53, 0.6) 60%, rgba(16, 24, 51, 0.6));
+  --uc-tbar-bg: linear-gradient(180deg, rgba(20, 29, 54, 0.2), rgba(14, 20, 40, 0.14));
+  --uc-log-bg: linear-gradient(180deg, rgba(10, 15, 31, 0.08), rgba(10, 15, 31, 0.03));
+  --uc-summary-bg: rgba(124, 92, 255, 0.16);
+  --uc-summary-hover: rgba(124, 92, 255, 0.24);
+  --uc-fieldset-bg: rgba(20, 29, 54, 0.1);
+  --uc-option-bg: rgba(13, 18, 36, 0.95);
+  --uc-option-text: #e7ecff;
+}
+
+#undiscord.theme-glass-dark {
+  --uc-surface: rgba(8, 8, 8, 0.18);
+  --uc-panel: rgba(12, 12, 12, 0.16);
+  --uc-panel-strong: rgba(18, 18, 18, 0.2);
+  --uc-border: rgba(255, 255, 255, 0.36);
+  --uc-shadow: 0 30px 70px rgba(0, 0, 0, 0.7);
+  --uc-window-bg: radial-gradient(1200px 600px at 10% -10%, rgba(124, 92, 255, 0.14), transparent 50%), linear-gradient(180deg, rgba(5, 5, 5, 0.85), rgba(0, 0, 0, 0.7));
+  --uc-header-bg: linear-gradient(90deg, rgba(10, 10, 10, 0.65), rgba(14, 14, 14, 0.65) 60%, rgba(10, 10, 10, 0.65));
+  --uc-tbar-bg: linear-gradient(180deg, rgba(12, 12, 12, 0.24), rgba(6, 6, 6, 0.16));
+  --uc-log-bg: linear-gradient(180deg, rgba(6, 6, 6, 0.1), rgba(3, 3, 3, 0.05));
+  --uc-summary-bg: rgba(124, 92, 255, 0.14);
+  --uc-summary-hover: rgba(124, 92, 255, 0.22);
+  --uc-fieldset-bg: rgba(8, 8, 8, 0.12);
+  --uc-option-bg: rgba(8, 8, 8, 0.98);
+  --uc-option-text: #f2f4ff;
+}
+
+#undiscord.theme-glass-light {
+  --uc-surface: rgba(255, 255, 255, 0.26);
+  --uc-panel: rgba(255, 255, 255, 0.32);
+  --uc-panel-strong: rgba(238, 241, 255, 0.38);
+  --uc-border: rgba(15, 23, 42, 0.36);
+  --uc-text: #1f2433;
+  --uc-muted: #56607a;
+  --uc-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+  --uc-window-bg: radial-gradient(1200px 600px at 10% -10%, rgba(108, 78, 255, 0.14), transparent 50%), linear-gradient(180deg, rgba(250, 251, 255, 0.97), rgba(232, 236, 255, 0.9));
+  --uc-header-bg: linear-gradient(90deg, rgba(232, 236, 255, 0.85), rgba(224, 230, 255, 0.85) 60%, rgba(232, 236, 255, 0.85));
+  --uc-tbar-bg: linear-gradient(180deg, rgba(244, 246, 255, 0.34), rgba(226, 231, 255, 0.26));
+  --uc-log-bg: linear-gradient(180deg, rgba(246, 248, 255, 0.28), rgba(232, 236, 255, 0.2));
+  --uc-summary-bg: rgba(108, 78, 255, 0.14);
+  --uc-summary-hover: rgba(108, 78, 255, 0.22);
+  --uc-fieldset-bg: rgba(255, 255, 255, 0.24);
+  --uc-option-bg: rgba(248, 250, 255, 0.98);
+  --uc-option-text: #1f2433;
+}
+
+#undiscord.theme-glass-default,
+#undiscord.theme-glass-dark,
+#undiscord.theme-glass-light { backdrop-filter: blur(48px) saturate(1.35); }
+
+#undiscord.theme-transparent {
+  --uc-surface: rgba(0, 0, 0, 0);
+  --uc-panel: rgba(0, 0, 0, 0);
+  --uc-panel-strong: rgba(0, 0, 0, 0);
+  --uc-border: rgba(255, 255, 255, 0.18);
+  --uc-window-bg: transparent;
+  --uc-tbar-bg: rgba(0, 0, 0, 0.22);
+  --uc-log-bg: rgba(0, 0, 0, 0.12);
+  --uc-summary-bg: rgba(124, 92, 255, 0.16);
+  --uc-summary-hover: rgba(124, 92, 255, 0.26);
+  --uc-fieldset-bg: rgba(0, 0, 0, 0);
+  --uc-option-bg: rgba(12, 12, 12, 0.98);
+  --uc-option-text: #f2f4ff;
+  backdrop-filter: blur(12px) saturate(1.1);
+}
+#undiscord.browser { box-shadow: var(--uc-shadow); border: 1px solid var(--uc-border); border-radius: 16px; overflow: hidden; }
 #undiscord.container,
-#undiscord .container {
-    background-color: var(--background-surface-high);
-    border-radius: 8px;
-    box-sizing: border-box;
-    cursor: default;
-    flex-direction: column;
-}
-
-#undiscord .header {
-    background-color: var(--background-tertiary);
-    height: 48px;
-    align-items: center;
-    min-height: 48px;
-    padding: 0 16px;
-    display: flex;
-    color: var(--header-secondary);
-    cursor: grab;
-}
-
-#undiscord .header .icon {
-    color: var(--interactive-normal);
-    margin-right: 8px;
-    flex-shrink: 0;
-    width: 24;
-    height: 24;
-}
-
-#undiscord .header .icon:hover {
-    color: var(--interactive-hover);
-}
-
-#undiscord .header h3 {
-    font-size: 16px;
-    line-height: 20px;
-    font-weight: 500;
-    font-family: var(--font-display);
-    color: var(--header-primary);
-    flex-shrink: 0;
-    margin-right: 16px;
-}
-
-#undiscord .spacer {
-    flex-grow: 1;
-}
-
-#undiscord .header .vert-divider {
-    width: 1px;
-    height: 24px;
-    background-color: var(--background-modifier-accent);
-    margin-right: 16px;
-    flex-shrink: 0;
-}
-
+#undiscord .container { background-color: var(--uc-surface); border-radius: 16px; box-sizing: border-box; cursor: default; flex-direction: column; }
+#undiscord .header { background: var(--uc-header-bg); height: 60px; align-items: center; min-height: 60px; padding: 0 22px; display: flex; color: var(--uc-muted); cursor: grab; box-shadow: inset 0 -1px 0 var(--uc-border); }
+#undiscord .header .icon { color: var(--uc-muted); margin-right: 10px; flex-shrink: 0; width: 24; height: 24; }
+#undiscord .header .icon:hover { color: var(--uc-text); }
+#undiscord .header h3 { font-size: 16px; line-height: 20px; font-weight: 700; font-family: var(--font-display); color: var(--uc-text); flex-shrink: 0; margin-right: 16px; letter-spacing: 0.4px; }
+#undiscord .spacer { flex-grow: 1; }
+#undiscord .header .vert-divider { width: 1px; height: 24px; background-color: var(--uc-border); margin-right: 16px; flex-shrink: 0; }
 #undiscord legend,
-#undiscord label {
-    color: var(--header-secondary);
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 500;
-    text-transform: uppercase;
-    cursor: default;
-    font-family: var(--font-display);
-    margin-bottom: 8px;
-}
-
-#undiscord .multiInput {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    box-sizing: border-box;
-    width: 100%;
-    border-radius: 3px;
-    color: var(--text-default);
-    background-color: var(--input-background);
-    border: none;
-    transition: border-color 0.2s ease-in-out 0s;
-}
-
-#undiscord .multiInput :first-child {
-    flex-grow: 1;
-}
-
-#undiscord .multiInput button:last-child {
-    margin-right: 4px;
-}
-
-#undiscord .input {
-    font-size: 16px;
-    width: 100%;
-    transition: border-color 0.2s ease-in-out 0s;
-    padding: 10px;
-    height: 44px;
-    
-    background-color: var(--input-background);
-    border: 1px solid var(--input-border);
-    border-radius: 8px;
-    box-sizing: border-box;
-    color: var(--text-default);
-}
-
-#undiscord fieldset {
-    margin-top: 16px;
-}
-
-#undiscord .input-wrapper {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    box-sizing: border-box;
-    width: 100%;
-    border-radius: 3px;
-    color: var(--text-default);
-    background-color: var(--input-background);
-    border: none;
-    transition: border-color 0.2s ease-in-out 0s;
-}
-
+#undiscord label { color: var(--uc-muted); font-size: 11px; line-height: 16px; font-weight: 600; text-transform: uppercase; cursor: default; font-family: var(--font-display); margin-bottom: 8px; letter-spacing: 0.4px; }
+#undiscord legend { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 2px; margin: 0 0 8px; }
+#undiscord .multiInput { display: flex; align-items: center; font-size: 16px; box-sizing: border-box; width: 100%; border-radius: 12px; color: var(--uc-text); background-color: var(--uc-panel); border: 1px solid var(--uc-border); transition: border-color 0.2s ease-in-out 0s, box-shadow 0.2s ease-in-out 0s; }
+#undiscord .multiInput :first-child { flex-grow: 1; }
+#undiscord .multiInput button:last-child { margin-right: 4px; }
+#undiscord .input { font-size: 15px; width: 100%; transition: border-color 0.2s ease-in-out 0s, box-shadow 0.2s ease-in-out 0s; padding: 10px 12px; height: 42px; background-color: var(--uc-panel); border: 1px solid var(--uc-border); border-radius: 12px; box-sizing: border-box; color: var(--uc-text); }
+#undiscord fieldset { margin-top: 16px; }
+#undiscord .input-wrapper { display: flex; align-items: center; font-size: 16px; box-sizing: border-box; width: 100%; border-radius: 12px; color: var(--uc-text); background-color: var(--uc-panel); border: none; transition: border-color 0.2s ease-in-out 0s; }
 #undiscord input[type="text"],
 #undiscord input[type="search"],
 #undiscord input[type="password"],
 #undiscord input[type="datetime-local"],
 #undiscord input[type="number"],
-#undiscord input[type="range"] {
-    background-color: var(--input-background);
-    border: 1px solid var(--input-border);
-    border-radius: 8px;
-    box-sizing: border-box;
-    color: var(--text-default);
-    font-size: 16px;
-    height: 44px;
-    padding: 12px 10px;
-    transition: border-color .2s ease-in-out;
-    width: 100%;
-}
-
+#undiscord input[type="range"] { background-color: var(--uc-panel); border: 1px solid var(--uc-border); border-radius: 12px; box-sizing: border-box; color: var(--uc-text); font-size: 16px; height: 44px; padding: 12px 10px; transition: border-color .2s ease-in-out, box-shadow .2s ease-in-out, background 0.2s ease, color 0.2s ease; width: 100%; }
+#undiscord select { background-color: var(--uc-panel); border: 1px solid var(--uc-border); border-radius: 12px; box-sizing: border-box; color: var(--uc-text); font-size: 16px; height: 44px; padding: 10px 12px; transition: border-color .2s ease-in-out, box-shadow .2s ease-in-out, background 0.2s ease, color 0.2s ease; width: 100%; }
+#undiscord select option { background-color: var(--uc-option-bg); color: var(--uc-option-text); }
 #undiscord .divider,
-#undiscord hr {
-    border: none;
-    margin-bottom: 24px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid var(--background-modifier-accent);
-}
-
-#undiscord .sectionDescription {
-    margin-bottom: 16px;
-    color: var(--header-secondary);
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 400;
-}
-
-#undiscord a {
-    color: var(--text-link);
-    text-decoration: none;
-}
-
+#undiscord hr { border: none; margin-bottom: 24px; padding-bottom: 4px; border-bottom: 1px solid var(--uc-border); }
+#undiscord .sectionDescription { margin: 8px 0 16px; color: var(--uc-muted); font-size: 13px; line-height: 18px; font-weight: 400; }
+#undiscord a { color: var(--uc-accent); text-decoration: none; }
 #undiscord .btn,
-#undiscord button {
-    position: relative;
-    display: flex;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    align-items: center;
-    box-sizing: border-box;
-    background: none;
-    border: none;
-    border-radius: 3px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 16px;
-    padding: 2px 16px;
-    user-select: none;
-
-    /* sizeSmall */
-    width: 60px;
-    height: 32px;
-    min-width: 60px;
-    min-height: 32px;
-
-    /* lookFilled colorPrimary */
-    color: rgb(255, 255, 255);
-    background-color: var(--button-secondary-background);
-}
-
-#undiscord .sizeMedium {
-    width: 96px;
-    height: 38px;
-    min-width: 96px;
-    min-height: 38px;
-}
-
-#undiscord .sizeMedium.icon {
-    width: 38px;
-    min-width: 38px;
-}
-
-#undiscord sup {
-    vertical-align: top;
-}
-
+#undiscord button { position: relative; display: flex; -webkit-box-pack: center; justify-content: center; -webkit-box-align: center; align-items: center; box-sizing: border-box; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; line-height: 16px; padding: 2px 16px; user-select: none; /* sizeSmall */     width: 60px; height: 38px; min-width: 60px; min-height: 38px; /* lookFilled colorPrimary */     color: #ffffff; background: linear-gradient(135deg, var(--uc-accent), #9a7bff); box-shadow: 0 10px 20px rgba(124, 92, 255, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.18); transition: transform 0.08s ease, filter 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease; }
+#undiscord button:hover { filter: brightness(1.06); }
+#undiscord button:active { transform: translateY(1px); }
+#undiscord .sizeMedium { width: 96px; height: 38px; min-width: 96px; min-height: 38px; }
+#undiscord .sizeMedium.icon { width: 38px; min-width: 38px; }
+#undiscord sup { vertical-align: top; }
 /* lookFilled colorPrimary */
-#undiscord .accent {
-    background-color: var(--brand-experiment);
-}
-
-#undiscord .danger {
-    background-color: var(--button-danger-background);
-}
-
-#undiscord .positive {
-    background-color: var(--button-positive-background);
-}
-
-#undiscord .info {
-    font-size: 12px;
-    line-height: 16px;
-    padding: 8px 10px;
-    color: var(--text-muted);
-}
-
+#undiscord .accent { background: linear-gradient(135deg, var(--uc-accent), #9a7bff); box-shadow: 0 10px 20px rgba(124, 92, 255, 0.35); }
+#undiscord .danger { background: linear-gradient(135deg, var(--uc-danger), #ff8aa0); box-shadow: 0 10px 20px rgba(255, 92, 122, 0.35); }
+#undiscord .positive { background: linear-gradient(135deg, var(--uc-accent-2), #59f0c0); box-shadow: 0 10px 20px rgba(45, 226, 166, 0.3); }
+#undiscord .info { font-size: 12px; line-height: 16px; padding: 8px 10px; color: var(--uc-muted); }
+#undiscord #redact { appearance: none; width: 38px; height: 22px; border-radius: 999px; background: rgba(255, 255, 255, 0.15); border: 1px solid var(--uc-border); position: relative; cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+#undiscord #redact::before { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); transition: transform 0.2s ease; }
+#undiscord #redact:checked { background: linear-gradient(135deg, var(--uc-accent), #9a7bff); border-color: rgba(124, 92, 255, 0.6); box-shadow: 0 0 0 2px rgba(124, 92, 255, 0.15); }
+#undiscord #redact:checked::before { transform: translateX(16px); }
+#undiscord .tbar label.row { gap: 8px; color: var(--uc-text); text-transform: none; }
+#undiscord input[type="checkbox"]:not(#redact) { appearance: none; width: 36px; height: 20px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); border: 1px solid var(--uc-border); position: relative; cursor: pointer; margin-right: 8px; transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+#undiscord input[type="checkbox"]:not(#redact)::before { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #ffffff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); transition: transform 0.2s ease; }
+#undiscord input[type="checkbox"]:not(#redact):checked { background: linear-gradient(135deg, var(--uc-accent-2), #59f0c0); border-color: rgba(45, 226, 166, 0.6); box-shadow: 0 0 0 2px rgba(45, 226, 166, 0.15); }
+#undiscord input[type="checkbox"]:not(#redact):checked::before { transform: translateX(16px); }
+#undiscord label.row,
+#undiscord .sectionDescription label,
+#undiscord .footer label { display: flex; align-items: center; gap: 8px; text-transform: none; color: var(--uc-text); line-height: 20px; min-height: 20px; }
+#undiscord input:focus,
+#undiscord select:focus,
+#undiscord textarea:focus { outline: none; box-shadow: 0 0 0 2px rgba(124, 92, 255, 0.5); border-color: var(--uc-accent); }
 /* Scrollbar */
-#undiscord .scroll::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-#undiscord .scroll::-webkit-scrollbar-corner {
-    background-color: transparent;
-}
-
-#undiscord .scroll::-webkit-scrollbar-thumb {
-    background-clip: padding-box;
-    border: 2px solid transparent;
-    border-radius: 4px;
-    background-color: var(--scrollbar-thin-thumb);
-    min-height: 40px;
-}
-
-#undiscord .scroll::-webkit-scrollbar-track {
-    border-color: var(--scrollbar-thin-track);
-    background-color: var(--scrollbar-thin-track);
-    border: 2px solid var(--scrollbar-thin-track);
-}
-
+#undiscord .scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+#undiscord .scroll::-webkit-scrollbar-corner { background-color: transparent; }
+#undiscord .scroll::-webkit-scrollbar-thumb { background-clip: padding-box; border: 2px solid transparent; border-radius: 4px; background-color: var(--scrollbar-thin-thumb); min-height: 40px; }
+#undiscord .scroll::-webkit-scrollbar-track { background-color: var(--scrollbar-thin-track); border: 2px solid var(--scrollbar-thin-track); }
 /* fade scrollbar */
 #undiscord .scroll::-webkit-scrollbar-thumb,
-#undiscord .scroll::-webkit-scrollbar-track {
-    visibility: hidden;
-}
-
+#undiscord .scroll::-webkit-scrollbar-track { visibility: hidden; }
 #undiscord .scroll:hover::-webkit-scrollbar-thumb,
-#undiscord .scroll:hover::-webkit-scrollbar-track {
-    visibility: visible;
-}
-
+#undiscord .scroll:hover::-webkit-scrollbar-track { visibility: visible; }
 /**** functional classes ****/
-#undiscord.redact .priv {
-    display: none !important;
-}
-
-#undiscord.redact x:not(:active) {
-    color: transparent !important;
-    background-color: var(--primary-700) !important;
-    cursor: default;
-    user-select: none;
-}
-
-#undiscord.redact x:hover {
-    position: relative;
-}
-
-#undiscord.redact x:hover::after {
-    content: "Redacted information (Streamer mode: ON)";
-    position: absolute;
-    display: inline-block;
-    top: -32px;
-    left: -20px;
-    padding: 4px;
-    width: 150px;
-    font-size: 8pt;
-    text-align: center;
-    white-space: pre-wrap;
-    background-color: var(--background-floating);
-    -webkit-box-shadow: var(--elevation-high);
-    box-shadow: var(--elevation-high);
-    color: var(--text-default);
-    border-radius: 5px;
-    pointer-events: none;
-}
-
-#undiscord.redact [priv] {
-    -webkit-text-security: disc !important;
-}
-
-#undiscord :disabled {
-    display: none;
-}
-
+#undiscord.redact .priv { display: none !important; }
+#undiscord.redact x:not(:active) { color: transparent !important; background-color: var(--primary-700) !important; cursor: default; user-select: none; }
+#undiscord.redact x:hover { position: relative; }
+#undiscord.redact x:hover::after { content: "Redacted information (Streamer mode: ON)"; position: absolute; display: inline-block; top: -32px; left: -20px; padding: 4px; width: 150px; font-size: 8pt; text-align: center; white-space: pre-wrap; background-color: var(--background-floating); -webkit-box-shadow: var(--elevation-high); box-shadow: var(--elevation-high); color: var(--text-default); border-radius: 5px; pointer-events: none; }
+#undiscord.redact [priv] { -webkit-text-security: disc !important; }
+#undiscord :disabled { display: none; }
 /**** layout and utility classes ****/
-
 #undiscord,
-#undiscord * {
-    box-sizing: border-box;
-}
-
-#undiscord .col {
-    display: flex;
-    flex-direction: column;
-}
-
-#undiscord .row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-#undiscord .mb1 {
-    margin-bottom: 8px;
-}
-
-#undiscord .log {
-    margin-bottom: 0.25em;
-}
-
-#undiscord .log-debug {
-    color: inherit;
-}
-
-#undiscord .log-info {
-    color: #00b0f4;
-}
-
-#undiscord .log-verb {
-    color: #72767d;
-}
-
-#undiscord .log-warn {
-    color: #faa61a;
-}
-
-#undiscord .log-error {
-    color: #f04747;
-}
-
-#undiscord .log-success {
-    color: #43b581;
-}
+#undiscord * { box-sizing: border-box; }
+#undiscord .col { display: flex; flex-direction: column; }
+#undiscord .row { display: flex; flex-direction: row; align-items: center; }
+#undiscord .mb1 { margin-bottom: 8px; }
+#undiscord .log { margin-bottom: 0.25em; }
+#undiscord .log-debug { color: inherit; }
+#undiscord .log-info { color: #00b0f4; }
+#undiscord .log-verb { color: #72767d; }
+#undiscord .log-warn { color: #faa61a; }
+#undiscord .log-error { color: #f04747; }
+#undiscord .log-success { color: #43b581; }

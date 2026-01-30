@@ -1,3 +1,4 @@
+
 <div id="undiscord" class="browser container redact" style="display:none;">
     <div class="header">
         <svg class="icon" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
@@ -18,8 +19,25 @@
             </svg>
         </div>
     </div>
-    <div class="window-body" style="display: flex; flex-direction: row;">
-        <div class="sidebar scroll">
+    <div class="window-body">
+        <div class="main col">
+            <div class="tbar col">
+                <div class="row">
+                    <button id="toggleSidebar" class="sizeMedium icon">☰</button>
+                    <button id="start" class="sizeMedium danger" style="width: 150px;" title="Start the deletion process">▶︎ Delete</button>
+                    <button id="stop" class="sizeMedium" title="Stop the deletion process" disabled>🛑 Stop</button>
+                    <button id="clear" class="sizeMedium">Clear log</button>
+                    <span class="spacer"></span>
+                    <label class="row" title="Hide sensitive information on your screen for taking screenshots">
+                        <input id="redact" type="checkbox" checked> Streamer mode
+                    </label>
+                </div>
+                <div class="row">
+                    <progress id="progressBar" style="display:none;"></progress>
+                </div>
+            </div>
+            <div class="content-grid">
+                <div class="sidebar settings scroll">
             <details open>
                 <summary>General</summary>
                 <fieldset>
@@ -171,6 +189,28 @@
             </details>
             <hr>
             <details>
+                <summary>Theme</summary>
+                <fieldset>
+                    <legend>
+                        Theme
+                    </legend>
+                    <div class="input-wrapper">
+                        <select id="themeMode">
+                            <option value="default" selected>Default</option>
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="glass-default">Glass Default</option>
+                            <option value="glass-dark">Glass Dark</option>
+                            <option value="glass-light">Glass Light</option>
+                            <option value="transparent">Transparent</option>
+                        </select>
+                    </div>
+                    <div class="sectionDescription">
+                        Choose a visual theme for the Undiscord window.
+                    </div>
+                </fieldset>
+            </details>
+            <details>
                 <summary>Advanced settings</summary>
                 <fieldset>
                     <legend>
@@ -214,25 +254,11 @@
             <hr>
             <div></div>
             <div class="info">
-                Undiscord {{VERSION}}
+                Undiscord {{VERSION}} · Better UX by Astrogaming057
                 <br> victornpb
             </div>
         </div>
-        <div class="main col">
-            <div class="tbar col">
-                <div class="row">
-                    <button id="toggleSidebar" class="sizeMedium icon">☰</button>
-                    <button id="start" class="sizeMedium danger" style="width: 150px;" title="Start the deletion process">▶︎ Delete</button>
-                    <button id="stop" class="sizeMedium" title="Stop the deletion process" disabled>🛑 Stop</button>
-                    <button id="clear" class="sizeMedium">Clear log</button>
-                    <label class="row" title="Hide sensitive information on your screen for taking screenshots">
-                        <input id="redact" type="checkbox" checked> Streamer mode
-                    </label>
-                </div>
-                <div class="row">
-                    <progress id="progressBar" style="display:none;"></progress>
-                </div>
-            </div>
+                <div class="activity col">
             <pre id="logArea" class="logarea scroll">
                 <div class="" style="background: var(--background-mentioned); padding: .5em;">Notice: Undiscord may be working slower than usual and<wbr>require multiple attempts due to a recent Discord update.<br>We're working on a fix, and we thank you for your patience.</div>
                 <center>
@@ -240,13 +266,27 @@
                     <div><a href="{{HOME}}/discussions" target="_blank" rel="noopener noreferrer">Issues or help</a></div>
                 </center>
             </pre>
-            <div class="tbar footer row">
-                <div id="progressPercent"></div>
+                    <div class="tbar footer row">
+                        <div class="export-wrap">
+                            <button id="exportBtn" class="sizeMedium icon" title="Export log" aria-haspopup="true" aria-expanded="false">
+                                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L11 13.17V3h1zm-7 14h14v2H5v-2z"></path>
+                                </svg>
+                            </button>
+                            <div id="exportMenu" class="export-menu" role="menu">
+                                <button type="button" data-export="json">Export log as JSON</button>
+                                <button type="button" data-export="txt">Export log as TXT</button>
+                                <button type="button" data-export="html">Export log as HTML</button>
+                            </div>
+                        </div>
+                        <div id="progressPercent"></div>
                 <span class="spacer"></span>
                 <label>
                     <input id="autoScroll" type="checkbox" checked> Auto scroll
                 </label>
                 <div class="resize-handle"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
