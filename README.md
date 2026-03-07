@@ -114,8 +114,8 @@ Please read: [what I'm doing to ensure this is safe for users][security_policy].
   [security_policy]: https://github.com/victornpb/undiscord/wiki/Security-Policy
 
 <!-- Extensions -->
-  [chrome_violentmonkey]: https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag
-  [chrome_tampermonkey]: https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo
+  [chrome_violentmonkey]: https://chromewebstore.google.com/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag
+  [chrome_tampermonkey]: https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo
   [firefox_greasemonkey]: https://addons.mozilla.org/firefox/addon/greasemonkey/
   [firefox_tampermonkey]: https://addons.mozilla.org/firefox/addon/tampermonkey/
   [firefox_violentmonkey]: https://addons.mozilla.org/firefox/addon/violentmonkey/
