@@ -1,249 +1,262 @@
-<div id="undiscord" class="browser container redact" style="display:none;">
+<div id="undiscord" class="browser">
     <div class="header">
-        <svg class="icon" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
+        <svg class="icon" aria-hidden="false" width="18" height="18" viewBox="0 0 24 24">
             <path fill="currentColor" d="M15 3.999V2H9V3.999H3V5.999H21V3.999H15Z"></path>
-            <path fill="currentColor"
-                d="M5 6.99902V18.999C5 20.101 5.897 20.999 7 20.999H17C18.103 20.999 19 20.101 19 18.999V6.99902H5ZM11 17H9V11H11V17ZM15 17H13V11H15V17Z">
-            </path>
+            <path fill="currentColor" d="M5 6.99902V18.999C5 20.101 5.897 20.999 7 20.999H17C18.103 20.999 19 20.101 19 18.999V6.99902H5ZM11 17H9V11H11V17ZM15 17H13V11H15V17Z"></path>
         </svg>
         <h3>Undiscord</h3>
-        <div class="vert-divider"></div>
-        <span> Bulk delete messages</span>
+        <span>v{{VERSION}}</span>
+        <select id="themeSelect" title="Theme" style="
+        background:#0c0d10;border:1px solid rgba(255,255,255,0.1);
+        color:#8b90a0;border-radius:4px;font-size:10px;font-weight:600;
+        letter-spacing:0.05em;height:22px;padding:0 6px;cursor:pointer;
+        text-transform:uppercase;outline:none;flex-shrink:0;">
+            <option value="default">Default</option>
+            <option value="white">White</option>
+            <option value="orange">Orange</option>
+        </select>
         <div class="spacer"></div>
-        <div id="hide" class="icon" aria-label="Close" role="button" tabindex="0">
-            <svg aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
-                <path fill="currentColor"
-                    d="M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z">
-                </path>
+        <div id="hide" class="icon" aria-label="Close" role="button" tabindex="0"
+             style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px;cursor:pointer;color:#4a5060;transition:background 0.15s,color 0.15s;"
+             onmouseover="this.style.background='rgba(239,68,68,0.15)';this.style.color='#ef4444'"
+             onmouseout="this.style.background='';this.style.color='#4a5060'">
+            <svg aria-hidden="false" width="16" height="16" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z"></path>
             </svg>
         </div>
     </div>
-    <div class="window-body" style="display: flex; flex-direction: row;">
+
+    <div class="window-body">
         <div class="sidebar scroll">
+
             <details open>
                 <summary>General</summary>
                 <fieldset>
-                    <legend>
-                        Author ID
-                        <a href="{{WIKI}}/authorId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
+                    <legend>Author ID <a href="{{WIKI}}/authorId" target="_blank" rel="noopener noreferrer">help</a></legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input class="input" id="authorId" type="text" priv>
+                            <input class="input" id="authorId" type="text" placeholder="000000000000000000" priv>
                         </div>
                         <button id="getAuthor">me</button>
                     </div>
                 </fieldset>
-                <hr>
-                <fieldset>
-                    <legend>
-                        Server ID
-                        <a href="{{WIKI}}/guildId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
+                <fieldset style="margin-top:10px;">
+                    <legend>Server ID <a href="{{WIKI}}/guildId" target="_blank" rel="noopener noreferrer">help</a></legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input class="input" id="guildId" type="text" priv>
+                            <input class="input" id="guildId" type="text" placeholder="000000000000000000" priv>
                         </div>
                         <button id="getGuild">current</button>
                     </div>
                 </fieldset>
-                <fieldset>
-                    <legend>
-                        Channel ID
-                        <a href="{{WIKI}}/channelId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
+                <fieldset style="margin-top:10px;">
+                    <legend>Channel ID <a href="{{WIKI}}/channelId" target="_blank" rel="noopener noreferrer">help</a></legend>
                     <div class="multiInput mb1">
                         <div class="input-wrapper">
-                            <input class="input" id="channelId" type="text" priv>
+                            <input class="input" id="channelId" type="text" placeholder="000000000000000000" priv>
                         </div>
                         <button id="getChannel">current</button>
                     </div>
                     <div class="sectionDescription">
-                        <label class="row"><input id="includeNsfw" type="checkbox">This is a NSFW channel</label>
+                        <label class="row"><input id="includeNsfw" type="checkbox"> NSFW channel</label>
                     </div>
                 </fieldset>
             </details>
+
             <details>
                 <summary>Wipe Archive</summary>
                 <fieldset>
-                    <legend>
-                        Import index.json
-                        <a href="{{WIKI}}/importJson" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
-                    <div class="input-wrapper">
-                        <input type="file" id="importJsonInput" accept="application/json,.json" style="width:100%";>
+                    <legend>Import index.json <a href="{{WIKI}}/importJson" target="_blank" rel="noopener noreferrer">help</a></legend>
+                    <div class="importJson">
+                        <input
+                            type="file"
+                            id="importJsonInput"
+                            class="fileInputReal"
+                            accept="application/json,.json"
+                            aria-describedby="importJsonFileName"
+                        >
+                        <label for="importJsonInput" class="filePickerBtn">Choose File</label>
+                        <span id="importJsonFileName" class="filePickerName">No file selected</span>
                     </div>
-                    <div class="sectionDescription">
-                        <br>
-                        After requesting your data from discord, you can import it here.<br>
-                        Select the "messages/index.json" file from the discord archive.
+                    <div class="sectionDescription" style="margin-top:8px;">
+                        Import the <code style="font-family:monospace;font-size:10px;color:var(--ud-amber);">messages/index.json</code> file from your Discord data archive.
                     </div>
                 </fieldset>
             </details>
-            <hr>
+
             <details>
                 <summary>Filter</summary>
                 <fieldset>
-                    <legend>
-                        Search
-                        <a href="{{WIKI}}/filters" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
+                    <legend>Contains text <a href="{{WIKI}}/filters" target="_blank" rel="noopener noreferrer">help</a></legend>
                     <div class="input-wrapper">
-                        <input id="search" type="text" placeholder="Containing text" priv>
-                    </div>
-                    <div class="sectionDescription">
-                        Only delete messages that contain the text
-                    </div>
-                    <div class="sectionDescription">
-                        <label><input id="hasLink" type="checkbox">has: link</label>
-                    </div>
-                    <div class="sectionDescription">
-                        <label><input id="hasFile" type="checkbox">has: file</label>
-                    </div>
-                    <div class="sectionDescription">
-                        <label><input id="includePinned" type="checkbox">Include pinned</label>
+                        <input id="search" type="text" placeholder="Search phrase…" priv>
                     </div>
                 </fieldset>
-                <hr>
-                <fieldset>
-                    <legend>
-                        Pattern
-                        <a href="{{WIKI}}/pattern" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
-                    <div class="sectionDescription">
-                        Delete messages that match the regular expression
-                    </div>
+                <fieldset style="margin-top:10px;">
+                    <legend>Pattern (regex) <a href="{{WIKI}}/pattern" target="_blank" rel="noopener noreferrer">help</a></legend>
                     <div class="input-wrapper">
-                        <span class="info">/</span>
-                        <input id="pattern" type="text" placeholder="regular expression" priv>
-                        <span class="info">/</span>
+                        <input id="pattern" type="text" placeholder="/expression/i" priv>
                     </div>
                 </fieldset>
+                <div class="sectionDescription" style="margin-top:10px;">
+                    <label><input id="hasLink" type="checkbox"> has: link</label>
+                </div>
+                <div class="sectionDescription">
+                    <label><input id="hasFile" type="checkbox"> has: file</label>
+                </div>
+                <div class="sectionDescription">
+                    <label><input id="includePinned" type="checkbox"> include pinned</label>
+                </div>
             </details>
+
             <details>
-                <summary>Messages interval</summary>
+                <summary>Message Range</summary>
                 <fieldset>
-                    <legend>
-                        Interval of messages
-                        <a href="{{WIKI}}/messageId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
+                    <legend>After message <a href="{{WIKI}}/messageId" target="_blank" rel="noopener noreferrer">help</a></legend>
                     <div class="multiInput mb1">
                         <div class="input-wrapper">
-                            <input id="minId" type="text" placeholder="After a message" priv>
+                            <input id="minId" type="text" placeholder="Message ID" priv>
                         </div>
-                        <button id="pickMessageAfter">Pick</button>
+                        <button id="pickMessageAfter">pick</button>
                     </div>
+                </fieldset>
+                <fieldset style="margin-top:10px;">
+                    <legend>Before message</legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input id="maxId" type="text" placeholder="Before a message" priv>
+                            <input id="maxId" type="text" placeholder="Message ID" priv>
                         </div>
-                        <button id="pickMessageBefore">Pick</button>
-                    </div>
-                    <div class="sectionDescription">
-                        Specify an interval to delete messages.
+                        <button id="pickMessageBefore">pick</button>
                     </div>
                 </fieldset>
             </details>
+
             <details>
-                <summary>Date interval</summary>
+                <summary>Date Range</summary>
                 <fieldset>
-                    <legend>
-                        After date
-                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
+                    <legend>After date <a href="{{WIKI}}/dateRange" target="_blank" rel="noopener noreferrer">help</a></legend>
                     <div class="input-wrapper mb1">
-                        <input id="minDate" type="datetime-local" title="Messages posted AFTER this date">
-                    </div>
-                    <legend>
-                        Before date
-                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
-                    <div class="input-wrapper">
-                        <input id="maxDate" type="datetime-local" title="Messages posted BEFORE this date">
-                    </div>
-                    <div class="sectionDescription">
-                        Delete messages that were posted between the two dates.
-                    </div>
-                    <div class="sectionDescription">
-                        * Filtering by date doesn't work if you use the "Messages interval".
+                        <div class="date-input-wrap">
+                            <input id="minDate" type="text" maxlength="16" title="Messages posted AFTER this date">
+                            <div class="date-mask-overlay" aria-hidden="true"><span class="typed"></span><span class="date-fake-caret" aria-hidden="true"></span><span class="remaining">YYYY-MM-DD HH:MM</span></div>
+                        </div>
                     </div>
                 </fieldset>
+                <fieldset style="margin-top:10px;">
+                    <legend>Before date <a href="{{WIKI}}/dateRange" target="_blank" rel="noopener noreferrer">help</a></legend>
+                    <div class="input-wrapper">
+                        <div class="date-input-wrap">
+                            <input id="maxDate" type="text" maxlength="16" title="Messages posted BEFORE this date">
+                            <div class="date-mask-overlay" aria-hidden="true"><span class="typed"></span><span class="remaining">YYYY-MM-DD HH:MM</span></div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="sectionDescription" style="margin-top:8px;">
+                    * Date range is ignored when a message interval is set.
+                </div>
             </details>
-            <hr>
+
             <details>
-                <summary>Advanced settings</summary>
+                <summary>Advanced</summary>
                 <fieldset>
-                    <legend>
-                        Search delay
-                        <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
-                    <div class="input-wrapper">
+                    <legend>Search delay <a href="{{WIKI}}/delay" target="_blank" rel="noopener noreferrer">help</a></legend>
+                    <div class="input-wrapper" style="gap:8px;">
                         <input id="searchDelay" type="range" value="30000" step="100" min="100" max="60000">
-                        <div id="searchDelayValue"></div>
+                        <div id="searchDelayValue" style="font-size:10px;font-family:monospace;color:var(--ud-amber);width:92px;flex-shrink:0;text-align:right;"></div>
                     </div>
                 </fieldset>
-                <fieldset>
-                    <legend>
-                        Delete delay
-                        <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
-                    <div class="input-wrapper">
+                <fieldset style="margin-top:10px;">
+                    <legend>Delete delay <a href="{{WIKI}}/delay" target="_blank" rel="noopener noreferrer">help</a></legend>
+                    <div class="input-wrapper" style="gap:8px;">
                         <input id="deleteDelay" type="range" value="1000" step="50" min="50" max="10000">
-                        <div id="deleteDelayValue"></div>
-                    </div>
-                    <br>
-                    <div class="sectionDescription">
-                        This will affect the speed in which the messages are deleted.
-                        Use the help link for more information.
+                        <div id="deleteDelayValue" style="font-size:10px;font-family:monospace;color:var(--ud-amber);width:92px;flex-shrink:0;text-align:right;"></div>
                     </div>
                 </fieldset>
-                <hr>
-                <fieldset>
-                    <legend>
-                        Authorization Token
-                        <a href="{{WIKI}}/authToken" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
+                <fieldset style="margin-top:10px;">
+                    <legend>Auth token <a href="{{WIKI}}/authToken" target="_blank" rel="noopener noreferrer">help</a></legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input class="input" id="token" type="text" autocomplete="dont" priv>
+                            <input class="input" id="token" type="password" autocomplete="dont" placeholder="••••••••••••••••" priv>
                         </div>
                         <button id="getToken">fill</button>
                     </div>
                 </fieldset>
             </details>
-            <hr>
-            <div></div>
-            <div class="info">
-                Undiscord {{VERSION}}
-                <br> victornpb
+
+            <div class="info" style="display:flex;align-items:center;justify-content:space-between;">
+                <span>Undiscord {{VERSION}}</span>
+                <button id="creditsBtn" style="font-size:9px;padding:0 8px;height:22px;min-height:22px;">Credits</button>
+            </div>
+
+            <div id="creditsModal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center;pointer-events:none;">
+                <div style="background:var(--ud-bg-raised);border:1px solid var(--ud-border-hi);border-radius:8px;padding:24px 28px;min-width:280px;max-width:380px;position:relative;pointer-events:auto;">
+                    <div style="font-size:13px;font-weight:700;color:var(--ud-text-primary);margin-bottom:16px;letter-spacing:0.02em;">Credits</div>
+                    <div style="font-size:11px;color:var(--ud-text-muted);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Original Author</div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+                        <div>
+                            <a href="https://github.com/victornpb" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--ud-text-primary);font-weight:600;text-decoration:none;">victornpb</a>
+                            <a href="https://github.com/victornpb/undiscord" target="_blank" rel="noopener noreferrer" style="font-size:10px;display:block;">github.com/victornpb/undiscord</a>
+                        </div>
+                    </div>
+                    <div style="font-size:11px;color:var(--ud-text-muted);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">UI Redesign &amp; Modifications</div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+                        <div>
+                            <a href="https://github.com/ForceWarrior" target="_blank" rel="noopener noreferrer" style="font-size:12px;color:var(--ud-text-primary);font-weight:600;text-decoration:none;">Force Warrior</a>
+                            <a href="https://github.com/ForceWarrior/undiscord-Fixed" target="_blank" rel="noopener noreferrer" style="font-size:10px;display:block;">https://github.com/ForceWarrior/undiscord-Fixed</a>
+                            <div style="font-size:10px;color:var(--ud-text-sec);">Theme system · UX improvements · Fixed trashcan not appearing</div>
+                        </div>
+                    </div>
+                    <div style="border-top:1px solid var(--ud-border);padding-top:12px;font-size:10px;color:var(--ud-text-muted);line-height:1.6;">
+                        Licensed under MIT. Original project by victornpb.
+                    </div>
+                    <button id="creditsClose" style="position:absolute;top:12px;right:12px;width:24px;height:24px;min-height:24px;min-width:24px;padding:0;font-size:14px;">✕</button>
+                </div>
             </div>
         </div>
+
         <div class="main col">
             <div class="tbar col">
-                <div class="row">
-                    <button id="toggleSidebar" class="sizeMedium icon">☰</button>
-                    <button id="start" class="sizeMedium danger" style="width: 150px;" title="Start the deletion process">▶︎ Delete</button>
-                    <button id="stop" class="sizeMedium" title="Stop the deletion process" disabled>🛑 Stop</button>
+                <div class="row" style="gap:6px;">
+                    <button id="toggleSidebar" class="sizeMedium icon" title="Toggle sidebar">☰</button>
+                    <button id="start" class="sizeMedium danger" style="width:140px;" title="Start the deletion process">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-right:6px;flex-shrink:0;">
+                            <path d="M15 3.999V2H9V3.999H3V5.999H21V3.999H15Z"/>
+                            <path d="M5 6.99902V18.999C5 20.101 5.897 20.999 7 20.999H17C18.103 20.999 19 20.101 19 18.999V6.99902H5ZM11 17H9V11H11V17ZM15 17H13V11H15V17Z"/>
+                        </svg>
+                        Delete
+                    </button>
+                    <button id="stop" class="sizeMedium" title="Stop the deletion process" disabled>⏹ Stop</button>
                     <button id="clear" class="sizeMedium">Clear log</button>
-                    <label class="row" title="Hide sensitive information on your screen for taking screenshots">
+                    <div class="spacer"></div>
+                    <label class="row" style="gap:6px;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:#4a5060;cursor:pointer;user-select:none;" title="Hide sensitive information on screen">
                         <input id="redact" type="checkbox" checked> Streamer mode
                     </label>
                 </div>
-                <div class="row">
+                <div class="row" style="margin-top:6px;">
                     <progress id="progressBar" style="display:none;"></progress>
                 </div>
             </div>
+
             <pre id="logArea" class="logarea scroll">
-                <div class="" style="background: var(--background-mentioned); padding: .5em;">Notice: Undiscord may be working slower than usual and<wbr>require multiple attempts due to a recent Discord update.<br>We're working on a fix, and we thank you for your patience.</div>
-                <center>
-                    <div>Star <a href="{{HOME}}" target="_blank" rel="noopener noreferrer">this project</a> on GitHub!</div>
-                    <div><a href="{{HOME}}/discussions" target="_blank" rel="noopener noreferrer">Issues or help</a></div>
-                </center>
+                <div class="log-notice">Undiscord may be working slower than usual and require multiple attempts due to a recent Discord update. We're working on a fix, thanks for your patience.</div>
             </pre>
+
             <div class="tbar footer row">
                 <div id="progressPercent"></div>
+                <a href="{{HOME}}" target="_blank" rel="noopener noreferrer"
+                   style="font-size:10px;font-weight:600;letter-spacing:0.05em;white-space:nowrap;flex-shrink:0;">
+                    ⭐ Star original
+                </a>
+                <a href="https://github.com/ForceWarrior/undiscord-Fixed" target="_blank" rel="noopener noreferrer"
+                   style="font-size:10px;font-weight:600;letter-spacing:0.05em;white-space:nowrap;flex-shrink:0;">
+                    ⭐ Star this version
+                </a>
+                <a href="{{HOME}}/discussions" target="_blank" rel="noopener noreferrer"
+                   style="font-size:10px;font-weight:600;letter-spacing:0.05em;white-space:nowrap;flex-shrink:0;">
+                    Issues or help
+                </a>
                 <span class="spacer"></span>
-                <label>
+                <label style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:#4a5060;cursor:pointer;user-select:none;">
                     <input id="autoScroll" type="checkbox" checked> Auto scroll
                 </label>
                 <div class="resize-handle"></div>
