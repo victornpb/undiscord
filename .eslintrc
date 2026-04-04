@@ -13,6 +13,12 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  {
+  "globals": {
+    "GM_getValue": "readonly",
+    "GM_setValue": "writable"
+  }
+  }
   "rules": {
     "indent": ["error", 2],
     "quotes": ["error", "single"],
