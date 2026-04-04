@@ -7,29 +7,19 @@
   "extends": "eslint:recommended",
   "globals": {
     "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
+    "SharedArrayBuffer": "readonly",
+    "GM_getValue": "readonly",
+    "GM_setValue": "writable"
   },
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  {
-  "globals": {
-    "GM_getValue": "readonly",
-    "GM_setValue": "writable"
-  }
-  }
   "rules": {
-    "no-duplicate-selectors": [true, { "disallowInList": false }]
     "indent": ["error", 2],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
-    "no-unused-vars": [
-      "warn",
-      {
-        "args": "none"
-      }
-    ],
+    "no-unused-vars": ["warn", { "args": "none" }],
     "no-console": "off",
     "no-debugger": "warn",
     "no-unused-expressions": "error",
