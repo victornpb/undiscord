@@ -36,6 +36,8 @@
 	box-sizing: border-box;
 	font-family: var(--ud-font-ui);
 }
+
+/* stylelint-disable-next-line no-duplicate-selectors */
 #undiscord {
 	color: var(--ud-text-primary);
 	background: var(--ud-bg-surface);
