@@ -78,6 +78,7 @@
 	flex: 1 0 100%;
 	height: 3px;
 	border-radius: 2px;
+	accent-color: var(--ud-amber);
 	accent-color: #f59e0b;
 	display: none;
 }
@@ -197,8 +198,6 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-
-#undiscord #progressBar { accent-color: var(--ud-amber); }
 
 /* Date input mask overlay */
 #undiscord .date-input-wrap {
