@@ -198,8 +198,6 @@
 	text-overflow: ellipsis;
 }
 
-#undicord-btn progress { accent-color: var(--ud-amber); }
-
 #undiscord #progressBar { accent-color: var(--ud-amber); }
 
 /* Date input mask overlay */
