@@ -3,6 +3,8 @@
 // @grant        GM_setValue
 // ==/UserScript==
 
+/* global GM_getValue, GM_setValue */  // ESLint inline comment
+
 const PREFIX = '[UNDISCORD]';
 
 import { VERSION } from 'process.env';
