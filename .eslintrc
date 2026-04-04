@@ -20,6 +20,7 @@
   }
   }
   "rules": {
+    "no-duplicate-selectors": [true, { "disallowInList": false }]
     "indent": ["error", 2],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
