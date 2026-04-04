@@ -1,3 +1,8 @@
+// ==UserScript==
+// @grant        GM_getValue
+// @grant        GM_setValue
+// ==/UserScript==
+
 const PREFIX = '[UNDISCORD]';
 
 import { VERSION } from 'process.env';
