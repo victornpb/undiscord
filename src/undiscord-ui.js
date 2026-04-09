@@ -1,3 +1,8 @@
+// ==UserScript==
+// @grant        GM_getValue
+// @grant        GM_setValue
+// ==/UserScript==
+
 const PREFIX = '[UNDISCORD]';
 
 import { VERSION } from 'process.env';
@@ -40,6 +45,8 @@ const ui = {
 };
 const $ = s => ui.undiscordWindow.querySelector(s);
 
+const msLabel = ms => `${ms}ms (${+(ms / 1000).toFixed(1)}s)`;
+
 function initUI() {
 
   insertCss(themeCss);
@@ -62,7 +69,10 @@ function initUI() {
   ui.undiscordBtn = createElm(buttonHtml);
   ui.undiscordBtn.onclick = toggleWindow;
   function mountBtn() {
-    const toolbar = document.querySelector('#app-mount [class*="-toolbar"]');
+    const toolbar = document.querySelector('#app-mount [class*="toolbar"]')
+      || document.querySelector('[class*="toolBar"]')
+      || document.querySelector('[class*="chat"]')
+      || document.body;
     if (toolbar) toolbar.appendChild(ui.undiscordBtn);
   }
   mountBtn();
@@ -73,7 +83,7 @@ function initUI() {
     if (observerThrottle) return;
     observerThrottle = setTimeout(() => {
       observerThrottle = null;
-      if (!discordElm.contains(ui.undiscordBtn)) mountBtn(); // re-mount the button to the toolbar
+      if (!discordElm.contains(ui.undiscordBtn)) mountBtn();
     }, 3000);
   });
   observer.observe(discordElm, { attributes: false, childList: true, subtree: true });
@@ -98,7 +108,7 @@ function initUI() {
 
   // register event listeners
   $('#hide').onclick = toggleWindow;
-  $('#toggleSidebar').onclick = ()=> ui.undiscordWindow.classList.toggle('hide-sidebar');
+  $('#toggleSidebar').onclick = () => ui.undiscordWindow.classList.toggle('hide-sidebar');
   $('button#start').onclick = startAction;
   $('button#stop').onclick = stopAction;
   $('button#clear').onclick = () => ui.logArea.innerHTML = '';
@@ -115,6 +125,37 @@ function initUI() {
     const b = ui.undiscordWindow.classList.toggle('redact');
     if (b) alert('This mode will attempt to hide personal information, so you can screen share / take screenshots.\nAlways double check you are not sharing sensitive information!');
   };
+
+  // import JSON file name display
+  const importJsonInput = $('input#importJsonInput');
+  const importJsonFileName = $('#importJsonFileName');
+  if (importJsonInput && importJsonFileName) {
+    importJsonInput.addEventListener('change', () => {
+      const name = importJsonInput.files && importJsonInput.files.length
+        ? importJsonInput.files[0].name
+        : 'No file selected';
+      importJsonFileName.textContent = name;
+      importJsonFileName.title = importJsonInput.files?.length ? name : '';
+    });
+  }
+
+  // Theme switcher — persisted via GM storage so it survives page refreshes
+  const themeSelect = $('#themeSelect');
+  const savedTheme = GM_getValue('ud-theme', 'default');
+  ui.undiscordWindow.dataset.theme = savedTheme;
+  themeSelect.value = savedTheme;
+  themeSelect.oninput = (e) => {
+    ui.undiscordWindow.dataset.theme = e.target.value;
+    GM_setValue('ud-theme', e.target.value);
+  };
+  themeSelect.addEventListener('mousedown', e => e.stopPropagation());
+
+  // Credits modal
+  const creditsModal = $('#creditsModal');
+  $('#creditsBtn').onclick = () => { creditsModal.style.display = 'flex'; };
+  $('#creditsClose').onclick = () => { creditsModal.style.display = 'none'; };
+  creditsModal.onclick = (e) => { if (e.target === creditsModal) creditsModal.style.display = 'none'; };
+
   $('#pickMessageAfter').onclick = async () => {
     alert('Select a message on the chat.\nThe message below it will be deleted.');
     toggleWindow();
@@ -131,22 +172,27 @@ function initUI() {
   };
   $('button#getToken').onclick = () => $('input#token').value = fillToken();
 
-  // sync delays
-  $('input#searchDelay').onchange = (e) => {
+  // Delay sliders — persist values and update label
+  $('input#searchDelay').oninput = (e) => {
     const v = parseInt(e.target.value);
-    if (v) undiscordCore.options.searchDelay = v;
+    if (v) { undiscordCore.options.searchDelay = v; GM_setValue('ud-searchDelay', v); }
+    $('div#searchDelayValue').textContent = msLabel(e.target.value);
   };
-  $('input#deleteDelay').onchange = (e) => {
+  $('input#deleteDelay').oninput = (e) => {
     const v = parseInt(e.target.value);
-    if (v) undiscordCore.options.deleteDelay = v;
+    if (v) { undiscordCore.options.deleteDelay = v; GM_setValue('ud-deleteDelay', v); }
+    $('div#deleteDelayValue').textContent = msLabel(e.target.value);
   };
 
-  $('input#searchDelay').addEventListener('input', (event) => {
-    $('div#searchDelayValue').textContent = event.target.value + 'ms';
-  });
-  $('input#deleteDelay').addEventListener('input', (event) => {
-    $('div#deleteDelayValue').textContent = event.target.value + 'ms';
-  });
+  // Restore saved delay values on load
+  const savedSearchDelay = GM_getValue('ud-searchDelay', parseInt($('input#searchDelay').value));
+  const savedDeleteDelay = GM_getValue('ud-deleteDelay', parseInt($('input#deleteDelay').value));
+  $('input#searchDelay').value = savedSearchDelay;
+  $('input#deleteDelay').value = savedDeleteDelay;
+  undiscordCore.options.searchDelay = savedSearchDelay;
+  undiscordCore.options.deleteDelay = savedDeleteDelay;
+  $('div#searchDelayValue').textContent = msLabel(savedSearchDelay);
+  $('div#deleteDelayValue').textContent = msLabel(savedDeleteDelay);
 
   // import json
   const fileSelection = $('input#importJsonInput');
@@ -181,6 +227,9 @@ function initUI() {
   setLogFn(printLog);
 
   setupUndiscordCore();
+
+  setupDateMask($('input#minDate'));
+  setupDateMask($('input#maxDate'));
 }
 
 function printLog(type = '', args) {
@@ -202,7 +251,6 @@ function setupUndiscordCore() {
   };
 
   undiscordCore.onProgress = (state, stats) => {
-    // console.log(PREFIX, 'onProgress', state, stats);
     let max = state.grandTotal;
     const value = state.delCount + state.failCount;
     max = Math.max(max, value, 0); // clamp max
@@ -229,11 +277,11 @@ function setupUndiscordCore() {
     // update delays
     const searchDelayInput = $('input#searchDelay');
     searchDelayInput.value = undiscordCore.options.searchDelay;
-    $('div#searchDelayValue').textContent = undiscordCore.options.searchDelay+'ms';
+    $('div#searchDelayValue').textContent = msLabel(undiscordCore.options.searchDelay);
 
     const deleteDelayInput = $('input#deleteDelay');
     deleteDelayInput.value = undiscordCore.options.deleteDelay;
-    $('div#deleteDelayValue').textContent = undiscordCore.options.deleteDelay+'ms';
+    $('div#deleteDelayValue').textContent = msLabel(undiscordCore.options.deleteDelay);
   };
 
   undiscordCore.onStop = (state, stats) => {
@@ -244,6 +292,112 @@ function setupUndiscordCore() {
     ui.progressMain.style.display = 'none';
     ui.percent.style.display = 'none';
   };
+}
+
+function setupDateMask(input) {
+  const separators = { 4: '-', 7: '-', 10: ' ', 13: ':' };
+  const sepPositions = new Set([4, 7, 10, 13]);
+  const mask = 'YYYY-MM-DD HH:MM';
+
+  const overlay   = input.parentElement.querySelector('.date-mask-overlay');
+  const typedSpan = overlay.querySelector('.typed');
+  const hintSpan  = overlay.querySelector('.remaining');
+  const fakeCaret = overlay.querySelector('.date-fake-caret');
+
+  function updateOverlay() {
+    const val = input.value;
+    typedSpan.textContent = val;
+    hintSpan.textContent  = mask.slice(val.length);
+  }
+  input.addEventListener('focus', () => {
+    if (fakeCaret) fakeCaret.style.display = 'inline-block';
+    updateOverlay();
+  });
+  input.addEventListener('blur', () => {
+    if (fakeCaret) fakeCaret.style.display = 'none';
+  });
+
+  // Returns max digit allowed at a given formatted-string position
+  function maxDigit(pos, val) {
+    const month = parseInt(val.slice(5, 7));
+    const year  = parseInt(val.slice(0, 4)) || 2000;
+    switch (pos) {
+      case 5:  return 1;
+      case 6:  return parseInt(val[5]) === 1 ? 2 : 9;
+      case 8:  {
+        const maxDay = (!isNaN(month) && month >= 1 && month <= 12)
+          ? new Date(year, month, 0).getDate() : 31;
+        return Math.floor(maxDay / 10);
+      }
+      case 9:  {
+        const d1 = parseInt(val[8]);
+        const maxDay = (!isNaN(month) && month >= 1 && month <= 12)
+          ? new Date(year, month, 0).getDate() : 31;
+        return Math.min(maxDay - d1 * 10, 9);
+      }
+      case 11: return 2;
+      case 12: return parseInt(val[11]) === 2 ? 3 : 9;
+      case 14: return 5;
+      default: return 9;
+    }
+  }
+
+  // Returns min digit allowed (prevents 00 month / 00 day)
+  function minDigit(pos, val) {
+    if (pos === 6 && parseInt(val[5]) === 0) return 1;
+    if (pos === 9 && parseInt(val[8]) === 0) return 1;
+    return 0;
+  }
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      const val = input.value;
+      if (!val) return;
+      const lastIsSep = ['-', ' ', ':'].includes(val[val.length - 1]);
+      input.value = (lastIsSep && val.length >= 2) ? val.slice(0, -2) : val.slice(0, -1);
+      updateOverlay();
+      return;
+    }
+
+    if (['Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) return;
+    if (!/^\d$/.test(e.key)) { e.preventDefault(); return; }
+    if (input.value.length >= 16) { e.preventDefault(); return; }
+
+    let targetPos = input.value.length;
+    if (sepPositions.has(targetPos)) targetPos++;
+
+    const digit = parseInt(e.key);
+    if (digit > maxDigit(targetPos, input.value) ||
+        digit < minDigit(targetPos, input.value)) {
+      e.preventDefault();
+      return;
+    }
+  });
+
+  input.addEventListener('input', () => {
+    let digits = input.value.replace(/\D/g, '');
+    let result = '';
+    for (let i = 0; i < digits.length && result.length < 16; i++) {
+      if (separators[result.length]) {
+        result += separators[result.length];
+        if (result.length >= 16) break;
+      }
+      result += digits[i];
+    }
+    if (separators[result.length] && result.length < 16) {
+      result += separators[result.length];
+    }
+    input.value = result;
+    updateOverlay();
+  });
+
+  updateOverlay();
+}
+
+function parseDateField(val) {
+  if (!val || val.length < 10) return '';
+  return val.trim().replace(' ', 'T');
 }
 
 async function startAction() {
@@ -262,20 +416,20 @@ async function startAction() {
   // message interval
   const minId = $('input#minId').value.trim();
   const maxId = $('input#maxId').value.trim();
-  // date range
-  const minDate = $('input#minDate').value.trim();
-  const maxDate = $('input#maxDate').value.trim();
-  //advanced
+  // date range parsed from masked text input "YYYY-MM-DD HH:MM"
+  const minDate = parseDateField($('input#minDate').value);
+  const maxDate = parseDateField($('input#maxDate').value);
+  // advanced
   const searchDelay = parseInt($('input#searchDelay').value.trim());
   const deleteDelay = parseInt($('input#deleteDelay').value.trim());
- 
+
   // token
   const authToken = $('input#token').value.trim() || fillToken();
   if (!authToken) return; // get token already logs an error.
-  
+
   // validate input
   if (!guildId) return log.error('You must fill the "Server ID" field!');
- 
+
   // clear logArea
   ui.logArea.innerHTML = '';
 
@@ -285,7 +439,7 @@ async function startAction() {
     authToken,
     authorId,
     guildId,
-    channelId: channelIds.length === 1 ? channelIds[0] : undefined, // single or multiple channel
+    channelId: channelIds.length === 1 ? channelIds[0] : undefined,
     minId: minId || minDate,
     maxId: maxId || maxDate,
     content,
@@ -296,26 +450,10 @@ async function startAction() {
     pattern,
     searchDelay,
     deleteDelay,
-    // maxAttempt: 2,
   };
 
-  // multiple guilds and channels
-  const FALSE = false;
-  if (FALSE) {
-    // TODO: import feature
-    const jobs = [].map(x => ({
-      guildId: x.guildId,
-      channelId: x.ch,
-    }));
-
-    try {
-      await undiscordCore.runBatch(jobs);
-    } catch (err) {
-      log.error('CoreException', err);
-    }
-  }
   // multiple channels
-  else if (channelIds.length > 1) {
+  if (channelIds.length > 1) {
     const jobs = channelIds.map(ch => ({
       guildId: guildId,
       channelId: ch,
@@ -345,4 +483,4 @@ function stopAction() {
 
 export default initUI;
 
-// ---- END Undiscord ----
+// ---- END Undiscord ---

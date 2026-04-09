@@ -1,3 +1,6 @@
+# this is my own custom version which works like a charm. it has NEW UX and fixed the trash icon not showing up. 
+Thank you for using my version!!!
+
 # Undiscord - Delete all messages in a Discord channel or DM
 <!-- shields -->
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/victornpb/undiscord?color=%235865f2&display_name=tag&label=Undiscord&style=flat-square)][greasyfork_url]

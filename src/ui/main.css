@@ -1,174 +1,248 @@
-/**** Undiscord Button ****/
+/* Trash icon button in Discord toolbar */
 #undicord-btn {
-    position: relative;
-    width: auto;
-    height: 24px;
-    margin: 0 8px;
-    cursor: pointer;
-    color: var(--interactive-normal);
-    flex: 0 0 auto;
+	position: relative;
+	width: auto;
+	height: 24px;
+	margin: 0 8px;
+	cursor: pointer;
+	color: var(--interactive-normal);
+	flex: 0 0 auto;
 }
-
 #undicord-btn progress {
-    position: absolute;
-    top: 23px;
-    left: -4px;
-    width: 32px;
-    height: 12px;
-    display: none;
+	position: absolute;
+	top: 23px;
+	left: -4px;
+	width: 32px;
+	height: 4px;
+	display: none;
+	accent-color: #f59e0b;
 }
+#undicord-btn.running { color: #ef4444 !important; }
+#undicord-btn.running progress { display: block; }
 
-#undicord-btn.running {
-    color: var(--button-danger-background) !important;
-}
-
-#undicord-btn.running progress {
-    display: block;
-}
-
-/**** Undiscord Interface ****/
+/* Main window */
 #undiscord {
-    position: fixed;
-    z-index: 100;
-    top: 58px;
-    right: 10px;
-    display: flex;
-    flex-direction: column;
-    width: 800px;
-    height: 80vh;
-    min-width: 610px;
-    max-width: 100vw;
-    min-height: 448px;
-    max-height: 100vh;
-    color: var(--text-normal);
-    border-radius: 4px;
-    background-color: var(--background-secondary);
-    box-shadow: var(--elevation-stroke), var(--elevation-high);
-    will-change: top, left, width, height;
+	position: fixed;
+	z-index: 100;
+	top: 58px;
+	right: 10px;
+	display: flex;
+	flex-direction: column;
+	width: 820px;
+	height: 80vh;
+	min-width: 560px;
+	max-width: 100vw;
+	min-height: 420px;
+	max-height: 100vh;
+	border-radius: 10px;
+	will-change: top, left, width, height;
 }
+#undiscord .header .icon { cursor: pointer; }
 
-#undiscord .header .icon {
-    cursor: pointer;
-}
-
+/* Window body split */
 #undiscord .window-body {
-    height: calc(100% - 48px);
+	display: flex;
+	flex-direction: row;
+	height: calc(100% - 44px);
 }
 
-#undiscord .sidebar {
-    overflow: hidden scroll;
-    overflow-y: auto;
-    width: 270px;
-    min-width: 250px;
-    height: 100%;
-    max-height: 100%;
-    padding: 8px;
-    background: var(--bg-overlay-4, var(--background-base-lowest));
-}
+/* Sidebar toggle */
+#undiscord.hide-sidebar .sidebar { display: none; }
+#undiscord.hide-sidebar .main { max-width: 100%; }
 
-#undiscord .sidebar legend,
-#undiscord .sidebar label {
-    display: block;
-    width: 100%;
-}
-
+/* Main panel */
 #undiscord .main {
-    display: flex;
-    max-width: calc(100% - 250px);
-    background-color: var(--bg-overlay-chat, var(--background-base-lower));
-    flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-width: 0;
+	background: #14161a;
 }
 
-#undiscord.hide-sidebar .sidebar {
-    display: none;
-}
-
-#undiscord.hide-sidebar .main {
-    max-width: 100%;
-}
-
-#undiscord #logArea {
-    font-family: Consolas, Liberation Mono, Menlo, Courier, monospace;
-    font-size: 0.75rem;
-    overflow: auto;
-    padding: 10px;
-    user-select: text;
-    flex-grow: 1;
-    flex-grow: 1;
-    cursor: auto;
-}
-
+/* Toolbar */
 #undiscord .tbar {
-    padding: 8px;
-    background-color: var(--bg-overlay-2, var(--__header-bar-background));
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 12px;
+	background: #1b1e24;
+	border-bottom: 1px solid rgba(255,255,255,0.07);
+	flex-shrink: 0;
+}
+#undiscord .tbar button { margin: 0; }
+
+/* Progress bar */
+#undiscord #progressBar {
+	flex: 1 0 100%;
+	height: 3px;
+	border-radius: 2px;
+	accent-color: var(--ud-amber);
+	accent-color: #f59e0b;
+	display: none;
 }
 
-#undiscord .tbar button {
-    margin-right: 4px;
-    margin-bottom: 4px;
-}
-
+/* Footer */
 #undiscord .footer {
-    cursor: se-resize;
-    padding-right: 30px;
+	height: 34px;
+	padding: 0 14px;
+	padding-right: 30px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	border-top: 1px solid rgba(255,255,255,0.07);
+	background: #0e0f11;
+	flex-shrink: 0;
 }
-
 #undiscord .footer #progressPercent {
-    padding: 0 1em;
-    font-size: small;
-    color: var(--interactive-muted);
-    flex-grow: 1;
+	font-size: 10px;
+	font-family: 'Consolas', 'Menlo', monospace;
+	color: rgba(255,255,255,0.3);
+	flex: 1;
+}
+#undiscord .footer label {
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	color: rgba(255,255,255,0.3);
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	cursor: pointer;
+	user-select: none;
 }
 
-.resize-handle {
-    position: absolute;
-    bottom: -15px;
-    right: -15px;
-    width: 30px;
-    height: 30px;
-    transform: rotate(-45deg);
-    background: repeating-linear-gradient(0, var(--background-modifier-accent), var(--background-modifier-accent) 1px, transparent 2px, transparent 4px);
-    cursor: nwse-resize;
+/* Log notice box (startup message) */
+#undiscord .log-notice {
+	background: var(--ud-amber-muted);
+	border: 1px solid rgba(245,158,11,0.18);
+	border-left: 3px solid var(--ud-amber);
+	border-radius: 4px;
+	padding: 9px 12px;
+	font-size: 11px;
+	color: #8b90a0;
+	margin-bottom: 14px;
+	line-height: 1.6;
+	white-space: normal;
+	word-wrap: break-word;
+	width: fit-content;
+	max-width: 100%;
 }
 
-/**** Elements ****/
-#undiscord summary {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 20px;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 2px;
-    padding: 6px 10px;
-    cursor: pointer;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: var(--interactive-normal);
-    border-radius: 4px;
-    flex-shrink: 0;
-}
-
-#undiscord fieldset {
-    padding-left: 8px;
-}
-
-#undiscord legend a {
-    float: right;
-    text-transform: initial;
-}
-
-#undiscord progress {
-    height: 8px;
-    margin-top: 4px;
-    flex-grow: 1;
-}
-
+/* Import JSON horizontal row layout */
 #undiscord .importJson {
-    display: flex;
-    flex-direction: row;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 6px;
 }
 
-#undiscord .importJson button {
-    margin-left: 5px;
-    width: fit-content;
+#undiscord .importJson .fileInputReal {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+#undiscord .importJson .filePickerBtn {
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	height: 32px !important;
+	line-height: 32px;
+	padding: 0 10px;
+	margin: 0;
+	background: var(--ud-control-bg);
+	border: 1px solid var(--ud-control-border);
+	border-radius: 4px;
+	color: var(--ud-control-text);
+	font-family: var(--ud-font-ui);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	cursor: pointer;
+	user-select: none;
+	transition: background 0.15s, color 0.15s;
+}
+
+#undiscord .importJson .filePickerBtn:hover {
+	background: var(--ud-control-bg-hover);
+	color: var(--ud-text-primary);
+}
+
+#undiscord .importJson .filePickerName {
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	flex: 1;
+	min-width: 0;
+	height: 32px !important;
+	line-height: 32px;
+	padding: 0 10px;
+	margin: 0;
+	background: var(--ud-bg-input);
+	border: 1px solid var(--ud-border-hi);
+	border-radius: 4px;
+	color: var(--ud-text-sec);
+	font-family: var(--ud-font-mono);
+	font-size: 11px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Date input mask overlay */
+#undiscord .date-input-wrap {
+	position: relative;
+	width: 100%;
+}
+#undiscord .date-input-wrap input {
+	width: 100%;
+	position: relative;
+	z-index: 1;
+	background: var(--ud-bg-input) !important;
+	color: transparent !important;
+	caret-color: transparent !important;
+}
+#undiscord .date-mask-overlay {
+	position: absolute;
+	inset: 1px;
+	display: block;
+	line-height: 30px;
+	padding: 0 10px;
+	font-family: var(--ud-font-mono);
+	font-size: 11px;
+	pointer-events: none;
+	z-index: 2;
+	overflow: hidden;
+	white-space: pre;
+}
+#undiscord .date-mask-overlay .typed {
+	color: var(--ud-text-primary);
+	white-space: pre;
+}
+#undiscord .date-mask-overlay .remaining {
+	color: var(--ud-text-muted);
+	white-space: pre;
+}
+#undiscord .date-fake-caret {
+	display: none;
+	width: 1px;
+	height: 0.85em;
+	background: var(--ud-text-primary);
+	vertical-align: middle;
+	margin-right: -1px;
+	animation: ud-caret-blink 1.2s step-end infinite;
+}
+@keyframes ud-caret-blink {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0; }
 }
