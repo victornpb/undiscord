@@ -1,7 +1,7 @@
 /* undiscord window */
 #undiscord.browser {
     box-shadow: var(--shadow-border), var(--shadow-high);
-        border: 1px solid var(--border-subtle);
+    border: 1px solid var(--border-subtle);
     overflow: hidden;
 }
 
@@ -15,18 +15,18 @@
 }
 
 #undiscord .header {
-    background-color: var(--background-tertiary);
+    background-color: var(--background-surface-higher, var(--background-tertiary));
     height: 48px;
     align-items: center;
     min-height: 48px;
     padding: 0 16px;
     display: flex;
-    color: var(--header-secondary);
+    color: var(--text-subtle, var(--header-secondary));
     cursor: grab;
 }
 
 #undiscord .header .icon {
-    color: var(--interactive-normal);
+    color: var(--interactive-text-default, var(--interactive-normal));
     margin-right: 8px;
     flex-shrink: 0;
     width: 24;
@@ -34,7 +34,7 @@
 }
 
 #undiscord .header .icon:hover {
-    color: var(--interactive-hover);
+    color: var(--interactive-text-hover, var(--interactive-hover));
 }
 
 #undiscord .header h3 {
@@ -42,7 +42,7 @@
     line-height: 20px;
     font-weight: 500;
     font-family: var(--font-display);
-    color: var(--header-primary);
+    color: var(--text-strong, var(--header-primary));
     flex-shrink: 0;
     margin-right: 16px;
 }
@@ -54,14 +54,14 @@
 #undiscord .header .vert-divider {
     width: 1px;
     height: 24px;
-    background-color: var(--background-modifier-accent);
+    background-color: var(--border-muted, var(--background-modifier-accent));
     margin-right: 16px;
     flex-shrink: 0;
 }
 
 #undiscord legend,
 #undiscord label {
-    color: var(--header-secondary);
+    color: var(--text-subtle, var(--header-secondary));
     font-size: 12px;
     line-height: 16px;
     font-weight: 500;
@@ -79,7 +79,7 @@
     width: 100%;
     border-radius: 3px;
     color: var(--text-default);
-    background-color: var(--input-background);
+    background-color: var(--input-background-default, var(--input-background));
     border: none;
     transition: border-color 0.2s ease-in-out 0s;
 }
@@ -98,9 +98,8 @@
     transition: border-color 0.2s ease-in-out 0s;
     padding: 10px;
     height: 44px;
-    
-    background-color: var(--input-background);
-    border: 1px solid var(--input-border);
+    background-color: var(--input-background-default, var(--input-background));
+    border: 1px solid var(--input-border-default, var(--input-border));
     border-radius: 8px;
     box-sizing: border-box;
     color: var(--text-default);
@@ -118,7 +117,7 @@
     width: 100%;
     border-radius: 3px;
     color: var(--text-default);
-    background-color: var(--input-background);
+    background-color: var(--input-background-default, var(--input-background));
     border: none;
     transition: border-color 0.2s ease-in-out 0s;
 }
@@ -129,8 +128,8 @@
 #undiscord input[type="datetime-local"],
 #undiscord input[type="number"],
 #undiscord input[type="range"] {
-    background-color: var(--input-background);
-    border: 1px solid var(--input-border);
+    background-color: var(--input-background-default, var(--input-background));
+    border: 1px solid var(--input-border-default, var(--input-border));
     border-radius: 8px;
     box-sizing: border-box;
     color: var(--text-default);
@@ -146,12 +145,12 @@
     border: none;
     margin-bottom: 24px;
     padding-bottom: 4px;
-    border-bottom: 1px solid var(--background-modifier-accent);
+    border-bottom: 1px solid var(--border-muted, var(--background-modifier-accent));
 }
 
 #undiscord .sectionDescription {
     margin-bottom: 16px;
-    color: var(--header-secondary);
+    color: var(--text-subtle, var(--header-secondary));
     font-size: 14px;
     line-height: 20px;
     font-weight: 400;
@@ -188,7 +187,7 @@
 
     /* lookFilled colorPrimary */
     color: rgb(255, 255, 255);
-    background-color: var(--button-secondary-background);
+    background-color: var(--control-secondary-background-default, var(--button-secondary-background));
 }
 
 #undiscord .sizeMedium {
@@ -209,15 +208,15 @@
 
 /* lookFilled colorPrimary */
 #undiscord .accent {
-    background-color: var(--brand-experiment);
+    background-color: var(--background-brand, var(--brand-experiment));
 }
 
 #undiscord .danger {
-    background-color: var(--button-danger-background);
+    background-color: var(--control-critical-primary-background-default, var(--button-danger-background));
 }
 
 #undiscord .positive {
-    background-color: var(--button-positive-background);
+    background-color: var(--control-connected-background-default, var(--button-positive-background));
 }
 
 #undiscord .info {
