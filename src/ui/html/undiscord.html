@@ -71,7 +71,7 @@
                         <a href="{{WIKI}}/importJson" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input type="file" id="importJsonInput" accept="application/json,.json" style="width:100%";>
+                        <input type="file" id="importJsonInput" accept="application/json,.json" style="width:100%">
                     </div>
                     <div class="sectionDescription">
                         <br>
@@ -102,6 +102,9 @@
                     </div>
                     <div class="sectionDescription">
                         <label><input id="includePinned" type="checkbox">Include pinned</label>
+                    </div>
+                    <div class="sectionDescription">
+                        <label><input id="includeApplications" type="checkbox" checked>Include bot/application messages</label>
                     </div>
                 </fieldset>
                 <hr>
@@ -163,6 +166,7 @@
                     </div>
                     <div class="sectionDescription">
                         Delete messages that were posted between the two dates.
+                        Make sure you enter both a date AND time, otherwise the filter will not work.
                     </div>
                     <div class="sectionDescription">
                         * Filtering by date doesn't work if you use the "Messages interval".
@@ -195,6 +199,15 @@
                     <div class="sectionDescription">
                         This will affect the speed in which the messages are deleted.
                         Use the help link for more information.
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Empty page retries</legend>
+                    <div class="input-wrapper">
+                        <input id="emptyPageRetries" type="number" value="2" min="0" max="10" step="1">
+                    </div>
+                    <div class="sectionDescription">
+                        Number of retries when the API returns an empty page before stopping.
                     </div>
                 </fieldset>
                 <hr>
@@ -233,8 +246,8 @@
                     <progress id="progressBar" style="display:none;"></progress>
                 </div>
             </div>
-            <pre id="logArea" class="logarea scroll">
-                <div class="" style="background: var(--background-mentioned); padding: .5em;">Notice: Undiscord may be working slower than usual and<wbr>require multiple attempts due to a recent Discord update.<br>We're working on a fix, and we thank you for your patience.</div>
+            <pre id="logArea" class="scroll">
+                <div class="" style="background: var(--message-mentioned-background-default, var(--background-mentioned)); padding: .5em;">Notice: Undiscord may be working slower than usual and<wbr>require multiple attempts due to a recent Discord update.<br>We're working on a fix, and we thank you for your patience.</div>
                 <center>
                     <div>Star <a href="{{HOME}}" target="_blank" rel="noopener noreferrer">this project</a> on GitHub!</div>
                     <div><a href="{{HOME}}/discussions" target="_blank" rel="noopener noreferrer">Issues or help</a></div>

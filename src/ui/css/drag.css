@@ -1,15 +1,15 @@
-[name^="grab-"] {
+#undiscord [name^="grab-"] {
   position: absolute;
   --size: 6px;
   --corner-size: 16px;
   --offset: -1px;
   z-index: 9;
 }
-[name^="grab-"]:hover{
+#undiscord [name^="grab-"]:hover{
     background: rgba(128,128,128,0.1);
 }
 
-[name="grab-t"] {
+#undiscord [name="grab-t"] {
   top: 0px;
   left: var(--corner-size);
   right: var(--corner-size);
@@ -17,15 +17,15 @@
   margin-top: var(--offset);
   cursor: ns-resize;
 }
-[name="grab-r"] {
+#undiscord [name="grab-r"] {
   top: var(--corner-size);
   bottom: var(--corner-size);
   right: 0px;
   width: var(--size);
-  margin-right: var(--offset); 
+  margin-right: var(--offset);
   cursor: ew-resize;
 }
-[name="grab-b"] {
+#undiscord [name="grab-b"] {
   bottom: 0px;
   left: var(--corner-size);
   right: var(--corner-size);
@@ -33,7 +33,7 @@
   margin-bottom: var(--offset);
   cursor: ns-resize;
 }
-[name="grab-l"] {
+#undiscord [name="grab-l"] {
   top: var(--corner-size);
   bottom: var(--corner-size);
   left: 0px;
@@ -41,7 +41,7 @@
   margin-left: var(--offset);
   cursor: ew-resize;
 }
-[name="grab-tl"] {
+#undiscord [name="grab-tl"] {
   top: 0px;
   left: 0px;
   width: var(--corner-size);
@@ -50,7 +50,7 @@
   margin-left: var(--offset);
   cursor: nwse-resize;
 }
-[name="grab-tr"] {
+#undiscord [name="grab-tr"] {
   top: 0px;
   right: 0px;
   width: var(--corner-size);
@@ -59,7 +59,7 @@
   margin-right: var(--offset);
   cursor: nesw-resize;
 }
-[name="grab-br"] {
+#undiscord [name="grab-br"] {
   bottom: 0px;
   right: 0px;
   width: var(--corner-size);
@@ -68,7 +68,7 @@
   margin-right: var(--offset);
   cursor: nwse-resize;
 }
-[name="grab-bl"] {
+#undiscord [name="grab-bl"] {
   bottom: 0px;
   left: 0px;
   width: var(--corner-size);

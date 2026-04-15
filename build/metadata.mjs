@@ -29,11 +29,15 @@ function generateComment(manifest) {
 export default function userScriptMetadataBlock() {
   const pkg = loadJSON('../package.json');
 
+  const authorLine = pkg.contributors
+    ? pkg.contributors.join(', ')
+    : pkg.author;
+
   const metadata = {
     name: pkg.nameFull,
     description: pkg.description,
     version: process.env.VERSION,
-    author: pkg.author,
+    author: authorLine,
     homepageURL: pkg.homepage,
     supportURL: pkg.bugs.url,
     match: pkg.userScript.match,

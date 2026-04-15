@@ -10,3 +10,6 @@ export const log = {
 
 var logFn; // custom console.log function
 export const setLogFn = (fn) => logFn = fn;
+
+const VALID_LOG_TYPES = new Set(['debug', 'info', 'verb', 'warn', 'error', 'success']);
+export const isValidLogType = (type) => VALID_LOG_TYPES.has(type);
