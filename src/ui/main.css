@@ -5,7 +5,7 @@
     height: 24px;
     margin: 0 8px;
     cursor: pointer;
-    color: var(--interactive-normal);
+    color: var(--scrollbar-thin-thumb);
     flex: 0 0 auto;
 }
 
@@ -19,7 +19,7 @@
 }
 
 #undicord-btn.running {
-    color: var(--button-danger-background) !important;
+    color: var(--control-critical-primary-background-default) !important;
 }
 
 #undicord-btn.running progress {
@@ -40,7 +40,7 @@
     max-width: 100vw;
     min-height: 448px;
     max-height: 100vh;
-    color: var(--text-normal);
+    color: var(--text-default);
     border-radius: 4px;
     background-color: var(--background-secondary);
     box-shadow: var(--elevation-stroke), var(--elevation-high);
@@ -143,9 +143,15 @@
     cursor: pointer;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: var(--interactive-normal);
+    color: var(--scrollbar-thin-thumb);
     border-radius: 4px;
     flex-shrink: 0;
+
+    transition: color .3s ease;
+}
+
+#undiscord summary:hover {
+    color: var(--interactive-text-hover);
 }
 
 #undiscord fieldset {

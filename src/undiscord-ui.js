@@ -62,7 +62,7 @@ function initUI() {
   ui.undiscordBtn = createElm(buttonHtml);
   ui.undiscordBtn.onclick = toggleWindow;
   function mountBtn() {
-    const toolbar = document.querySelector('#app-mount [class*="-toolbar"]');
+    const toolbar = document.querySelector('#app-mount [class*="toolbar__"]');
     if (toolbar) toolbar.appendChild(ui.undiscordBtn);
   }
   mountBtn();
@@ -81,11 +81,11 @@ function initUI() {
   function toggleWindow() {
     if (ui.undiscordWindow.style.display !== 'none') {
       ui.undiscordWindow.style.display = 'none';
-      ui.undiscordBtn.style.color = 'var(--interactive-normal)';
+      ui.undiscordBtn.style.color = 'var(--scrollbar-thin-thumb)';
     }
     else {
       ui.undiscordWindow.style.display = '';
-      ui.undiscordBtn.style.color = 'var(--interactive-active)';
+      ui.undiscordBtn.style.color = 'var(--interactive-text-hover)';
     }
   }
 
