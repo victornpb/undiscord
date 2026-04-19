@@ -29,6 +29,9 @@
   },
   "homepage": "https://github.com/victornpb/undiscord",
   "author": "victornpb",
+  "contributors": [
+    "dekooah"
+  ],
   "main": "deleteDiscordMessages.user.js",
   "scripts": {
     "start": "npm run watch",

@@ -1,6 +1,6 @@
 <div id="undiscord" class="browser container redact" style="display:none;">
     <div class="header">
-        <svg class="icon" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
+        <svg class="icon logo" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
             <path fill="currentColor" d="M15 3.999V2H9V3.999H3V5.999H21V3.999H15Z"></path>
             <path fill="currentColor"
                 d="M5 6.99902V18.999C5 20.101 5.897 20.999 7 20.999H17C18.103 20.999 19 20.101 19 18.999V6.99902H5ZM11 17H9V11H11V17ZM15 17H13V11H15V17Z">
@@ -10,7 +10,7 @@
         <div class="vert-divider"></div>
         <span> Bulk delete messages</span>
         <div class="spacer"></div>
-        <div id="hide" class="icon" aria-label="Close" role="button" tabindex="0">
+        <div id="hide" class="icon disbtn" aria-label="Close" role="button" tabindex="0">
             <svg aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor"
                     d="M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z">
@@ -29,7 +29,7 @@
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input class="input" id="authorId" type="text" priv>
+                            <input class="input" id="authorId" type="text" placeholder="Author ID..." priv>
                         </div>
                         <button id="getAuthor">me</button>
                     </div>
@@ -42,7 +42,7 @@
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input class="input" id="guildId" type="text" priv>
+                            <input class="input" id="guildId" type="text" placeholder="Server ID..." priv>
                         </div>
                         <button id="getGuild">current</button>
                     </div>
@@ -54,7 +54,7 @@
                     </legend>
                     <div class="multiInput mb1">
                         <div class="input-wrapper">
-                            <input class="input" id="channelId" type="text" priv>
+                            <input class="input" id="channelId" type="text" placeholder="Channel ID..." priv>
                         </div>
                         <button id="getChannel">current</button>
                     </div>
@@ -215,7 +215,8 @@
             <div></div>
             <div class="info">
                 Undiscord {{VERSION}}
-                <br> victornpb
+                <br> victornpb & 
+                <a href="https://github.com/victornpb/undiscord/graphs/contributors" target="_blank" rel="noopener noreferrer">contributors</a>
             </div>
         </div>
         <div class="main col">
