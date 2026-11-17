@@ -1,3 +1,36 @@
+/* Legacy Discord CSS variables (removed from the client), scoped to the window so nothing leaks */
+#undiscord {
+  --background-primary: #313338;
+  --background-secondary: #2b2d31;
+  --background-tertiary: #1e1f22;
+  --background-secondary-alt: #232428;
+  --background-floating: #111214;
+  --background-modifier-accent: #3f4147;
+  --background-mentioned: rgba(240, 177, 50, 0.1);
+  --background-message-automod-hover: rgba(240, 71, 71, 0.1);
+  --input-background: #1e1f22;
+  --text-normal: #dbdee1;
+  --text-muted: #949ba4;
+  --text-link: #00a8fc;
+  --header-primary: #f2f3f5;
+  --header-secondary: #b5bac1;
+  --interactive-normal: #b5bac1;
+  --interactive-hover: #dbdee1;
+  --interactive-active: #ffffff;
+  --interactive-muted: #4e5058;
+  --button-secondary-background: #4e5058;
+  --button-danger-background: #da373c;
+  --button-positive-background: #248046;
+  --button-outline-brand-border: #5865f2;
+  --brand-experiment: #5865f2;
+  --scrollbar-thin-thumb: #1a1b1e;
+  --scrollbar-thin-track: transparent;
+  --primary-700: #1e1f22;
+  --font-display: "gg sans", "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --elevation-stroke: 0 0 0 1px rgba(0,0,0,0.3);
+  --elevation-high: 0 8px 16px rgba(0,0,0,0.4);
+}
+
 /* undiscord window */
 #undiscord.browser {
     box-shadow: var(--shadow-border), var(--shadow-high);

@@ -81,11 +81,11 @@ function initUI() {
   function toggleWindow() {
     if (ui.undiscordWindow.style.display !== 'none') {
       ui.undiscordWindow.style.display = 'none';
-      ui.undiscordBtn.style.color = 'var(--interactive-normal)';
+      ui.undiscordBtn.style.color = '';
     }
     else {
       ui.undiscordWindow.style.display = '';
-      ui.undiscordBtn.style.color = 'var(--interactive-active)';
+      ui.undiscordBtn.style.color = '#ffffff';
     }
   }
 
