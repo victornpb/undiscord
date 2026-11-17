@@ -2,14 +2,14 @@ import insertCss from './insertCss';
 
 const messagePickerCss = `
 body.undiscord-pick-message [data-list-id="chat-messages"] {
-  background-color: var(--background-secondary-alt);
-  box-shadow: inset 0 0 0px 2px var(--button-outline-brand-border);
+  background-color: #232428;
+  box-shadow: inset 0 0 0px 2px #5865f2;
 }
 
 body.undiscord-pick-message [id^="message-content-"]:hover {
   cursor: pointer;
   cursor: cell;
-  background: var(--background-message-automod-hover);
+  background: rgba(240, 71, 71, 0.1);
 }
 body.undiscord-pick-message [id^="message-content-"]:hover::after {
   position: absolute;
@@ -20,8 +20,8 @@ body.undiscord-pick-message [id^="message-content-"]:hover::after {
   height: 22px;
   line-height: 22px;
   font-family: var(--font-display);
-  background-color: var(--button-secondary-background);
-  color: var(--header-secondary);
+  background-color: #4e5058;
+  color: #b5bac1;
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
