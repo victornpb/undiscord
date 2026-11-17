@@ -1,20 +1,67 @@
 import { log } from './log';
 
-export function getToken() {
-  window.dispatchEvent(new Event('beforeunload'));
-  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
+function readLocalStorage(key) {
+  const f = document.body.appendChild(document.createElement('iframe'));
   try {
-    return JSON.parse(LS.token);
-  } catch {
-    log.info('Could not automatically detect Authorization Token in local storage!');
-    log.info('Attempting to grab token using webpack');
-    return (window.webpackChunkdiscord_app.push([[''], {}, e => { window.m = []; for (let c in e.c) window.m.push(e.c[c]); }]), window.m).find(m => m?.exports?.default?.getToken !== void 0).exports.default.getToken();
+    return f.contentWindow.localStorage[key];
+  } finally {
+    f.remove(); // don't leak iframes
   }
 }
 
+function getWebpackModules() {
+  const mods = [];
+  window.webpackChunkdiscord_app.push([[Symbol()], {}, r => { for (const k in r.c) mods.push(r.c[k]); }]);
+  window.webpackChunkdiscord_app.pop();
+  return mods;
+}
+
+function findInModules(test) {
+  for (const m of getWebpackModules()) {
+    const e = m?.exports;
+    if (!e || typeof e !== 'object') continue;
+    let candidates;
+    try { candidates = [e.default, e.Z, e.ZP, ...Object.values(e)]; } catch { continue; }
+    for (const v of candidates) {
+      try {
+        const result = test(v);
+        if (result) return result;
+      } catch { /* ignore */ }
+    }
+  }
+  return null;
+}
+
+export function getToken() {
+  window.dispatchEvent(new Event('beforeunload'));
+  try {
+    const t = readLocalStorage('token');
+    if (t) return JSON.parse(t);
+  } catch { /* fall through to webpack */ }
+  log.info('Token not found in local storage, searching webpack modules...');
+  const token = findInModules(v => {
+    if (v && typeof v.getToken === 'function') {
+      const t = v.getToken();
+      if (typeof t === 'string' && t.length > 20) return t;
+    }
+  });
+  if (!token) throw new Error('Token not found');
+  return token;
+}
+
 export function getAuthorId() {
-  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-  return JSON.parse(LS.user_id_cache);
+  try {
+    const id = readLocalStorage('user_id_cache');
+    if (id) return JSON.parse(id);
+  } catch { /* fall through to webpack */ }
+  const id = findInModules(v => {
+    if (v && typeof v.getCurrentUser === 'function') {
+      const u = v.getCurrentUser();
+      if (u && u.id) return u.id;
+    }
+  });
+  if (!id) alert('Could not find your user ID automatically. Please paste it manually.');
+  return id || '';
 }
 
 export function getGuildId() {
