@@ -63,6 +63,35 @@ class UndiscordCore {
   onProgress = undefined;
   onStop = undefined;
 
+  #session = null;
+
+  #begin() {
+    const session = { stopped: false };
+    session.stopRequested = new Promise(done => session.stop = done);
+    this.#session = session;
+    this.state.running = true;
+    if (this.onStart) this.onStart(this.state, this.stats);
+    return session;
+  }
+
+  #finish(session) {
+    if (this.#session !== session) return;
+    this.#session = null;
+    this.state.running = false;
+    if (this.onStop) this.onStop(this.state, this.stats);
+  }
+
+  #active(session) {
+    if (!session) return !this.#session;
+    return this.#session === session && !session.stopped;
+  }
+
+  async #wait(ms) {
+    const session = this.#session;
+    if (!session) return wait(ms);
+    await Promise.race([wait(ms), session.stopRequested]);
+  }
+
   resetState() {
     this.state = {
       running: false,
@@ -82,36 +111,50 @@ class UndiscordCore {
 
   /** Automate the deletion process of multiple channels */
   async runBatch(queue) {
-    if (this.state.running) return log.error('Already running!');
+    if (this.#session) return log.error('Already running!');
+    const session = this.#begin();
 
     log.info(`Runnning batch with queue of ${queue.length} jobs`);
-    for (let i = 0; i < queue.length; i++) {
-      const job = queue[i];
-      log.info('Starting job...', `(${i + 1}/${queue.length})`);
+    try {
+      for (let i = 0; i < queue.length; i++) {
+        if (!this.#active(session)) break;
+        const job = queue[i];
+        log.info('Starting job...', `(${i + 1}/${queue.length})`);
 
-      // set options
-      this.options = {
-        ...this.options, // keep current options
-        ...job, // override with options for that job
-      };
+        // set options
+        this.options = {
+          ...this.options, // keep current options
+          ...job, // override with options for that job
+        };
 
-      await this.run(true);
-      if (!this.state.running) break;
+        await this.#runJob(session, true);
+        if (!this.#active(session) || !this.state.running) break;
 
-      log.info('Job ended.', `(${i + 1}/${queue.length})`);
-      this.resetState();
-      this.options.askForConfirmation = false;
-      this.state.running = true; // continue running
+        log.info('Job ended.', `(${i + 1}/${queue.length})`);
+        this.resetState();
+        this.options.askForConfirmation = false;
+        this.state.running = true; // continue running
+      }
+
+      log.info('Batch finished.');
+    } finally {
+      this.#finish(session);
     }
-
-    log.info('Batch finished.');
-    this.state.running = false;
   }
 
   /** Start the deletion process */
-  async run(isJob = false) {
-    if (this.state.running && !isJob) return log.error('Already running!');
+  async run() {
+    if (this.#session) return log.error('Already running!');
+    const session = this.#begin();
+    try {
+      await this.#runJob(session, false);
+    } finally {
+      this.#finish(session);
+    }
+  }
 
+  async #runJob(session, isJob) {
+    const active = () => this.#active(session);
     this.state.running = true;
     this.stats.startTime = new Date();
 
@@ -126,14 +169,13 @@ class UndiscordCore {
       `hasFile = ${!!this.options.hasFile}`,
     );
 
-    if (this.onStart) this.onStart(this.state, this.stats);
-
     do {
       this.state.iterations++;
 
       log.verb('Fetching messages...');
       // Search messages
-      await this.search();
+      await this.search(session);
+      if (!active()) break;
 
       // Process results and find which messages should be deleted
       await this.filterResponse();
@@ -158,8 +200,10 @@ class UndiscordCore {
           this.state.running = false; // break out of a job
           break; // immmediately stop this iteration
         }
+        if (!active()) break;
 
-        await this.deleteMessagesFromList();
+        await this.deleteMessagesFromList(session);
+        if (!active()) break;
       }
       else if (this.state._skippedMessages.length > 0) {
         // There are stuff, but nothing to delete (example a page full of system messages)
@@ -178,21 +222,22 @@ class UndiscordCore {
 
       // wait before next page (fix search page not updating fast enough)
       log.verb(`Waiting ${(this.options.searchDelay / 1000).toFixed(2)}s before next page...`);
-      await wait(this.options.searchDelay);
+      await this.#wait(this.options.searchDelay);
 
-    } while (this.state.running);
+    } while (active() && this.state.running);
 
     this.stats.endTime = new Date();
     log.success(`Ended at ${this.stats.endTime.toLocaleString()}! Total time: ${msToHMS(this.stats.endTime.getTime() - this.stats.startTime.getTime())}`);
     this.printStats();
     log.debug(`Deleted ${this.state.delCount} messages, ${this.state.failCount} failed.\n`);
-
-    if (this.onStop) this.onStop(this.state, this.stats);
   }
 
   stop() {
+    const session = this.#session;
+    if (!session) return;
+    session.stopped = true;
+    session.stop();
     this.state.running = false;
-    if (this.onStop) this.onStop(this.state, this.stats);
   }
 
   /** Calculate the estimated time remaining based on the current stats */
@@ -225,7 +270,7 @@ class UndiscordCore {
     }
   }
 
-  async search() {
+  async search(session = this.#session) {
     let API_SEARCH_URL;
     if (this.options.guildId === '@me') API_SEARCH_URL = `https://discord.com/api/v9/channels/${this.options.channelId}/messages/`; // DMs
     else API_SEARCH_URL = `https://discord.com/api/v9/guilds/${this.options.guildId}/messages/`; // Server
@@ -264,8 +309,9 @@ class UndiscordCore {
       this.stats.throttledCount++;
       this.stats.throttledTotalTime += w;
       log.warn(`This channel isn't indexed yet. Waiting ${w}ms for discord to index it...`);
-      await wait(w);
-      return await this.search();
+      await this.#wait(w);
+      if (!this.#active(session)) return this.state._seachResponse;
+      return await this.search(session);
     }
 
     if (!resp.ok) {
@@ -282,8 +328,9 @@ class UndiscordCore {
         this.printStats();
         log.verb(`Cooling down for ${w * 2}ms before retrying...`);
 
-        await wait(w * 2);
-        return await this.search();
+        await this.#wait(w * 2);
+        if (!this.#active(session)) return this.state._seachResponse;
+        return await this.search(session);
       }
       else {
         this.state.running = false;
@@ -329,10 +376,10 @@ class UndiscordCore {
     console.log(PREFIX, 'filterResponse', this.state);
   }
 
-  async deleteMessagesFromList() {
+  async deleteMessagesFromList(session = this.#session) {
     for (let i = 0; i < this.state._messagesToDelete.length; i++) {
       const message = this.state._messagesToDelete[i];
-      if (!this.state.running) return log.error('Stopped by you!');
+      if (!this.#active(session) || !this.state.running) return log.error('Stopped by you!');
 
       log.debug(
         // `${((this.state.delCount + 1) / this.state.grandTotal * 100).toFixed(2)}%`,
@@ -346,13 +393,14 @@ class UndiscordCore {
 
       // Delete a single message (with retry)
       let attempt = 0;
-      while (attempt < this.options.maxAttempt) {
+      while (attempt < this.options.maxAttempt && this.#active(session)) {
         const result = await this.deleteMessage(message);
 
         if (result === 'RETRY') {
           attempt++;
+          if (!this.#active(session)) return log.error('Stopped by you!');
           log.verb(`Retrying in ${this.options.deleteDelay}ms... (${attempt}/${this.options.maxAttempt})`);
-          await wait(this.options.deleteDelay);
+          await this.#wait(this.options.deleteDelay);
         }
         else break;
       }
@@ -360,7 +408,8 @@ class UndiscordCore {
       this.calcEtr();
       if (this.onProgress) this.onProgress(this.state, this.stats);
 
-      await wait(this.options.deleteDelay);
+      if (!this.#active(session)) return log.error('Stopped by you!');
+      await this.#wait(this.options.deleteDelay);
     }
   }
 
@@ -394,7 +443,7 @@ class UndiscordCore {
         log.warn(`Being rate limited by the API for ${w}ms! Adjusted delete delay to ${this.options.deleteDelay}ms.`);
         this.printStats();
         log.verb(`Cooling down for ${w * 2}ms before retrying...`);
-        await wait(w * 2);
+        await this.#wait(w * 2);
         return 'RETRY';
       } else {
         const body = await resp.text();
